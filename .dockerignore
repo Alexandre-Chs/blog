@@ -1,0 +1,11 @@
+node_modules
+.pnpm-store
+pnpm-debug.log*
+.tanstack
+dist
+.git
+.gitignore
+Dockerfile*
+docker-compose.yml
+.DS_Store
+.env
