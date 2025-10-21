@@ -1,9 +1,25 @@
-version: '3.9'
-
 services:
   app:
     build: .
-    container_name: blogai
-    restart: unless-stopped
+    container_name: blogai_app
+    env_file:
+      - .env
     ports:
       - '80:3000'
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:16.10-alpine3.22
+    container_name: blogai_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - '5433:5432'
+
+volumes:
+  db_data:

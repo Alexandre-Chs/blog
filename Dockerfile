@@ -1,7 +1,6 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Installer PNPM et dépendances
 COPY package.json pnpm-lock.yaml* ./
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate && pnpm i --frozen-lockfile
 
@@ -18,5 +17,4 @@ COPY --from=builder /app/package.json ./package.json
 
 EXPOSE 3000
 
-# Commande de démarrage
 CMD ["node", ".output/server/index.mjs"]
