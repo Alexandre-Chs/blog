@@ -9,6 +9,7 @@ if [ "$MODE" = "dev" ]; then
   echo "Starting docker in dev mode..."
   docker compose up -d db
   echo "Starting frontend..."
+  pnpm run db:studio & 
   pnpm run dev
 else
   docker compose up -d --build
