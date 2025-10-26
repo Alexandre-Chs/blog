@@ -5,12 +5,12 @@ services:
     env_file:
       - .env
     ports:
-      - '3000:3000'
+      - '80:3000'
     depends_on:
       - db
     restart: unless-stopped
     networks:
-      - blogai_network
+      - dokploy-network
 
   db:
     image: postgres:16.10-alpine3.22
@@ -23,11 +23,11 @@ services:
     ports:
       - '5433:5432'
     networks:
-      - blogai_network
+      - dokploy-network
 
 volumes:
   db_data:
 
 networks:
-  blogai_network:
-    driver: bridge
+  dokploy-network:
+    external: true
