@@ -10,7 +10,7 @@ services:
       - db
     restart: unless-stopped
     networks:
-      - dokploy-network
+      - blogai_network
 
   db:
     image: postgres:16.10-alpine3.22
@@ -27,11 +27,11 @@ services:
     ports:
       - '5433:5432'
     networks:
-      - dokploy-network
+      - blogai_network
 
 volumes:
   db_data:
 
 networks:
-  dokploy-network:
-    external: true
+  blogai_network:
+    driver: bridge
