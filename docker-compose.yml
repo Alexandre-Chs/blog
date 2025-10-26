@@ -9,6 +9,8 @@ services:
     depends_on:
       - db
     restart: unless-stopped
+    networks:
+      - blogai_network
 
   db:
     image: postgres:16.10-alpine3.22
@@ -20,6 +22,12 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - '5433:5432'
+    networks:
+      - blogai_network
 
 volumes:
   db_data:
+
+networks:
+  blogai_network:
+    driver: bridge
