@@ -7,12 +7,12 @@ services:
     ports:
       - '80:3000'
     depends_on:
-      - db
+      - blogdb
     restart: unless-stopped
     networks:
-      - blogai_network
+      - dokploy-network
 
-  db:
+  blogdb:
     image: postgres:16.10-alpine3.22
     container_name: blogai_db
     restart: unless-stopped
@@ -27,11 +27,7 @@ services:
     ports:
       - '5433:5432'
     networks:
-      - blogai_network
+      - dokploy-network
 
 volumes:
   db_data:
-
-networks:
-  blogai_network:
-    driver: bridge
