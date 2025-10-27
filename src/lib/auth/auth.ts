@@ -4,7 +4,7 @@ import { db } from '@/index'
 import * as schema from '@/db/schema'
 
 const trustedOrigins =
-  process.env.NODE_ENV === 'production' ? [process.env.BASE_URL!] : ['http://localhost', 'http://127.0.0.1']
+  process.env.NODE_ENV === 'production' ? [process.env.BASE_URL!] : ['http://localhost:3000', 'http://127.0.0.1']
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
