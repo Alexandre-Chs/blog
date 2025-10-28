@@ -3,19 +3,8 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import z from 'zod'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth/auth-client'
 import { loginSchema } from '@/lib/zod'
@@ -47,10 +36,9 @@ export function Login() {
         setError(authError.message)
         return
       }
-      navigate({ to: '/' })
+      navigate({ to: '/admin' })
     } catch (err) {
-      if (err instanceof z.ZodError)
-        setError(err.issues.map((issue) => issue.message).join(', '))
+      if (err instanceof z.ZodError) setError(err.issues.map((issue) => issue.message).join(', '))
       else setError('An unexpected error occurred')
     }
   }
@@ -62,9 +50,7 @@ export function Login() {
           <Card>
             <CardHeader>
               <CardTitle>Login to your account</CardTitle>
-              <CardDescription>
-                Enter your email below to login to your account
-              </CardDescription>
+              <CardDescription>Enter your email below to login to your account</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleLoginSubmit}>
@@ -83,20 +69,11 @@ export function Login() {
                   <Field>
                     <div className="flex items-center">
                       <FieldLabel htmlFor="password">Password</FieldLabel>
-                      <a
-                        href="#"
-                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                      >
+                      <a href="#" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
                         Forgot your password?
                       </a>
                     </div>
-                    <Input
-                      id="password"
-                      type="password"
-                      name="password"
-                      onChange={handleLoginFormChange}
-                      required
-                    />
+                    <Input id="password" type="password" name="password" onChange={handleLoginFormChange} required />
                   </Field>
                   {error && <p className="text-sm text-red-600">{error}</p>}
                   <Field>
@@ -104,8 +81,7 @@ export function Login() {
                       Login
                     </Button>
                     <FieldDescription className="text-center">
-                      Don&apos;t have an account?{' '}
-                      <Link to="/sign-up">Sign up</Link>
+                      Don&apos;t have an account? <Link to="/admin/sign-up">Sign up</Link>
                     </FieldDescription>
                   </Field>
                 </FieldGroup>

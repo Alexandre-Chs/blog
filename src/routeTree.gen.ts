@@ -8,102 +8,193 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignUpRouteImport } from './routes/sign-up'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as AppRouteRouteImport } from './routes/_app/route'
-import { Route as AppIndexRouteImport } from './routes/_app/index'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { createFileRoute } from '@tanstack/react-router'
 
-const SignUpRoute = SignUpRouteImport.update({
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as BlogIndexRouteImport } from './routes/_blog/index'
+import { Route as AdminSignUpRouteImport } from './routes/admin/sign-up'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as AdminLayoutRouteRouteImport } from './routes/admin/_layout/route'
+import { Route as AdminLayoutIndexRouteImport } from './routes/admin/_layout/index'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AdminLayoutSettingsIndexRouteImport } from './routes/admin/_layout/settings/index'
+import { Route as AdminLayoutCalendarIndexRouteImport } from './routes/admin/_layout/calendar/index'
+import { Route as AdminLayoutArticlesIndexRouteImport } from './routes/admin/_layout/articles/index'
+
+const AdminRouteImport = createFileRoute('/admin')()
+
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/_blog/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSignUpRoute = AdminSignUpRouteImport.update({
   id: '/sign-up',
   path: '/sign-up',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AdminRoute,
 } as any)
-const LoginRoute = LoginRouteImport.update({
+const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AdminRoute,
 } as any)
-const AppRouteRoute = AppRouteRouteImport.update({
-  id: '/_app',
-  getParentRoute: () => rootRouteImport,
+const AdminLayoutRouteRoute = AdminLayoutRouteRouteImport.update({
+  id: '/_layout',
+  getParentRoute: () => AdminRoute,
 } as any)
-const AppIndexRoute = AppIndexRouteImport.update({
+const AdminLayoutIndexRoute = AdminLayoutIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppRouteRoute,
+  getParentRoute: () => AdminLayoutRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLayoutSettingsIndexRoute =
+  AdminLayoutSettingsIndexRouteImport.update({
+    id: '/settings/',
+    path: '/settings/',
+    getParentRoute: () => AdminLayoutRouteRoute,
+  } as any)
+const AdminLayoutCalendarIndexRoute =
+  AdminLayoutCalendarIndexRouteImport.update({
+    id: '/calendar/',
+    path: '/calendar/',
+    getParentRoute: () => AdminLayoutRouteRoute,
+  } as any)
+const AdminLayoutArticlesIndexRoute =
+  AdminLayoutArticlesIndexRouteImport.update({
+    id: '/articles/',
+    path: '/articles/',
+    getParentRoute: () => AdminLayoutRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/login': typeof LoginRoute
-  '/sign-up': typeof SignUpRoute
-  '/': typeof AppIndexRoute
+  '/admin': typeof AdminLayoutRouteRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/sign-up': typeof AdminSignUpRoute
+  '/': typeof BlogIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/admin/': typeof AdminLayoutIndexRoute
+  '/admin/articles': typeof AdminLayoutArticlesIndexRoute
+  '/admin/calendar': typeof AdminLayoutCalendarIndexRoute
+  '/admin/settings': typeof AdminLayoutSettingsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/login': typeof LoginRoute
-  '/sign-up': typeof SignUpRoute
-  '/': typeof AppIndexRoute
+  '/admin': typeof AdminLayoutIndexRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/sign-up': typeof AdminSignUpRoute
+  '/': typeof BlogIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/admin/articles': typeof AdminLayoutArticlesIndexRoute
+  '/admin/calendar': typeof AdminLayoutCalendarIndexRoute
+  '/admin/settings': typeof AdminLayoutSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_app': typeof AppRouteRouteWithChildren
-  '/login': typeof LoginRoute
-  '/sign-up': typeof SignUpRoute
-  '/_app/': typeof AppIndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/_layout': typeof AdminLayoutRouteRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/sign-up': typeof AdminSignUpRoute
+  '/_blog/': typeof BlogIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/admin/_layout/': typeof AdminLayoutIndexRoute
+  '/admin/_layout/articles/': typeof AdminLayoutArticlesIndexRoute
+  '/admin/_layout/calendar/': typeof AdminLayoutCalendarIndexRoute
+  '/admin/_layout/settings/': typeof AdminLayoutSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/sign-up' | '/' | '/api/auth/$'
+  fullPaths:
+    | '/admin'
+    | '/admin/login'
+    | '/admin/sign-up'
+    | '/'
+    | '/api/auth/$'
+    | '/admin/'
+    | '/admin/articles'
+    | '/admin/calendar'
+    | '/admin/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/sign-up' | '/' | '/api/auth/$'
-  id: '__root__' | '/_app' | '/login' | '/sign-up' | '/_app/' | '/api/auth/$'
+  to:
+    | '/admin'
+    | '/admin/login'
+    | '/admin/sign-up'
+    | '/'
+    | '/api/auth/$'
+    | '/admin/articles'
+    | '/admin/calendar'
+    | '/admin/settings'
+  id:
+    | '__root__'
+    | '/admin'
+    | '/admin/_layout'
+    | '/admin/login'
+    | '/admin/sign-up'
+    | '/_blog/'
+    | '/api/auth/$'
+    | '/admin/_layout/'
+    | '/admin/_layout/articles/'
+    | '/admin/_layout/calendar/'
+    | '/admin/_layout/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AppRouteRoute: typeof AppRouteRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  SignUpRoute: typeof SignUpRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  BlogIndexRoute: typeof BlogIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sign-up': {
-      id: '/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof SignUpRouteImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_app': {
-      id: '/_app'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AppRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_app/': {
-      id: '/_app/'
+    '/_blog/': {
+      id: '/_blog/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof AppRouteRoute
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/sign-up': {
+      id: '/admin/sign-up'
+      path: '/sign-up'
+      fullPath: '/admin/sign-up'
+      preLoaderRoute: typeof AdminSignUpRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/_layout': {
+      id: '/admin/_layout'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminLayoutRouteRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/_layout/': {
+      id: '/admin/_layout/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminLayoutIndexRouteImport
+      parentRoute: typeof AdminLayoutRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -112,25 +203,64 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/_layout/settings/': {
+      id: '/admin/_layout/settings/'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminLayoutSettingsIndexRouteImport
+      parentRoute: typeof AdminLayoutRouteRoute
+    }
+    '/admin/_layout/calendar/': {
+      id: '/admin/_layout/calendar/'
+      path: '/calendar'
+      fullPath: '/admin/calendar'
+      preLoaderRoute: typeof AdminLayoutCalendarIndexRouteImport
+      parentRoute: typeof AdminLayoutRouteRoute
+    }
+    '/admin/_layout/articles/': {
+      id: '/admin/_layout/articles/'
+      path: '/articles'
+      fullPath: '/admin/articles'
+      preLoaderRoute: typeof AdminLayoutArticlesIndexRouteImport
+      parentRoute: typeof AdminLayoutRouteRoute
+    }
   }
 }
 
-interface AppRouteRouteChildren {
-  AppIndexRoute: typeof AppIndexRoute
+interface AdminLayoutRouteRouteChildren {
+  AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute
+  AdminLayoutArticlesIndexRoute: typeof AdminLayoutArticlesIndexRoute
+  AdminLayoutCalendarIndexRoute: typeof AdminLayoutCalendarIndexRoute
+  AdminLayoutSettingsIndexRoute: typeof AdminLayoutSettingsIndexRoute
 }
 
-const AppRouteRouteChildren: AppRouteRouteChildren = {
-  AppIndexRoute: AppIndexRoute,
+const AdminLayoutRouteRouteChildren: AdminLayoutRouteRouteChildren = {
+  AdminLayoutIndexRoute: AdminLayoutIndexRoute,
+  AdminLayoutArticlesIndexRoute: AdminLayoutArticlesIndexRoute,
+  AdminLayoutCalendarIndexRoute: AdminLayoutCalendarIndexRoute,
+  AdminLayoutSettingsIndexRoute: AdminLayoutSettingsIndexRoute,
 }
 
-const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
-  AppRouteRouteChildren,
-)
+const AdminLayoutRouteRouteWithChildren =
+  AdminLayoutRouteRoute._addFileChildren(AdminLayoutRouteRouteChildren)
+
+interface AdminRouteChildren {
+  AdminLayoutRouteRoute: typeof AdminLayoutRouteRouteWithChildren
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminSignUpRoute: typeof AdminSignUpRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminLayoutRouteRoute: AdminLayoutRouteRouteWithChildren,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminSignUpRoute: AdminSignUpRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  AppRouteRoute: AppRouteRouteWithChildren,
-  LoginRoute: LoginRoute,
-  SignUpRoute: SignUpRoute,
+  AdminRoute: AdminRouteWithChildren,
+  BlogIndexRoute: BlogIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
