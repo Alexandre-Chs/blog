@@ -49,7 +49,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <div>Blog ai</div>
+        <Link to="/admin" className="flex items-center gap-x-2">
+          <img src="/logo.png" alt="Logo" width={40} />
+          <span className="text-lg font-semibold">Blog AI</span>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         {data.navMain.map((item) => (
