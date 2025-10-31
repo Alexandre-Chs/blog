@@ -20,6 +20,7 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AdminLayoutSettingsIndexRouteImport } from './routes/admin/_layout/settings/index'
 import { Route as AdminLayoutCalendarIndexRouteImport } from './routes/admin/_layout/calendar/index'
 import { Route as AdminLayoutArticlesIndexRouteImport } from './routes/admin/_layout/articles/index'
+import { Route as AdminLayoutArticlesCreateIndexRouteImport } from './routes/admin/_layout/articles/create/index'
 
 const AdminRouteImport = createFileRoute('/admin')()
 
@@ -75,6 +76,12 @@ const AdminLayoutArticlesIndexRoute =
     path: '/articles/',
     getParentRoute: () => AdminLayoutRouteRoute,
   } as any)
+const AdminLayoutArticlesCreateIndexRoute =
+  AdminLayoutArticlesCreateIndexRouteImport.update({
+    id: '/articles/create/',
+    path: '/articles/create/',
+    getParentRoute: () => AdminLayoutRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/admin': typeof AdminLayoutRouteRouteWithChildren
@@ -86,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/admin/articles': typeof AdminLayoutArticlesIndexRoute
   '/admin/calendar': typeof AdminLayoutCalendarIndexRoute
   '/admin/settings': typeof AdminLayoutSettingsIndexRoute
+  '/admin/articles/create': typeof AdminLayoutArticlesCreateIndexRoute
 }
 export interface FileRoutesByTo {
   '/admin': typeof AdminLayoutIndexRoute
@@ -96,6 +104,7 @@ export interface FileRoutesByTo {
   '/admin/articles': typeof AdminLayoutArticlesIndexRoute
   '/admin/calendar': typeof AdminLayoutCalendarIndexRoute
   '/admin/settings': typeof AdminLayoutSettingsIndexRoute
+  '/admin/articles/create': typeof AdminLayoutArticlesCreateIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -109,6 +118,7 @@ export interface FileRoutesById {
   '/admin/_layout/articles/': typeof AdminLayoutArticlesIndexRoute
   '/admin/_layout/calendar/': typeof AdminLayoutCalendarIndexRoute
   '/admin/_layout/settings/': typeof AdminLayoutSettingsIndexRoute
+  '/admin/_layout/articles/create/': typeof AdminLayoutArticlesCreateIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/admin/articles'
     | '/admin/calendar'
     | '/admin/settings'
+    | '/admin/articles/create'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/admin'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/admin/articles'
     | '/admin/calendar'
     | '/admin/settings'
+    | '/admin/articles/create'
   id:
     | '__root__'
     | '/admin'
@@ -144,6 +156,7 @@ export interface FileRouteTypes {
     | '/admin/_layout/articles/'
     | '/admin/_layout/calendar/'
     | '/admin/_layout/settings/'
+    | '/admin/_layout/articles/create/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -224,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutArticlesIndexRouteImport
       parentRoute: typeof AdminLayoutRouteRoute
     }
+    '/admin/_layout/articles/create/': {
+      id: '/admin/_layout/articles/create/'
+      path: '/articles/create'
+      fullPath: '/admin/articles/create'
+      preLoaderRoute: typeof AdminLayoutArticlesCreateIndexRouteImport
+      parentRoute: typeof AdminLayoutRouteRoute
+    }
   }
 }
 
@@ -232,6 +252,7 @@ interface AdminLayoutRouteRouteChildren {
   AdminLayoutArticlesIndexRoute: typeof AdminLayoutArticlesIndexRoute
   AdminLayoutCalendarIndexRoute: typeof AdminLayoutCalendarIndexRoute
   AdminLayoutSettingsIndexRoute: typeof AdminLayoutSettingsIndexRoute
+  AdminLayoutArticlesCreateIndexRoute: typeof AdminLayoutArticlesCreateIndexRoute
 }
 
 const AdminLayoutRouteRouteChildren: AdminLayoutRouteRouteChildren = {
@@ -239,6 +260,7 @@ const AdminLayoutRouteRouteChildren: AdminLayoutRouteRouteChildren = {
   AdminLayoutArticlesIndexRoute: AdminLayoutArticlesIndexRoute,
   AdminLayoutCalendarIndexRoute: AdminLayoutCalendarIndexRoute,
   AdminLayoutSettingsIndexRoute: AdminLayoutSettingsIndexRoute,
+  AdminLayoutArticlesCreateIndexRoute: AdminLayoutArticlesCreateIndexRoute,
 }
 
 const AdminLayoutRouteRouteWithChildren =
