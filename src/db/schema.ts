@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { boolean, integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -58,4 +58,25 @@ export const verification = pgTable('verification', {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
+})
+
+export const statusEnum = pgEnum('status', ['draft', 'scheduled', 'published'])
+
+export const articles = pgTable('articles', {
+  id: text('id').primaryKey(),
+  title: text('title').notNull(),
+  content: text('content').notNull(),
+  status: statusEnum(),
+  authorId: text('author_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  slug: text('slug').notNull().unique(),
+  readTime: integer('read_time').default(0).notNull(),
+  views: integer('views').default(0).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at')
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  publishedAt: timestamp('published_at'),
 })
