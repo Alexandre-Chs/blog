@@ -1,83 +1,75 @@
-import {
-  BlockquotePlugin,
-  BoldPlugin,
-  H1Plugin,
-  H2Plugin,
-  H3Plugin,
-  ItalicPlugin,
-  UnderlinePlugin,
-} from '@platejs/basic-nodes/react'
-import { ClientOnly } from '@tanstack/react-router'
-import { Plate, usePlateEditor } from 'platejs/react'
-import type { Value } from 'platejs'
-
-import { BlockquoteElement } from '@/components/ui/blockquote-node'
-import { Editor, EditorContainer } from '@/components/ui/editor'
-import { FixedToolbar } from '@/components/ui/fixed-toolbar'
-import { H1Element, H2Element, H3Element } from '@/components/ui/heading-node'
-import { MarkToolbarButton } from '@/components/ui/mark-toolbar-button'
-import { ToolbarButton } from '@/components/ui/toolbar'
-
-function ClientEditor() {
-  const initialValue: Value = [
-    { children: [{ text: 'Title' }], type: 'h3' },
-    { children: [{ text: 'This is a quote.' }], type: 'blockquote' },
-    { children: [{ text: 'With some ' }, { bold: true, text: 'bold' }, { text: ' text for emphasis!' }], type: 'p' },
-  ]
-
-  const editor = usePlateEditor({
-    plugins: [
-      BoldPlugin,
-      ItalicPlugin,
-      UnderlinePlugin,
-      H1Plugin.withComponent(H1Element),
-      H2Plugin.withComponent(H2Element),
-      H3Plugin.withComponent(H3Element),
-      BlockquotePlugin.withComponent(BlockquoteElement),
-    ],
-    value: () => {
-      const savedValue = localStorage.getItem('installation-react-demo')
-      return savedValue ? JSON.parse(savedValue) : initialValue
-    },
-  })
-
-  return (
-    <Plate
-      editor={editor}
-      onChange={({ value }) => {
-        localStorage.setItem('installation-react-demo', JSON.stringify(value))
-      }}
-    >
-      <FixedToolbar className="flex justify-start gap-1 rounded-t-lg">
-        <ToolbarButton onClick={() => editor.tf.h1.toggle()}>H1</ToolbarButton>
-        <ToolbarButton onClick={() => editor.tf.h2.toggle()}>H2</ToolbarButton>
-        <ToolbarButton onClick={() => editor.tf.h3.toggle()}>H3</ToolbarButton>
-        <ToolbarButton onClick={() => editor.tf.blockquote.toggle()}>Quote</ToolbarButton>
-        <MarkToolbarButton nodeType="bold" tooltip="Bold (⌘+B)">
-          B
-        </MarkToolbarButton>
-        <MarkToolbarButton nodeType="italic" tooltip="Italic (⌘+I)">
-          I
-        </MarkToolbarButton>
-        <MarkToolbarButton nodeType="underline" tooltip="Underline (⌘+U)">
-          U
-        </MarkToolbarButton>
-        <div className="flex-1" />
-        <ToolbarButton className="px-2" onClick={() => editor.tf.setValue(initialValue)}>
-          Reset
-        </ToolbarButton>
-      </FixedToolbar>
-      <EditorContainer>
-        <Editor placeholder="Type your amazing content here..." />
-      </EditorContainer>
-    </Plate>
-  )
-}
+import { useRef, useState } from 'react'
+import { ClientOnly, useNavigate } from '@tanstack/react-router'
+import { MarkdownPlugin } from '@platejs/markdown'
+import { toast } from 'sonner'
+import { articleCreate } from '../api/create'
+import type { PlateEditor } from 'platejs/react'
+import Editor from '@/features/editor/Editor'
+import { Button } from '@/components/ui/button'
 
 export default function ArticlesCreatePage() {
+  const [title, setTitle] = useState<string>('')
+  const editorRef = useRef<PlateEditor>(null)
+  const [isPublishing, setIsPublishing] = useState<boolean>(false)
+
+  const navigate = useNavigate()
+
+  const handleTitleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(evt.target.value)
+  }
+
+  const handlePublish = async () => {
+    setIsPublishing(true)
+
+    if (!editorRef.current) {
+      toast.error('Editor initialization failed. Please refresh the page.')
+      return
+    }
+
+    if (!title.trim()) {
+      toast.error('Title is required.')
+      return
+    }
+
+    const markdown = editorRef.current.getApi(MarkdownPlugin).markdown.serialize()
+    if (!markdown || markdown.trim() === '') {
+      toast.error('Content is required.')
+      return
+    }
+
+    try {
+      await articleCreate({ data: { title: title.trim(), content: markdown } })
+      toast.success('Article published successfully!')
+      navigate({ to: '/admin/articles' })
+    } catch (err) {
+      toast.error('An error occurred while publishing the article.')
+      return
+    } finally {
+      setIsPublishing(false)
+    }
+  }
+
   return (
     <ClientOnly fallback={<div>Loading editor...</div>}>
-      <ClientEditor />
+      <div className="flex justify-between items-center p-4">
+        <div>Date</div>
+        <Button onClick={handlePublish}>{isPublishing ? 'Publishing...' : 'Publish'}</Button>
+      </div>
+
+      <div className="px-4">
+        <div className="max-w-5xl mx-auto pb-4 pl-4">
+          <input
+            value={title}
+            onChange={handleTitleChange}
+            type="text"
+            placeholder="Title"
+            className="outline-none bg-transparent text-2xl"
+          />
+        </div>
+        <div className="max-w-5xl mx-auto">
+          <Editor ref={editorRef} />
+        </div>
+      </div>
     </ClientOnly>
   )
 }
