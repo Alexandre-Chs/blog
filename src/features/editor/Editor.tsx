@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle } from 'react'
+import { useImperativeHandle } from 'react'
 import {
   BlockquotePlugin,
   BoldPlugin,

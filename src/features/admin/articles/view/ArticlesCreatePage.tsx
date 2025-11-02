@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { ClientOnly, useNavigate } from '@tanstack/react-router'
 import { MarkdownPlugin } from '@platejs/markdown'
 import { toast } from 'sonner'
+import { useMutation } from '@tanstack/react-query'
 import { articleCreate } from '../api/create'
 import type { PlateEditor } from 'platejs/react'
 import Editor from '@/features/editor/Editor'
@@ -10,7 +11,6 @@ import { Button } from '@/components/ui/button'
 export default function ArticlesCreatePage() {
   const [title, setTitle] = useState<string>('')
   const editorRef = useRef<PlateEditor>(null)
-  const [isPublishing, setIsPublishing] = useState<boolean>(false)
 
   const navigate = useNavigate()
 
@@ -18,9 +18,22 @@ export default function ArticlesCreatePage() {
     setTitle(evt.target.value)
   }
 
-  const handlePublish = async () => {
-    setIsPublishing(true)
+  const createArticleMutation = useMutation({
+    mutationFn: articleCreate,
+    onSuccess: () => {
+      toast.success('Article published successfully!')
+      navigate({ to: '/admin/articles' })
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        toast.error(error.message)
+      } else {
+        toast.error('An error occurred while publishing the article.')
+      }
+    },
+  })
 
+  const handlePublish = () => {
     if (!editorRef.current) {
       toast.error('Editor initialization failed. Please refresh the page.')
       return
@@ -37,23 +50,21 @@ export default function ArticlesCreatePage() {
       return
     }
 
-    try {
-      await articleCreate({ data: { title: title.trim(), content: markdown } })
-      toast.success('Article published successfully!')
-      navigate({ to: '/admin/articles' })
-    } catch (err) {
-      toast.error('An error occurred while publishing the article.')
-      return
-    } finally {
-      setIsPublishing(false)
-    }
+    createArticleMutation.mutate({
+      data: {
+        title: title.trim(),
+        content: markdown,
+      },
+    })
   }
 
   return (
     <ClientOnly fallback={<div>Loading editor...</div>}>
       <div className="flex justify-between items-center p-4">
         <div>Date</div>
-        <Button onClick={handlePublish}>{isPublishing ? 'Publishing...' : 'Publish'}</Button>
+        <Button disabled={createArticleMutation.isPending} onClick={handlePublish}>
+          {createArticleMutation.isPending ? 'Publishing...' : 'Publish'}
+        </Button>
       </div>
 
       <div className="px-4">
