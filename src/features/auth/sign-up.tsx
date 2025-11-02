@@ -3,19 +3,8 @@ import { useState } from 'react'
 import { z } from 'zod'
 import type { FormEvent } from 'react'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth/auth-client'
 import { signUpSchema } from '@/lib/zod'
@@ -59,8 +48,7 @@ export default function SignUpPage() {
         return
       }
     } catch (err) {
-      if (err instanceof z.ZodError)
-        setError(err.issues.map((issue) => issue.message).join(', '))
+      if (err instanceof z.ZodError) setError(err.issues.map((issue) => issue.message).join(', '))
       else setError('An unexpected error occurred')
     }
   }
@@ -71,9 +59,7 @@ export default function SignUpPage() {
         <Card>
           <CardHeader>
             <CardTitle>Create an account</CardTitle>
-            <CardDescription>
-              Enter your information below to create your account
-            </CardDescription>
+            <CardDescription>Enter your information below to create your account</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit}>
@@ -91,21 +77,11 @@ export default function SignUpPage() {
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <Input
-                    id="password"
-                    type="password"
-                    name="password"
-                    onChange={handleSignUpFormChange}
-                    required
-                  />
-                  <FieldDescription>
-                    Must be at least 8 characters long.
-                  </FieldDescription>
+                  <Input id="password" type="password" name="password" onChange={handleSignUpFormChange} required />
+                  <FieldDescription>Must be at least 8 characters long.</FieldDescription>
                 </Field>
                 <Field>
-                  <FieldLabel htmlFor="confirm-password">
-                    Confirm Password
-                  </FieldLabel>
+                  <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
                   <Input
                     id="confirm-password"
                     type="password"
@@ -113,16 +89,14 @@ export default function SignUpPage() {
                     onChange={handleSignUpFormChange}
                     required
                   />
-                  <FieldDescription>
-                    Please confirm your password.
-                  </FieldDescription>
+                  <FieldDescription>Please confirm your password.</FieldDescription>
                 </Field>
                 {error && <p className="text-sm text-red-600">{error}</p>}
                 <FieldGroup>
                   <Field>
                     <Button type="submit">Create Account</Button>
                     <FieldDescription className="px-6 text-center">
-                      Already have an account? <Link to="/login">Login</Link>
+                      Already have an account? <Link to="/admin/login">Login</Link>
                     </FieldDescription>
                   </Field>
                 </FieldGroup>
