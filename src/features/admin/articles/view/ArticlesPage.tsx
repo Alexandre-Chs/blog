@@ -1,44 +1,48 @@
 import { useQuery } from '@tanstack/react-query'
-import { articlesList } from '../api/list'
+import ArticlesList from '../components/ArticlesList'
+import { articlesListCount } from '../api/list'
+import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
+function ArticlesCount({ count }: { count: number }) {
+  return <Badge className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums">{count}</Badge>
+}
 
 export default function ArticlesPage() {
-  const { data: articles } = useQuery({
-    queryKey: ['todos'],
-    queryFn: articlesList,
+  const { data: articlesCount } = useQuery({
+    queryKey: ['articlesCount'],
+    queryFn: articlesListCount,
   })
 
-  if (!articles) {
-    return <div className="max-w-5xl mx-auto px-6 py-10">No articles find.</div>
-  }
+  if (!articlesCount) return null
 
   return (
-    <div className="max-w-3xl mx-auto pt-10 w-full">
-      <div className="border border-border/70 rounded-xl overflow-hidden">
-        {articles.map((article, idx) => {
-          const isLast = idx === articles.length - 1
-
-          return (
-            <div key={article.id} className={`${!isLast ? 'border-b border-border/70' : ''}`}>
-              <article className="flex gap-4 px-4 py-5 sm:px-6">
-                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-md bg-muted text-base font-semibold text-muted-foreground">
-                  {article.title.trim().charAt(0).toUpperCase()}
-                </div>
-                <div className="flex flex-col justify-between flex-1">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="truncate text-base font-semibold text-foreground">{article.title.trim()}</div>
-                    {article.status ? (
-                      <span className="flex-shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-medium capitalize text-muted-foreground">
-                        {article.status}
-                      </span>
-                    ) : null}
-                  </div>
-                  <span className="text-sm">{article.authorName ? article.authorName : 'Author unknown'}</span>
-                </div>
-              </article>
-            </div>
-          )
-        })}
-      </div>
-    </div>
+    <>
+      <Tabs defaultValue="published" className="max-w-3xl mx-auto pt-6 w-full">
+        <TabsList>
+          <TabsTrigger value="published">
+            Published
+            <ArticlesCount count={articlesCount['published']} />
+          </TabsTrigger>
+          <TabsTrigger value="scheduled">
+            Scheduled
+            <ArticlesCount count={articlesCount['scheduled']} />
+          </TabsTrigger>
+          <TabsTrigger value="drafts">
+            Drafts
+            <ArticlesCount count={articlesCount['draft']} />
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="published">
+          <ArticlesList articleStatus="published" />
+        </TabsContent>
+        <TabsContent value="scheduled">
+          <ArticlesList articleStatus="scheduled" />
+        </TabsContent>
+        <TabsContent value="drafts">
+          <ArticlesList articleStatus="draft" />
+        </TabsContent>
+      </Tabs>
+    </>
   )
 }
