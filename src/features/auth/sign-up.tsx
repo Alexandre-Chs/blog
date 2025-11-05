@@ -38,7 +38,7 @@ export default function SignUpPage() {
         { email: signUpData.email, password: signUpData.password, name: '' },
         {
           onSuccess: () => {
-            navigate({ to: '/' })
+            navigate({ to: '/admin' })
           },
         },
       )

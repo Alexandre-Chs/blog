@@ -1,90 +1,23 @@
-const articles = [
-  {
-    id: 'article-001',
-    title: '6 Technical Skills A Non-Technical Startup Founder Needs to Have',
-    content:
-      'By learning a small amount of technical skills, founders can better support their company and ship confidently alongside their teams.',
-    status: 'published',
-    author: 'john-griebel',
-    slug: 'technical-skills-for-non-technical-founders',
-    readTime: 8,
-    views: 1842,
-    createdAt: new Date('2024-10-18T09:00:00Z'),
-    updatedAt: new Date('2024-10-19T07:15:00Z'),
-    publishedAt: new Date('2024-10-19T09:00:00Z'),
-  },
-  {
-    id: 'article-002',
-    title: 'Why Simplicity Wins in Product Design',
-    content:
-      'A deep dive into why removing is often better than adding, and how teams can cultivate a sharper sense for what really matters.',
-    status: 'published',
-    author: 'jane-smith',
-    slug: 'why-simplicity-wins-in-product-design',
-    readTime: 6,
-    views: 2104,
-    createdAt: new Date('2024-10-08T14:30:00Z'),
-    updatedAt: new Date('2024-10-10T08:45:00Z'),
-    publishedAt: new Date('2024-10-10T10:00:00Z'),
-  },
-  {
-    id: 'article-003',
-    title: 'How to Keep Writing When No One Is Reading Yet',
-    content:
-      'Momentum is everything during the early days of publishing. Here are five rituals that help you keep hitting publish before the audience arrives.',
-    status: 'published',
-    author: 'alex-cho',
-    slug: 'keep-writing-when-no-one-is-reading',
-    readTime: 5,
-    views: 987,
-    createdAt: new Date('2024-09-28T07:10:00Z'),
-    updatedAt: new Date('2024-09-30T11:22:00Z'),
-    publishedAt: new Date('2024-09-30T12:00:00Z'),
-  },
-  {
-    id: 'article-004',
-    title: 'The Editorial OS: Systems for Publishing Every Week',
-    content:
-      'Behind every consistent publication sits a calendar, a checklist, and a cadence your readers can trust. Here is the operating system we rely on.',
-    status: 'published',
-    author: 'marie-lefebvre',
-    slug: 'editorial-operating-system-for-weekly-publishing',
-    readTime: 9,
-    views: 1436,
-    createdAt: new Date('2024-09-14T10:05:00Z'),
-    updatedAt: new Date('2024-09-16T16:40:00Z'),
-    publishedAt: new Date('2024-09-17T08:30:00Z'),
-  },
-  {
-    id: 'article-005',
-    title: 'Founder Letters: Writing Updates Your Team Will Actually Read',
-    content:
-      'Skip the vanity metrics and share the narrative your team needs. A framework for writing updates that keep everyone aligned and inspired.',
-    status: 'published',
-    author: 'darius-mendez',
-    slug: 'founder-letters-writing-updates-your-team-reads',
-    readTime: 7,
-    views: 1195,
-    createdAt: new Date('2024-08-26T06:45:00Z'),
-    updatedAt: new Date('2024-08-27T13:52:00Z'),
-    publishedAt: new Date('2024-08-28T09:15:00Z'),
-  },
-] as const
-
-const dateFormatter = new Intl.DateTimeFormat('en-US', {
-  month: 'long',
-  day: 'numeric',
-  year: 'numeric',
-})
-
-const viewsFormatter = new Intl.NumberFormat('en', {
-  notation: 'compact',
-  compactDisplay: 'short',
-})
-
-const popularArticles = [...articles].sort((a, b) => b.views - a.views).slice(0, 3)
+import { Link } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
+import { articlesPublished } from '../api/home'
+import { PlateMarkdown } from '@/components/PlateMarkdown'
 
 const HomePage = () => {
+  const { data: articles } = useQuery({
+    queryKey: ['articlesPublished'],
+    queryFn: articlesPublished,
+  })
+
+  console.log('les articles', articles)
+
+  if (!articles) {
+    return <div>Loading...</div> // TODO: afficher ici pas d'articles
+  }
+
+  const popularArticles = [...articles].slice(0, 3)
+  // TODO: pending = loading
+
   return (
     <div className="min-h-screen bg-white text-[#1a1a1a]">
       <header className="border-b border-gray-100">
@@ -92,13 +25,13 @@ const HomePage = () => {
           <span className="text-xl font-semibold tracking-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
             smith.
           </span>
-          <a
-            href="#about"
+          <Link
+            to="/about"
             className="text-sm font-medium text-[#111] transition-colors duration-200 hover:text-[#555]"
             style={{ fontFamily: 'Inter, sans-serif' }}
           >
             About
-          </a>
+          </Link>
         </div>
       </header>
 
@@ -111,7 +44,6 @@ const HomePage = () => {
           <div className="mt-12 flex flex-col gap-16 lg:mt-16 lg:flex-row lg:gap-20">
             <div className="lg:flex-1 lg:min-w-0">
               {articles.map((article, index) => {
-                const publishedDate = article.publishedAt ?? article.createdAt
                 const isLast = index === articles.length - 1
                 const isFirst = index === 0
 
@@ -124,7 +56,7 @@ const HomePage = () => {
                       className="text-sm uppercase tracking-wide text-gray-500"
                       style={{ fontFamily: 'Inter, sans-serif' }}
                     >
-                      {dateFormatter.format(publishedDate)}
+                      {/* {dateFormatter.format(publishedDate)} */}
                     </p>
 
                     <h2
@@ -134,7 +66,11 @@ const HomePage = () => {
                       {article.title}
                     </h2>
 
-                    <p className="mt-5 text-lg leading-[1.8] text-gray-700">{article.content}</p>
+                    <div className="mt-5">
+                      <PlateMarkdown className="prose prose-lg max-w-none text-gray-700">
+                        {article.content.slice(0, 100) + (article.content.length > 100 ? '...' : '')}
+                      </PlateMarkdown>
+                    </div>
 
                     <div className="mt-8 flex flex-col gap-6 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex flex-col gap-1">
@@ -142,17 +78,19 @@ const HomePage = () => {
                           className="text-sm font-semibold text-[#1a1a1a]"
                           style={{ fontFamily: 'Inter, sans-serif' }}
                         >
-                          {article.author}
+                          {/* {article.author} */}
+                          the team blogai
                         </span>
                       </div>
 
-                      <a
-                        href={`/blog/${article.slug}`}
+                      <Link
+                        params={{ slug: article.slug }}
+                        to="/$slug"
                         className="text-sm font-medium text-gray-600 transition-colors duration-200 hover:text-[#555]"
                         style={{ fontFamily: 'Inter, sans-serif' }}
                       >
                         Read more →
-                      </a>
+                      </Link>
                     </div>
                   </article>
                 )
@@ -167,19 +105,24 @@ const HomePage = () => {
               <div className="mt-6 divide-y divide-gray-100 border-t border-gray-100">
                 {popularArticles.map((article) => (
                   <article key={article.id} className="py-6">
-                    <a
-                      href={`/blog/${article.slug}`}
+                    <Link
+                      params={{ slug: article.slug }}
+                      to="/$slug"
                       className="text-base font-semibold text-[#111] transition-colors duration-200 hover:text-[#555]"
                       style={{ fontFamily: 'Inter, sans-serif' }}
                     >
                       {article.title}
-                    </a>
-                    <p className="mt-3 text-sm leading-relaxed text-gray-600">{article.content}</p>
+                    </Link>
+                    <div className="mt-3">
+                      <PlateMarkdown className="prose prose-sm max-w-none text-gray-600">
+                        {article.content.slice(0, 70) + (article.content.length > 70 ? '...' : '')}
+                      </PlateMarkdown>
+                    </div>
                     <p
                       className="mt-4 text-xs uppercase tracking-wide text-gray-500"
                       style={{ fontFamily: 'Inter, sans-serif' }}
                     >
-                      {viewsFormatter.format(article.views)} views · {article.readTime} min read
+                      {/* {viewsFormatter.format(article.views)} views · {article.readTime} min read */}
                     </p>
                   </article>
                 ))}
