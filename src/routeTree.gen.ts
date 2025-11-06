@@ -11,13 +11,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as SlugIndexRouteImport } from './routes/$slug/index'
+import { Route as BlogRouteRouteImport } from './routes/_blog/route'
+import { Route as BlogIndexRouteImport } from './routes/_blog/index'
 import { Route as AdminSignUpRouteImport } from './routes/admin/sign-up'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as BlogAboutRouteImport } from './routes/_blog/about'
 import { Route as AdminLayoutRouteRouteImport } from './routes/admin/_layout/route'
 import { Route as AdminLayoutIndexRouteImport } from './routes/admin/_layout/index'
+import { Route as BlogSlugIndexRouteImport } from './routes/_blog/$slug/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AdminLayoutSettingsIndexRouteImport } from './routes/admin/_layout/settings/index'
 import { Route as AdminLayoutCalendarIndexRouteImport } from './routes/admin/_layout/calendar/index'
@@ -31,20 +32,14 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+const BlogRouteRoute = BlogRouteRouteImport.update({
+  id: '/_blog',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SlugIndexRoute = SlugIndexRouteImport.update({
-  id: '/$slug/',
-  path: '/$slug/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => BlogRouteRoute,
 } as any)
 const AdminSignUpRoute = AdminSignUpRouteImport.update({
   id: '/sign-up',
@@ -56,6 +51,11 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AdminRoute,
 } as any)
+const BlogAboutRoute = BlogAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => BlogRouteRoute,
+} as any)
 const AdminLayoutRouteRoute = AdminLayoutRouteRouteImport.update({
   id: '/_layout',
   getParentRoute: () => AdminRoute,
@@ -64,6 +64,11 @@ const AdminLayoutIndexRoute = AdminLayoutIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminLayoutRouteRoute,
+} as any)
+const BlogSlugIndexRoute = BlogSlugIndexRouteImport.update({
+  id: '/$slug/',
+  path: '/$slug/',
+  getParentRoute: () => BlogRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -96,13 +101,13 @@ const AdminLayoutArticlesCreateIndexRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/admin': typeof AdminLayoutRouteRouteWithChildren
+  '/about': typeof BlogAboutRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/sign-up': typeof AdminSignUpRoute
-  '/$slug': typeof SlugIndexRoute
+  '/': typeof BlogIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/$slug': typeof BlogSlugIndexRoute
   '/admin/': typeof AdminLayoutIndexRoute
   '/admin/articles': typeof AdminLayoutArticlesIndexRoute
   '/admin/calendar': typeof AdminLayoutCalendarIndexRoute
@@ -110,13 +115,13 @@ export interface FileRoutesByFullPath {
   '/admin/articles/create': typeof AdminLayoutArticlesCreateIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/admin': typeof AdminLayoutIndexRoute
+  '/about': typeof BlogAboutRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/sign-up': typeof AdminSignUpRoute
-  '/$slug': typeof SlugIndexRoute
+  '/': typeof BlogIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/$slug': typeof BlogSlugIndexRoute
   '/admin/articles': typeof AdminLayoutArticlesIndexRoute
   '/admin/calendar': typeof AdminLayoutCalendarIndexRoute
   '/admin/settings': typeof AdminLayoutSettingsIndexRoute
@@ -124,14 +129,15 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/_blog': typeof BlogRouteRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/admin/_layout': typeof AdminLayoutRouteRouteWithChildren
+  '/_blog/about': typeof BlogAboutRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/sign-up': typeof AdminSignUpRoute
-  '/$slug/': typeof SlugIndexRoute
+  '/_blog/': typeof BlogIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_blog/$slug/': typeof BlogSlugIndexRoute
   '/admin/_layout/': typeof AdminLayoutIndexRoute
   '/admin/_layout/articles/': typeof AdminLayoutArticlesIndexRoute
   '/admin/_layout/calendar/': typeof AdminLayoutCalendarIndexRoute
@@ -141,13 +147,13 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/about'
     | '/admin'
+    | '/about'
     | '/admin/login'
     | '/admin/sign-up'
-    | '/$slug'
+    | '/'
     | '/api/auth/$'
+    | '/$slug'
     | '/admin/'
     | '/admin/articles'
     | '/admin/calendar'
@@ -155,27 +161,28 @@ export interface FileRouteTypes {
     | '/admin/articles/create'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/about'
     | '/admin'
+    | '/about'
     | '/admin/login'
     | '/admin/sign-up'
-    | '/$slug'
+    | '/'
     | '/api/auth/$'
+    | '/$slug'
     | '/admin/articles'
     | '/admin/calendar'
     | '/admin/settings'
     | '/admin/articles/create'
   id:
     | '__root__'
-    | '/'
-    | '/about'
+    | '/_blog'
     | '/admin'
     | '/admin/_layout'
+    | '/_blog/about'
     | '/admin/login'
     | '/admin/sign-up'
-    | '/$slug/'
+    | '/_blog/'
     | '/api/auth/$'
+    | '/_blog/$slug/'
     | '/admin/_layout/'
     | '/admin/_layout/articles/'
     | '/admin/_layout/calendar/'
@@ -184,10 +191,8 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
+  BlogRouteRoute: typeof BlogRouteRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
-  SlugIndexRoute: typeof SlugIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -200,26 +205,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/_blog': {
+      id: '/_blog'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof BlogRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_blog/': {
+      id: '/_blog/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/$slug/': {
-      id: '/$slug/'
-      path: '/$slug'
-      fullPath: '/$slug'
-      preLoaderRoute: typeof SlugIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRouteRoute
     }
     '/admin/sign-up': {
       id: '/admin/sign-up'
@@ -235,6 +233,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_blog/about': {
+      id: '/_blog/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof BlogAboutRouteImport
+      parentRoute: typeof BlogRouteRoute
+    }
     '/admin/_layout': {
       id: '/admin/_layout'
       path: '/admin'
@@ -248,6 +253,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminLayoutIndexRouteImport
       parentRoute: typeof AdminLayoutRouteRoute
+    }
+    '/_blog/$slug/': {
+      id: '/_blog/$slug/'
+      path: '/$slug'
+      fullPath: '/$slug'
+      preLoaderRoute: typeof BlogSlugIndexRouteImport
+      parentRoute: typeof BlogRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -287,6 +299,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface BlogRouteRouteChildren {
+  BlogAboutRoute: typeof BlogAboutRoute
+  BlogIndexRoute: typeof BlogIndexRoute
+  BlogSlugIndexRoute: typeof BlogSlugIndexRoute
+}
+
+const BlogRouteRouteChildren: BlogRouteRouteChildren = {
+  BlogAboutRoute: BlogAboutRoute,
+  BlogIndexRoute: BlogIndexRoute,
+  BlogSlugIndexRoute: BlogSlugIndexRoute,
+}
+
+const BlogRouteRouteWithChildren = BlogRouteRoute._addFileChildren(
+  BlogRouteRouteChildren,
+)
+
 interface AdminLayoutRouteRouteChildren {
   AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute
   AdminLayoutArticlesIndexRoute: typeof AdminLayoutArticlesIndexRoute
@@ -321,10 +349,8 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
+  BlogRouteRoute: BlogRouteRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
-  SlugIndexRoute: SlugIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

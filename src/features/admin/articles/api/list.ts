@@ -8,6 +8,10 @@ const articlesListSchema = z.object({
   status: z.enum(['published', 'draft', 'scheduled']),
 })
 
+const articleBySlugSchema = z.object({
+  slug: z.string().min(1),
+})
+
 export const articlesList = createServerFn({ method: 'GET' })
   .inputValidator(articlesListSchema)
   .handler(async ({ data }) => {
@@ -62,3 +66,46 @@ export const articlesListCount = createServerFn({ method: 'GET' }).handler(async
 
   return result
 })
+
+export const articleBySlug = createServerFn({ method: 'GET' })
+  .inputValidator(articleBySlugSchema)
+  .handler(async ({ data }) => {
+    const rows = await db
+      .select({
+        id: articles.id,
+        title: articles.title,
+        content: articles.content,
+        slug: articles.slug,
+        status: articles.status,
+        createdAt: articles.createdAt,
+        updatedAt: articles.updatedAt,
+        publishedAt: articles.publishedAt,
+        readTime: articles.readTime,
+        views: articles.views,
+        authorName: user.name,
+      })
+      .from(articles)
+      .leftJoin(user, eq(articles.authorId, user.id))
+      .where(eq(articles.slug, data.slug))
+      .limit(1)
+
+    const article = rows.at(0)
+
+    if (!article) {
+      return null
+    }
+
+    return {
+      id: article.id,
+      title: article.title,
+      content: article.content,
+      slug: article.slug,
+      status: article.status,
+      createdAt: article.createdAt.toISOString(),
+      updatedAt: article.updatedAt.toISOString(),
+      publishedAt: article.publishedAt ? article.publishedAt.toISOString() : null,
+      readTime: article.readTime,
+      views: article.views,
+      authorName: article.authorName ?? null,
+    }
+  })

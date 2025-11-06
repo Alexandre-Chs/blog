@@ -1,8 +1,8 @@
-import { DateTime } from 'luxon'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { articlesPublished } from '../api/home'
 import { PlateMarkdown } from '@/components/PlateMarkdown'
+import { formatDate } from '@/utils/formatDate'
 
 const HomePage = () => {
   const { data: articles, isPending } = useQuery({
@@ -14,31 +14,12 @@ const HomePage = () => {
     return <div>Loading...</div>
   }
 
-  const formatDate = (dateString: string) => {
-    return DateTime.fromISO(dateString).toFormat('dd LL yyyy')
-  }
-
   const latestArticles = articles ?? []
   const hasArticles = latestArticles.length > 0
   const popularArticles = latestArticles.slice(0, 3)
 
   return (
     <div className="min-h-screen bg-white text-[#1a1a1a]">
-      <header className="border-b border-gray-100">
-        <div className="mx-auto flex max-w-screen-xl items-center justify-between px-6 py-6">
-          <span className="text-xl font-semibold tracking-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
-            smith.
-          </span>
-          <Link
-            to="/about"
-            className="text-sm font-medium text-[#111] transition-colors duration-200 hover:text-[#555]"
-            style={{ fontFamily: 'Inter, sans-serif' }}
-          >
-            About
-          </Link>
-        </div>
-      </header>
-
       <main className="mx-auto max-w-screen-xl px-6" style={{ fontFamily: 'Merriweather, serif' }}>
         <section className={`${hasArticles ? 'mt-16' : ''}`}>
           {hasArticles && (
@@ -62,7 +43,7 @@ const HomePage = () => {
                       className={`${isFirst ? 'pb-12' : 'py-12'} ${isLast ? '' : 'border-b border-gray-100'}`}
                     >
                       <p
-                        className="text-sm uppercase tracking-wide text-gray-500"
+                        className="text-sm lowercase tracking-wide text-gray-500"
                         style={{ fontFamily: 'Inter, sans-serif' }}
                       >
                         {formatDate(article.publishedAt)}
