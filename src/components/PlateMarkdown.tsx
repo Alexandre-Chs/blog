@@ -14,7 +14,7 @@ import { BlockquoteElement } from '@/components/ui/blockquote-node'
 import { H1Element, H2Element, H3Element } from '@/components/ui/heading-node'
 
 export interface PlateMarkdownProps {
-  children: string // Le contenu Markdown
+  children: string
   className?: string
 }
 

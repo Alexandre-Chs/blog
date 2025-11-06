@@ -74,7 +74,7 @@ export default function ArticlesCreatePage() {
             onChange={handleTitleChange}
             type="text"
             placeholder="Title"
-            className="outline-none bg-transparent text-2xl"
+            className="outline-none bg-transparent text-2xl w-full"
           />
         </div>
         <div className="max-w-5xl mx-auto">

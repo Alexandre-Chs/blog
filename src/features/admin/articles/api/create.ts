@@ -33,6 +33,7 @@ export const articleCreate = createServerFn({ method: 'POST' })
             .trim()
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/(^-|-$)+/g, ''),
+          publishedAt: new Date(),
         })
         .returning()
 
