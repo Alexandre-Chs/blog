@@ -1,4 +1,5 @@
 import { boolean, integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import type { InferSelectModel } from 'drizzle-orm'
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -80,3 +81,5 @@ export const articles = pgTable('articles', {
     .notNull(),
   publishedAt: timestamp('published_at'),
 })
+
+export type Article = InferSelectModel<typeof articles>

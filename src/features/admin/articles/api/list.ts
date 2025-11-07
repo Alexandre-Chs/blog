@@ -31,16 +31,7 @@ export const articlesList = createServerFn({ method: 'GET' })
       .where(eq(articles.status, data.status))
       .orderBy(desc(articles.updatedAt))
 
-    return rows.map((row) => ({
-      id: row.id,
-      title: row.title,
-      slug: row.slug,
-      status: row.status,
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
-      publishedAt: row.publishedAt ? row.publishedAt.toISOString() : null,
-      authorName: row.authorName ?? null,
-    }))
+    return rows
   })
 
 export const articlesListCount = createServerFn({ method: 'GET' }).handler(async () => {
@@ -95,17 +86,5 @@ export const articleBySlug = createServerFn({ method: 'GET' })
       return null
     }
 
-    return {
-      id: article.id,
-      title: article.title,
-      content: article.content,
-      slug: article.slug,
-      status: article.status,
-      createdAt: article.createdAt.toISOString(),
-      updatedAt: article.updatedAt.toISOString(),
-      publishedAt: article.publishedAt ? article.publishedAt.toISOString() : null,
-      readTime: article.readTime,
-      views: article.views,
-      authorName: article.authorName ?? null,
-    }
+    return article
   })

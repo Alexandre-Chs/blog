@@ -2,7 +2,8 @@ import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { articlesPublished } from '../api/home'
 import { PlateMarkdown } from '@/components/PlateMarkdown'
-import { formatDate } from '@/utils/formatDate'
+import ArticleNotFound from '@/features/blog/components/ArticleNotFound'
+import Article from '@/features/blog/components/Article'
 
 const HomePage = () => {
   const { data: articles, isPending } = useQuery({
@@ -32,77 +33,10 @@ const HomePage = () => {
             className={`flex flex-col gap-16 lg:mt-16 lg:flex-row lg:gap-20 min-h-[55vh] ${hasArticles ? 'mt-12' : ''}`}
           >
             <div className={`flex flex-1 flex-col lg:min-w-0 ${!hasArticles ? 'justify-center' : ''}`}>
-              {hasArticles ? (
-                latestArticles.map((article, index) => {
-                  const isLast = index === latestArticles.length - 1
-                  const isFirst = index === 0
-
-                  return (
-                    <article
-                      key={article.id}
-                      className={`${isFirst ? 'pb-12' : 'py-12'} ${isLast ? '' : 'border-b border-gray-100'}`}
-                    >
-                      <p
-                        className="text-sm lowercase tracking-wide text-gray-500"
-                        style={{ fontFamily: 'Inter, sans-serif' }}
-                      >
-                        {formatDate(article.publishedAt)}
-                      </p>
-
-                      <h2
-                        className="mt-3 text-3xl font-semibold leading-snug text-[#1a1a1a]"
-                        style={{ fontFamily: 'Inter, sans-serif' }}
-                      >
-                        {article.title}
-                      </h2>
-
-                      <div className="mt-5">
-                        <PlateMarkdown className="prose prose-lg max-w-none text-gray-700">
-                          {article.content.slice(0, 100) + (article.content.length > 100 ? '...' : '')}
-                        </PlateMarkdown>
-                      </div>
-
-                      <div className="mt-8 flex flex-col gap-6 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="flex flex-col gap-1">
-                          <span
-                            className="text-sm font-semibold text-[#1a1a1a]"
-                            style={{ fontFamily: 'Inter, sans-serif' }}
-                          >
-                            {/* {article.author} */}
-                            the team blogai
-                          </span>
-                        </div>
-
-                        <Link
-                          params={{ slug: article.slug }}
-                          to="/$slug"
-                          className="text-sm font-medium text-gray-600 transition-colors duration-200 hover:text-[#555]"
-                          style={{ fontFamily: 'Inter, sans-serif' }}
-                        >
-                          Read more →
-                        </Link>
-                      </div>
-                    </article>
-                  )
-                })
+              {articles && articles.length ? (
+                articles.map((article, index) => <Article article={article} index={index} articles={articles} />)
               ) : (
-                <div className="mx-auto flex w-full max-w-3xl flex-col items-center justify-center rounded-lg border border-dashed border-gray-200 bg-gray-50 px-8 py-16 text-center">
-                  <span
-                    className="text-xs font-semibold uppercase tracking-[0.35em] text-gray-400"
-                    style={{ fontFamily: 'Inter, sans-serif' }}
-                  >
-                    Empty Feed
-                  </span>
-                  <h2
-                    className="mt-6 text-2xl font-semibold text-[#1a1a1a]"
-                    style={{ fontFamily: 'Inter, sans-serif' }}
-                  >
-                    No articles yet
-                  </h2>
-                  <p className="mt-4 text-base leading-relaxed text-gray-600">
-                    When new stories are published, they’ll appear here. Until then, enjoy the quiet moment.
-                  </p>
-                </div>
+                <ArticleNotFound />
               )}
             </div>
 
