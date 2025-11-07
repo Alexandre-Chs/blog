@@ -76,15 +76,6 @@ const HomePage = () => {
           </div>
         </section>
       </main>
-
-      <footer className="border-t border-gray-100">
-        <div
-          className="mx-auto max-w-screen-lg px-6 py-10 text-center text-sm text-gray-500"
-          style={{ fontFamily: 'Merriweather, serif' }}
-        >
-          © 2025 BlogAI — Built with ❤️
-        </div>
-      </footer>
     </div>
   )
 }

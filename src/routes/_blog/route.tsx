@@ -6,8 +6,8 @@ export const Route = createFileRoute('/_blog')({
 
 function RouteComponent() {
   return (
-    <div>
-      <header className="border-b border-gray-100">
+    <>
+      <header>
         <div className="mx-auto flex max-w-screen-xl items-center justify-between px-6 py-6">
           <Link to="/" className="text-xl font-semibold tracking-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
             blogai.
@@ -22,6 +22,14 @@ function RouteComponent() {
         </div>
       </header>
       <Outlet />
-    </div>
+      <footer>
+        <div
+          className="mx-auto max-w-screen-lg px-6 py-10 text-center text-sm text-gray-500"
+          style={{ fontFamily: 'Merriweather, serif' }}
+        >
+          © 2025 BlogAI — Built with ❤️
+        </div>
+      </footer>
+    </>
   )
 }
