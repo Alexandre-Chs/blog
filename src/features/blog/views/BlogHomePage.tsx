@@ -1,9 +1,9 @@
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { articlesPublished } from '../api/home'
-import { PlateMarkdown } from '@/components/PlateMarkdown'
-import ArticleNotFound from '@/features/blog/components/ArticleNotFound'
 import Article from '@/features/blog/components/Article'
+import { formatDate } from '@/utils/formatDate'
+import { PlateMarkdown } from '@/components/PlateMarkdown'
 
 const HomePage = () => {
   const { data: articles, isPending } = useQuery({
@@ -12,68 +12,69 @@ const HomePage = () => {
   })
 
   if (isPending) {
-    return <div>Loading...</div>
+    return (
+      <div
+        className="flex flex-1 items-center justify-center bg-white text-sm text-neutral-500"
+        style={{ fontFamily: 'Inter, sans-serif' }}
+      >
+        Loading...
+      </div>
+    )
   }
 
-  const latestArticles = articles ?? []
-  const hasArticles = latestArticles.length > 0
-  const popularArticles = latestArticles.slice(0, 3)
+  if (!articles || articles.length === 0) {
+    return (
+      <div
+        className="flex flex-1 items-center justify-center bg-white text-neutral-900"
+        style={{ fontFamily: 'Inter, sans-serif' }}
+      >
+        <div className="mx-auto w-full max-w-2xl py-24 text-center">
+          <p className="text-xs uppercase tracking-[0.35em] text-neutral-400">Quiet for now</p>
+          <p className="mt-4 text-2xl font-semibold text-neutral-900">No articles published yet</p>
+          <p className="mt-3 text-base leading-relaxed text-neutral-600">
+            Check back soon&mdash;new posts will appear here as soon as they go live.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  const articlesPopular = articles.slice(0, 4)
 
   return (
-    <div className="min-h-screen bg-white text-[#1a1a1a]">
-      <main className="mx-auto max-w-screen-xl px-6" style={{ fontFamily: 'Merriweather, serif' }}>
-        <section className={`${hasArticles ? 'mt-16' : ''}`}>
-          {hasArticles && (
-            <h1 className="text-3xl font-bold tracking-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
-              Latest Articles
-            </h1>
-          )}
-
-          <div
-            className={`flex flex-col gap-16 lg:mt-16 lg:flex-row lg:gap-20 min-h-[55vh] ${hasArticles ? 'mt-12' : ''}`}
-          >
-            <div className={`flex flex-1 flex-col lg:min-w-0 ${!hasArticles ? 'justify-center' : ''}`}>
-              {articles && articles.length ? (
-                articles.map((article, index) => <Article article={article} index={index} articles={articles} />)
-              ) : (
-                <ArticleNotFound />
-              )}
-            </div>
-
-            {hasArticles && (
-              <aside className="lg:sticky lg:top-24 lg:w-[30%] lg:min-w-[260px] lg:self-start">
-                <h2 className="text-xl font-semibold text-[#1a1a1a]" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  Popular Articles
-                </h2>
-
-                <div className="mt-6 divide-y divide-gray-100 border-t border-gray-100">
-                  {popularArticles.map((article) => (
-                    <article key={article.id} className="py-6">
-                      <Link
-                        params={{ slug: article.slug }}
-                        to="/$slug"
-                        className="text-base font-semibold text-[#111] transition-colors duration-200 hover:text-[#555]"
-                        style={{ fontFamily: 'Inter, sans-serif' }}
-                      >
-                        {article.title}
-                      </Link>
-                      <div className="mt-3">
-                        <PlateMarkdown className="prose prose-sm max-w-none text-gray-600">
-                          {article.content.slice(0, 70) + (article.content.length > 70 ? '...' : '')}
-                        </PlateMarkdown>
-                      </div>
-                      <p
-                        className="mt-4 text-xs uppercase tracking-wide text-gray-500"
-                        style={{ fontFamily: 'Inter, sans-serif' }}
-                      >
-                        {/* {viewsFormatter.format(article.views)} views · {article.readTime} min read */}
-                      </p>
-                    </article>
-                  ))}
-                </div>
-              </aside>
-            )}
+    <div className="flex flex-1 flex-col bg-white text-neutral-900" style={{ fontFamily: 'Inter, sans-serif' }}>
+      <main className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 lg:px-0 lg:py-16">
+        <section className="lg:grid lg:grid-cols-[minmax(0,720px)_220px] lg:items-start lg:justify-center lg:gap-14">
+          <div className="w-full max-w-2xl space-y-10">
+            {articles.map((article, index) => (
+              <Article key={article.id} article={article} index={index} articles={articles} />
+            ))}
           </div>
+
+          <aside className="mt-12 text-sm text-neutral-500 lg:mt-0">
+            <p className="text-xs uppercase tracking-[0.35em] text-neutral-400 pb-1">Popular</p>
+            <div className="mt-2 space-y-6">
+              {articlesPopular.map((article) => (
+                <article key={article.id} className="space-y-2">
+                  <Link
+                    params={{ slug: article.slug }}
+                    to="/$slug"
+                    className="text-sm font-semibold text-neutral-800 hover:underline"
+                  >
+                    {article.title}
+                  </Link>
+                  <p className="text-sm leading-relaxed text-neutral-500 mt-2">
+                    <PlateMarkdown>
+                      {article.content.slice(0, 90) + (article.content.length > 90 ? '…' : '')}
+                    </PlateMarkdown>
+                  </p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-neutral-400">
+                    {formatDate(article.publishedAt ?? article.updatedAt)}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </aside>
         </section>
       </main>
     </div>

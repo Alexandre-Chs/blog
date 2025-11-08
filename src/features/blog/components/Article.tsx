@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import type { Article } from '@/db/schema'
-import { PlateMarkdown } from '@/components/PlateMarkdown'
 import { formatDate } from '@/utils/formatDate'
+import { PlateMarkdown } from '@/components/PlateMarkdown'
 
 type ArticlePropsType = {
   article: Article
@@ -11,44 +11,28 @@ type ArticlePropsType = {
 
 export default function Article({ article, articles, index }: ArticlePropsType) {
   const isLast = index === articles.length - 1
-  const isFirst = index === 0
+  const authorName = (article as Article & { authorName?: string }).authorName ?? 'Editorial Team'
 
   return (
-    <article key={article.id} className={`${isFirst ? 'pb-12' : 'py-12'} ${isLast ? '' : 'border-b border-gray-100'}`}>
-      <p className="text-sm lowercase tracking-wide text-gray-500" style={{ fontFamily: 'Inter, sans-serif' }}>
+    <article
+      className={`space-y-3 sm:space-y-4 ${isLast ? '' : 'pb-10 md:pb-12'} ${isLast ? '' : 'border-b border-neutral-100'}`}
+      style={{ fontFamily: 'Inter, sans-serif' }}
+    >
+      <p className="text-xs font-medium uppercase tracking-[0.3em] text-neutral-500">
         {formatDate(article.publishedAt)}
       </p>
 
-      <h2
-        className="mt-3 text-3xl font-semibold leading-snug text-[#1a1a1a]"
-        style={{ fontFamily: 'Inter, sans-serif' }}
-      >
-        {article.title}
-      </h2>
+      <Link params={{ slug: article.slug }} to="/$slug" className="group block">
+        <h2 className="cursor-pointer text-2xl font-semibold leading-snug text-neutral-900 group-hover:underline">
+          {article.title}
+        </h2>
+      </Link>
 
-      <div className="mt-5">
-        <PlateMarkdown className="prose prose-lg max-w-none text-gray-700">
-          {article.content.slice(0, 100) + (article.content.length > 100 ? '...' : '')}
-        </PlateMarkdown>
-      </div>
+      <p className="text-base leading-relaxed text-neutral-700">
+        <PlateMarkdown>{article.content.slice(0, 100) + (article.content.length > 100 ? '...' : '')}</PlateMarkdown>
+      </p>
 
-      <div className="mt-8 flex flex-col gap-6 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-[#1a1a1a]" style={{ fontFamily: 'Inter, sans-serif' }}>
-            {/* {article.author} */}
-            the team blogai
-          </span>
-        </div>
-
-        <Link
-          params={{ slug: article.slug }}
-          to="/$slug"
-          className="text-sm font-medium text-gray-600 transition-colors duration-200 hover:text-[#555]"
-          style={{ fontFamily: 'Inter, sans-serif' }}
-        >
-          Read more →
-        </Link>
-      </div>
+      <p className="text-sm font-medium text-neutral-500">{authorName}</p>
     </article>
   )
 }
