@@ -24,6 +24,7 @@ import { Route as AdminLayoutSettingsIndexRouteImport } from './routes/admin/_la
 import { Route as AdminLayoutCalendarIndexRouteImport } from './routes/admin/_layout/calendar/index'
 import { Route as AdminLayoutArticlesIndexRouteImport } from './routes/admin/_layout/articles/index'
 import { Route as AdminLayoutArticlesCreateIndexRouteImport } from './routes/admin/_layout/articles/create/index'
+import { Route as AdminLayoutArticlesArticleIdEditIndexRouteImport } from './routes/admin/_layout/articles/$articleId/edit/index'
 
 const AdminRouteImport = createFileRoute('/admin')()
 
@@ -99,6 +100,12 @@ const AdminLayoutArticlesCreateIndexRoute =
     path: '/articles/create/',
     getParentRoute: () => AdminLayoutRouteRoute,
   } as any)
+const AdminLayoutArticlesArticleIdEditIndexRoute =
+  AdminLayoutArticlesArticleIdEditIndexRouteImport.update({
+    id: '/articles/$articleId/edit/',
+    path: '/articles/$articleId/edit/',
+    getParentRoute: () => AdminLayoutRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/admin': typeof AdminLayoutRouteRouteWithChildren
@@ -113,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/admin/calendar': typeof AdminLayoutCalendarIndexRoute
   '/admin/settings': typeof AdminLayoutSettingsIndexRoute
   '/admin/articles/create': typeof AdminLayoutArticlesCreateIndexRoute
+  '/admin/articles/$articleId/edit': typeof AdminLayoutArticlesArticleIdEditIndexRoute
 }
 export interface FileRoutesByTo {
   '/admin': typeof AdminLayoutIndexRoute
@@ -126,6 +134,7 @@ export interface FileRoutesByTo {
   '/admin/calendar': typeof AdminLayoutCalendarIndexRoute
   '/admin/settings': typeof AdminLayoutSettingsIndexRoute
   '/admin/articles/create': typeof AdminLayoutArticlesCreateIndexRoute
+  '/admin/articles/$articleId/edit': typeof AdminLayoutArticlesArticleIdEditIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +152,7 @@ export interface FileRoutesById {
   '/admin/_layout/calendar/': typeof AdminLayoutCalendarIndexRoute
   '/admin/_layout/settings/': typeof AdminLayoutSettingsIndexRoute
   '/admin/_layout/articles/create/': typeof AdminLayoutArticlesCreateIndexRoute
+  '/admin/_layout/articles/$articleId/edit/': typeof AdminLayoutArticlesArticleIdEditIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/admin/calendar'
     | '/admin/settings'
     | '/admin/articles/create'
+    | '/admin/articles/$articleId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/admin'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/admin/calendar'
     | '/admin/settings'
     | '/admin/articles/create'
+    | '/admin/articles/$articleId/edit'
   id:
     | '__root__'
     | '/_blog'
@@ -188,6 +200,7 @@ export interface FileRouteTypes {
     | '/admin/_layout/calendar/'
     | '/admin/_layout/settings/'
     | '/admin/_layout/articles/create/'
+    | '/admin/_layout/articles/$articleId/edit/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -296,6 +309,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutArticlesCreateIndexRouteImport
       parentRoute: typeof AdminLayoutRouteRoute
     }
+    '/admin/_layout/articles/$articleId/edit/': {
+      id: '/admin/_layout/articles/$articleId/edit/'
+      path: '/articles/$articleId/edit'
+      fullPath: '/admin/articles/$articleId/edit'
+      preLoaderRoute: typeof AdminLayoutArticlesArticleIdEditIndexRouteImport
+      parentRoute: typeof AdminLayoutRouteRoute
+    }
   }
 }
 
@@ -321,6 +341,7 @@ interface AdminLayoutRouteRouteChildren {
   AdminLayoutCalendarIndexRoute: typeof AdminLayoutCalendarIndexRoute
   AdminLayoutSettingsIndexRoute: typeof AdminLayoutSettingsIndexRoute
   AdminLayoutArticlesCreateIndexRoute: typeof AdminLayoutArticlesCreateIndexRoute
+  AdminLayoutArticlesArticleIdEditIndexRoute: typeof AdminLayoutArticlesArticleIdEditIndexRoute
 }
 
 const AdminLayoutRouteRouteChildren: AdminLayoutRouteRouteChildren = {
@@ -329,6 +350,8 @@ const AdminLayoutRouteRouteChildren: AdminLayoutRouteRouteChildren = {
   AdminLayoutCalendarIndexRoute: AdminLayoutCalendarIndexRoute,
   AdminLayoutSettingsIndexRoute: AdminLayoutSettingsIndexRoute,
   AdminLayoutArticlesCreateIndexRoute: AdminLayoutArticlesCreateIndexRoute,
+  AdminLayoutArticlesArticleIdEditIndexRoute:
+    AdminLayoutArticlesArticleIdEditIndexRoute,
 }
 
 const AdminLayoutRouteRouteWithChildren =

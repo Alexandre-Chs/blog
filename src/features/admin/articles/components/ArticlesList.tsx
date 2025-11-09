@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { articlesList } from '../api/list'
+import ArticleActions from './ArticleActions'
 
 type ArticlesListProps = {
   articleStatus: 'published' | 'scheduled' | 'draft'
@@ -30,13 +31,14 @@ export default function ArticlesList({ articleStatus }: ArticlesListProps) {
                 <div className="flex flex-col justify-between flex-1">
                   <div className="flex items-start justify-between gap-3">
                     <div className="truncate text-base font-semibold text-foreground">{article.title.trim()}</div>
-                    {article.status ? (
-                      <span className="flex-shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-medium capitalize text-muted-foreground">
-                        {article.status}
-                      </span>
-                    ) : null}
+                    <span className="flex-shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-medium capitalize text-muted-foreground">
+                      {article.status}
+                    </span>
                   </div>
-                  <span className="text-sm">{article.authorName ? article.authorName : 'Author unknown'}</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">{article.authorName ? article.authorName : 'Author unknown'}</span>
+                    <ArticleActions articleId={article.id} />
+                  </div>
                 </div>
               </article>
             </div>
