@@ -14,7 +14,6 @@ fi
 
 export DATABASE_URL="$DATABASE_URL_PROD"
 
-pnpm drizzle-kit generate --config drizzle.config.ts
 pnpm drizzle-kit migrate --config drizzle.config.ts
 
 echo "✅ Migration completed successfully!"
