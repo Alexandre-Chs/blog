@@ -2,6 +2,7 @@ import { revalidateLogic, useForm } from '@tanstack/react-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
+import { useRouter } from '@tanstack/react-router'
 import { settingsGeneralList, settingsGeneralUpdate, settingsGeneralformSchema } from '../api/list'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { Input } from '@/components/ui/input'
@@ -20,6 +21,8 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export default function SettingsPage() {
+  const router = useRouter()
+
   const { data: defaultFormValue, isSuccess } = useQuery({
     queryKey: ['settingsGeneral'],
     queryFn: () => settingsGeneralList(),
@@ -29,6 +32,7 @@ export default function SettingsPage() {
     mutationFn: settingsGeneralUpdate,
     onSuccess: () => {
       toast.success('Settings updated successfully!')
+      router.invalidate()
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -43,7 +47,6 @@ export default function SettingsPage() {
     if (isSuccess) form.reset(defaultFormValue)
   }, [defaultFormValue])
 
-  console.log('la data value', defaultFormValue)
   const form = useForm({
     defaultValues: {
       name: '',
@@ -54,7 +57,6 @@ export default function SettingsPage() {
     },
     onSubmit: ({ value }) => {
       settingsGeneralMutation.mutate({ data: { name: value.name } })
-      console.log(value)
     },
   })
 

@@ -1,5 +1,5 @@
-import * as React from 'react'
 import { Link, useRouterState } from '@tanstack/react-router'
+import type { ComponentProps } from 'react'
 import {
   Sidebar,
   SidebarContent,
@@ -37,8 +37,11 @@ const data = {
     },
   ],
 }
+type AppSidebarProps = ComponentProps<typeof Sidebar> & {
+  projectName: string
+}
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ projectName, ...props }: AppSidebarProps) {
   const routerState = useRouterState()
 
   const handleRouteActive = (to: string) => {
@@ -51,7 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <Link to="/admin" className="flex items-center gap-x-2">
           <img src="/logo.png" alt="Logo" width={40} />
-          <span className="text-lg font-semibold">Blog AI</span>
+          <span className="text-lg font-semibold">{projectName}</span>
         </Link>
       </SidebarHeader>
       <SidebarContent>
