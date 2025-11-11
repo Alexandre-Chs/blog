@@ -1,5 +1,6 @@
 import { HeadContent, Scripts, createRootRouteWithContext } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+import { FormDevtoolsPlugin } from '@tanstack/react-form-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import { Toaster } from 'sonner'
@@ -59,6 +60,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 render: <TanStackRouterDevtoolsPanel />,
               },
               TanStackQueryDevtools,
+              FormDevtoolsPlugin(),
             ]}
           />
         )}

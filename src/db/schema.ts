@@ -1,4 +1,4 @@
-import { boolean, integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { boolean, integer, jsonb, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import type { InferSelectModel } from 'drizzle-orm'
 
 export const user = pgTable('user', {
@@ -83,3 +83,8 @@ export const articles = pgTable('articles', {
 })
 
 export type Article = InferSelectModel<typeof articles>
+
+export const settings = pgTable('settings', {
+  key: text('key').primaryKey(),
+  value: jsonb('value').$type<{ name?: string }>().default({ name: 'blogai.' }),
+})

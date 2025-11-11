@@ -50,9 +50,7 @@ export const articlesListCount = createServerFn({ method: 'GET' }).handler(async
   }
 
   counts.forEach((row) => {
-    if (row.status === 'published' || row.status === 'scheduled' || row.status === 'draft') {
-      result[row.status] = row.count
-    }
+    result[row.status] = row.count
   })
 
   return result
