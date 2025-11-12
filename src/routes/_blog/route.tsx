@@ -13,6 +13,21 @@ export const Route = createFileRoute('/_blog')({
     }
   },
 
+  head: ({ match }) => {
+    const projectName = match.context.settings.general.name
+    return {
+      meta: [
+        {
+          title: 'Blog - ' + projectName,
+        },
+        {
+          name: 'description',
+          content: 'A blog about ' + projectName,
+        },
+      ],
+    }
+  },
+
   component: RouteComponent,
 })
 
