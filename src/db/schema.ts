@@ -1,12 +1,15 @@
 import { boolean, integer, jsonb, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import type { InferSelectModel } from 'drizzle-orm'
 
+export const userRoleEnum = pgEnum('role', ['user', 'admin'])
+
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').default(false).notNull(),
   image: text('image'),
+  role: userRoleEnum().notNull().default('user'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
@@ -86,5 +89,5 @@ export type Article = InferSelectModel<typeof articles>
 
 export const settings = pgTable('settings', {
   key: text('key').primaryKey(),
-  value: jsonb('value').$type<{ name?: string }>().default({ name: 'blogai.' }),
+  value: jsonb('value').$type<{ name?: string }>().default({ name: 'my blog' }),
 })

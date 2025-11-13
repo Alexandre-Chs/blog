@@ -11,6 +11,10 @@ export const Route = createFileRoute('/admin/_layout')({
       throw redirect({ to: '/admin/login', replace: true })
     }
 
+    if (session.user.role !== 'admin') {
+      throw redirect({ to: '/admin/login', replace: true })
+    }
+
     const settingsGeneral = await settingsGeneralList()
 
     return {
