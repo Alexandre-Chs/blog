@@ -33,7 +33,7 @@ export const auth = betterAuth({
         const existing = await db.select().from(schema.user).limit(1)
         if (existing.length > 0) {
           throw new APIError('BAD_REQUEST', {
-            message: 'Signup disabled: admin already exists',
+            message: 'Error signup.',
           })
         }
       }
@@ -46,7 +46,7 @@ export const auth = betterAuth({
           const existing = await db.select().from(schema.user).limit(1)
           if (existing.length > 0) {
             throw new APIError('BAD_REQUEST', {
-              message: 'Cannot create user: admin already exists',
+              message: 'Error signup.',
             })
           }
           return { data: { ...user, role: 'admin' } }
