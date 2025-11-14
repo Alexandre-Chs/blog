@@ -9,7 +9,11 @@ import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth/auth-client'
 import { loginSchema } from '@/lib/zod'
 
-export function Login() {
+type LoginProps = {
+  existUser: boolean
+}
+
+export function Login({ existUser }: LoginProps) {
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
   const [error, setError] = useState<string | undefined>(undefined)
 
@@ -36,6 +40,7 @@ export function Login() {
         setError(authError.message)
         return
       }
+
       navigate({ to: '/admin' })
     } catch (err) {
       if (err instanceof z.ZodError) setError(err.issues.map((issue) => issue.message).join(', '))
@@ -80,9 +85,11 @@ export function Login() {
                     <Button type="submit" className="cursor-pointer">
                       Login
                     </Button>
-                    <FieldDescription className="text-center">
-                      Don&apos;t have an account? <Link to="/admin/sign-up">Sign up</Link>
-                    </FieldDescription>
+                    {!existUser && (
+                      <FieldDescription className="text-center">
+                        Don&apos;t have an account? <Link to="/admin/sign-up">Sign up</Link>
+                      </FieldDescription>
+                    )}
                   </Field>
                 </FieldGroup>
               </form>
