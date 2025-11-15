@@ -1,22 +1,24 @@
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { articleBySlug } from '../api/list'
+import { useServerFn } from '@tanstack/react-start'
 import { PlateMarkdown } from '@/components/PlateMarkdown'
 import { formatDate } from '@/utils/formatDate'
 import ArticleNotFound from '@/features/blog/components/ArticleNotFound'
+import { articleBySlug } from '@/features/blog/api/articles'
 
 type ArticlePageProps = {
   slug: string
 }
 
 export default function ArticlePage({ slug }: ArticlePageProps) {
+  const articleBySlugFn = useServerFn(articleBySlug)
   const {
     data: article,
     isPending,
     isError,
   } = useQuery({
     queryKey: ['article', slug],
-    queryFn: () => articleBySlug({ data: { slug } }),
+    queryFn: () => articleBySlugFn({ data: { slug } }),
   })
 
   if (isPending) {

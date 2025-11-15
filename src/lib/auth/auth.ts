@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth'
 import { APIError, createAuthMiddleware } from 'better-auth/api'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { eq } from 'drizzle-orm'
 import { db } from '@/index'
 import * as schema from '@/db/schema'
 
@@ -50,6 +51,16 @@ export const auth = betterAuth({
             })
           }
           return { data: { ...user, role: 'admin' } }
+        },
+        after: async () => {
+          const exists = await db.select().from(schema.settings).where(eq(schema.settings.key, 'general')).limit(1)
+
+          if (exists.length === 0) {
+            await db.insert(schema.settings).values({
+              key: 'general',
+              value: { name: 'my blog' },
+            })
+          }
         },
       },
     },

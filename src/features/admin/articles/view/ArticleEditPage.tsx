@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { MarkdownPlugin } from '@platejs/markdown'
 import { toast } from 'sonner'
+import { useServerFn } from '@tanstack/react-start'
 import { articleById, articleUpdate } from '../api/edit'
 import type { PlateEditor } from 'platejs/react'
 import Editor from '@/features/editor/Editor'
@@ -15,11 +16,12 @@ type ArticleEditPageProps = {
 export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
   const editorRef = useRef<PlateEditor>(null)
   const [title, setTitle] = useState('')
+  const articleByIdFn = useServerFn(articleById)
   const navigate = useNavigate()
 
   const { data: article, isPending } = useQuery({
     queryKey: ['articleEdit', articleId],
-    queryFn: () => articleById({ data: { articleId } }),
+    queryFn: () => articleByIdFn({ data: { articleId } }),
   })
 
   const updateArticleMutation = useMutation({

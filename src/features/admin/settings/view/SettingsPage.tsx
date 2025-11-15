@@ -3,6 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { useRouter } from '@tanstack/react-router'
+import { useServerFn } from '@tanstack/react-start'
 import { settingsGeneralList, settingsGeneralUpdate, settingsGeneralformSchema } from '../api/list'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { Input } from '@/components/ui/input'
@@ -21,11 +22,12 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export default function SettingsPage() {
+  const settingsGeneralListFn = useServerFn(settingsGeneralList)
   const router = useRouter()
 
   const { data: defaultFormValue, isSuccess } = useQuery({
     queryKey: ['settingsGeneral'],
-    queryFn: () => settingsGeneralList(),
+    queryFn: () => settingsGeneralListFn(),
   })
 
   const settingsGeneralMutation = useMutation({

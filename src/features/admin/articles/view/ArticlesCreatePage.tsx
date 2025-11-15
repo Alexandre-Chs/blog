@@ -3,6 +3,7 @@ import { ClientOnly, useNavigate } from '@tanstack/react-router'
 import { MarkdownPlugin } from '@platejs/markdown'
 import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
+import { useServerFn } from '@tanstack/react-start'
 import { articleCreate } from '../api/create'
 import type { PlateEditor } from 'platejs/react'
 import Editor from '@/features/editor/Editor'
@@ -11,6 +12,7 @@ import { Button } from '@/components/ui/button'
 export default function ArticlesCreatePage() {
   const [title, setTitle] = useState<string>('')
   const editorRef = useRef<PlateEditor>(null)
+  const createArticle = useServerFn(articleCreate)
 
   const navigate = useNavigate()
 
@@ -19,7 +21,7 @@ export default function ArticlesCreatePage() {
   }
 
   const createArticleMutation = useMutation({
-    mutationFn: articleCreate,
+    mutationFn: createArticle,
     onSuccess: () => {
       toast.success('Article published successfully!')
       navigate({ to: '/admin/articles' })

@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { useServerFn } from '@tanstack/react-start'
 import ArticlesList from '../components/ArticlesList'
 import { articlesListCount } from '../api/list'
 import { Badge } from '@/components/ui/badge'
@@ -9,9 +10,10 @@ function ArticlesCount({ count }: { count: number }) {
 }
 
 export default function ArticlesPage() {
+  const articlesListCountFn = useServerFn(articlesListCount)
   const { data: articlesCount } = useQuery({
     queryKey: ['articlesCount'],
-    queryFn: articlesListCount,
+    queryFn: articlesListCountFn,
   })
 
   if (!articlesCount) return null

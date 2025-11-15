@@ -1,10 +1,10 @@
 import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
-import { settingsGeneralList } from '@/features/admin/settings/api/list'
+import { settingsGeneralListBlog } from '@/features/blog/api/settings'
 
 export const Route = createFileRoute('/_blog')({
   beforeLoad: async () => {
     // safe for public
-    const settingsGeneral = await settingsGeneralList()
+    const settingsGeneral = await settingsGeneralListBlog()
 
     return {
       settings: {
@@ -14,7 +14,7 @@ export const Route = createFileRoute('/_blog')({
   },
 
   head: ({ match }) => {
-    const projectName = match.context.settings.general.name
+    const projectName = match.context.settings.general?.name
     return {
       meta: [
         {
@@ -39,7 +39,7 @@ function RouteComponent() {
       <header className="shrink-0">
         <div className="mx-auto flex max-w-screen-xl items-center justify-between px-6 py-6">
           <Link to="/" className="text-xl font-semibold tracking-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
-            {settings.general.name}
+            {settings.general?.name}
           </Link>
           <Link
             to="/about"
@@ -58,7 +58,7 @@ function RouteComponent() {
           className="mx-auto max-w-screen-lg px-6 py-10 text-center text-sm text-gray-500"
           style={{ fontFamily: 'Merriweather, serif' }}
         >
-          © 2025 {settings.general.name} — Built with ❤️
+          © 2025 {settings.general?.name} — Built with ❤️
         </div>
       </footer>
     </div>

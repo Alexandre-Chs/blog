@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { useServerFn } from '@tanstack/react-start'
 import { articlesList } from '../api/list'
 import ArticleActions from './ArticleActions'
 
@@ -7,9 +8,11 @@ type ArticlesListProps = {
 }
 
 export default function ArticlesList({ articleStatus }: ArticlesListProps) {
+  const articlesListsFn = useServerFn(articlesList)
+
   const { data: articles } = useQuery({
     queryKey: ['articles', articleStatus],
-    queryFn: () => articlesList({ data: { status: articleStatus } }),
+    queryFn: () => articlesListsFn({ data: { status: articleStatus } }),
   })
 
   if (!articles || articles.length === 0) {

@@ -89,5 +89,5 @@ export type Article = InferSelectModel<typeof articles>
 
 export const settings = pgTable('settings', {
   key: text('key').primaryKey(),
-  value: jsonb('value').$type<{ name?: string }>().default({ name: 'my blog' }),
+  value: jsonb('value').$type<{ name?: string }>(),
 })
