@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 export default function ArticlesCreatePage() {
   const [title, setTitle] = useState<string>('')
   const editorRef = useRef<PlateEditor>(null)
-  const createArticle = useServerFn(articleCreate)
+  const createArticleFn = useServerFn(articleCreate)
 
   const navigate = useNavigate()
 
@@ -21,7 +21,7 @@ export default function ArticlesCreatePage() {
   }
 
   const createArticleMutation = useMutation({
-    mutationFn: createArticle,
+    mutationFn: createArticleFn,
     onSuccess: () => {
       toast.success('Article published successfully!')
       navigate({ to: '/admin/articles' })

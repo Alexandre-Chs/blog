@@ -17,6 +17,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
   const editorRef = useRef<PlateEditor>(null)
   const [title, setTitle] = useState('')
   const articleByIdFn = useServerFn(articleById)
+  const articleUpdateFn = useServerFn(articleUpdate)
   const navigate = useNavigate()
 
   const { data: article, isPending } = useQuery({
@@ -25,7 +26,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
   })
 
   const updateArticleMutation = useMutation({
-    mutationFn: articleUpdate,
+    mutationFn: articleUpdateFn,
     onSuccess: () => {
       toast.success('Article edited successfully!')
       navigate({ to: '/admin/articles' })
