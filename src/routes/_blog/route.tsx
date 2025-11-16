@@ -35,17 +35,18 @@ function RouteComponent() {
   const { settings } = Route.useRouteContext()
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col px-8 lg:px-0">
       <div className="mx-auto w-full max-w-5xl flex min-h-screen flex-col">
         <header className="shrink-0">
-          <div className="flex w-full items-center justify-start py-6">
+          <div className="flex w-full items-center justify-between py-6">
             <Link
               to="/"
-              className="text-lg font-semibold tracking-tight text-gray-900 transition-colors duration-200 hover:text-gray-600"
+              className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight md:pr-8"
               style={{ fontFamily: 'Inter, sans-serif' }}
             >
               {settings.general?.name}
             </Link>
+            <div className="text-center md:text-left text-lg mt-5 md:pl-8">Best way to find setups.</div>
           </div>
         </header>
         <main className="flex flex-1 flex-col">
@@ -53,7 +54,7 @@ function RouteComponent() {
         </main>
       </div>
 
-      <footer className="shrink-0 bg-gray-50 w-full">
+      <footer className="shrink-0 bg-gray-50 w-full rounded-t-4xl">
         <div className="mx-auto w-full max-w-5xl px-6 py-12 flex flex-col md:flex-row justify-between">
           <div className="flex flex-col">
             <Link

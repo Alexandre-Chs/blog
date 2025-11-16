@@ -1,11 +1,10 @@
-import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
+import { Link } from '@tanstack/react-router'
 import { articlesPublished } from '../api/home'
-import ArticleHome from '@/features/blog/components/ArticleHome'
 import { formatDate } from '@/utils/formatDate'
 import { PlateMarkdown } from '@/components/PlateMarkdown'
 
-const HomePage = () => {
+const BlogHomePage = () => {
   const { data: articles, isPending } = useQuery({
     queryKey: ['articlesPublished'],
     queryFn: articlesPublished,
@@ -39,46 +38,38 @@ const HomePage = () => {
     )
   }
 
-  const articlesPopular = articles.slice(0, 4)
-
   return (
-    <div className="flex flex-1 flex-col bg-white text-neutral-900" style={{ fontFamily: 'Inter, sans-serif' }}>
-      <main className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 lg:px-0 lg:py-16">
-        <section className="lg:grid lg:grid-cols-[minmax(0,720px)_220px] lg:items-start lg:justify-center lg:gap-14">
-          <div className="w-full max-w-2xl space-y-10">
-            {articles.map((article, index) => (
-              <ArticleHome key={article.id} article={article} index={index} articles={articles} />
-            ))}
-          </div>
+    <section className="grid gap-8 lg:grid-cols-2 md:gap-10 mt-20">
+      {articles.map((article) => {
+        const date = formatDate(article.publishedAt ?? article.updatedAt)
+        const coverImageUrl = (article as typeof article & { coverImageUrl?: string | null }).coverImageUrl || true
 
-          <aside className="mt-12 text-sm text-neutral-500 lg:mt-0">
-            <p className="text-xs uppercase tracking-[0.35em] text-neutral-400 pb-1">Popular</p>
-            <div className="mt-2 space-y-6">
-              {articlesPopular.map((article) => (
-                <article key={article.id} className="space-y-2">
-                  <Link
-                    params={{ slug: article.slug }}
-                    to="/$slug"
-                    className="text-sm font-semibold text-neutral-800 hover:underline"
-                  >
-                    {article.title}
-                  </Link>
-                  <p className="text-sm leading-relaxed text-neutral-500 mt-2">
-                    <PlateMarkdown>
-                      {article.content.slice(0, 90) + (article.content.length > 90 ? '…' : '')}
-                    </PlateMarkdown>
-                  </p>
-                  <p className="text-xs uppercase tracking-[0.2em] text-neutral-400">
-                    {formatDate(article.publishedAt ?? article.updatedAt)}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </aside>
-        </section>
-      </main>
-    </div>
+        return (
+          <Link key={article.id} params={{ slug: article.slug }} to="/$slug" className="block">
+            <article className="overflow-hidden rounded-lg border border-neutral-100 bg-white h-[400px]">
+              <div className="overflow-hidden">
+                {coverImageUrl ? (
+                  <img src="/public/articleimg.png" alt={article.title} className="h-[200px] w-full object-cover" />
+                ) : (
+                  <div className="h-[200px] w-full bg-gray-50" />
+                )}
+              </div>
+
+              <div className="px-6 py-6 sm:px-8 sm:py-7">
+                <p className="mb-1 text-xs text-neutral-500">{date}</p>
+                <h2 className="text-2xl font-semibold leading-snug text-neutral-900">{article.title}</h2>
+                <p className="mt-1 text-sm leading-relaxed text-neutral-600">
+                  <PlateMarkdown>
+                    {article.content.slice(0, 140) + (article.content.length > 140 ? '…' : '')}
+                  </PlateMarkdown>
+                </p>
+              </div>
+            </article>
+          </Link>
+        )
+      })}
+    </section>
   )
 }
 
-export default HomePage
+export default BlogHomePage

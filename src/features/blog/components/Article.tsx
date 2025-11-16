@@ -6,6 +6,7 @@ import { formatDate } from '@/utils/formatDate'
 type ArticleContent = Article & {
   variant: 'article'
   authorName?: string | null
+  coverImageUrl?: string | null
 }
 
 type StaticContent = {
@@ -21,38 +22,41 @@ type ArticleProps = {
 export default function Article({ content }: ArticleProps) {
   return (
     <div className="flex flex-1 flex-col bg-white text-neutral-900" style={{ fontFamily: 'Inter, sans-serif' }}>
-      <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 md:py-20">
+      <main className="mx-auto w-full max-w-5xl py-6 md:py-12">
         {content.variant === 'article' ? (
           <ArticleContentView content={content} />
         ) : (
           <PageContentView content={content} />
         )}
-
-        <div className="mt-12 text-sm">
-          <Link to="/" className="text-neutral-600 hover:text-neutral-900 hover:underline">
-            ← Back
-          </Link>
-        </div>
       </main>
     </div>
   )
 }
 
 function ArticleContentView({ content }: { content: ArticleContent }) {
-  const authorName = content.authorName ?? 'Editorial team'
   const primaryDate = formatDate(content.publishedAt)
+  const coverImageUrl = content.coverImageUrl || true
 
   return (
-    <article className="space-y-6">
-      <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">{primaryDate}</p>
-
-      <h1 className="text-4xl font-semibold leading-tight text-neutral-900 md:text-[3.2rem]">{content.title}</h1>
-
-      <div className="flex flex-col gap-2 text-sm text-neutral-500 sm:flex-row sm:items-center sm:gap-3">
-        <span className="font-medium text-neutral-600">{authorName}</span>
+    <article className="space-y-8">
+      <div className="overflow-hidden rounded-3xl bg-gray-50">
+        {coverImageUrl ? (
+          <img
+            src="/public/articleimg.png"
+            alt={content.title}
+            className="shadow-sm rounded-lg object-cover h-[300px] w-full hover:shadow-md transition-shadow duration-200"
+          />
+        ) : (
+          <div className="h-[300px] w-full bg-gray-50" />
+        )}
       </div>
 
-      <div className="pt-6 text-neutral-800">
+      <header>
+        <h1 className="text-4xl font-semibold leading-tight text-neutral-900 md:text-[3.2rem]">{content.title}</h1>
+        {primaryDate && <p className="mt-2 text-sm text-neutral-500">{primaryDate}</p>}
+      </header>
+
+      <div className="pt-2 text-neutral-800">
         <PlateMarkdown className="prose prose-lg max-w-none leading-relaxed text-neutral-800">
           {content.content}
         </PlateMarkdown>
@@ -63,10 +67,10 @@ function ArticleContentView({ content }: { content: ArticleContent }) {
 
 function PageContentView({ content }: { content: StaticContent }) {
   return (
-    <article className="space-y-6">
+    <article className="space-y-8">
       <h1 className="text-4xl font-semibold leading-tight text-neutral-900 md:text-[3.2rem]">{content.title}</h1>
 
-      <div className="pt-6 text-neutral-800">
+      <div className="pt-2 text-neutral-800">
         <PlateMarkdown className="prose prose-lg max-w-none leading-relaxed text-neutral-800">
           {content.content}
         </PlateMarkdown>
