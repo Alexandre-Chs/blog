@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { articlesPublished } from '../api/home'
-import Article from '@/features/blog/components/Article'
+import ArticleHome from '@/features/blog/components/ArticleHome'
 import { formatDate } from '@/utils/formatDate'
 import { PlateMarkdown } from '@/components/PlateMarkdown'
 
@@ -47,7 +47,7 @@ const HomePage = () => {
         <section className="lg:grid lg:grid-cols-[minmax(0,720px)_220px] lg:items-start lg:justify-center lg:gap-14">
           <div className="w-full max-w-2xl space-y-10">
             {articles.map((article, index) => (
-              <Article key={article.id} article={article} index={index} articles={articles} />
+              <ArticleHome key={article.id} article={article} index={index} articles={articles} />
             ))}
           </div>
 

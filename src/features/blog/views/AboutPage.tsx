@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
-import { PlateMarkdown } from '@/components/PlateMarkdown'
+import Article from '@/features/blog/components/Article'
 import { settingsAboutListBlog } from '@/features/blog/api/about'
 
 export default function AboutPage() {
@@ -34,19 +34,5 @@ export default function AboutPage() {
     )
   }
 
-  return (
-    <div className="flex flex-1 flex-col bg-white text-neutral-900" style={{ fontFamily: 'Inter, sans-serif' }}>
-      <main className="w-full py-6 md:py-20">
-        <article className="space-y-10">
-          <h1 className="text-4xl font-semibold leading-tight text-neutral-900 md:text-[3.2rem]">About</h1>
-
-          <div className="pt-4 text-neutral-800">
-            <PlateMarkdown className="prose prose-lg max-w-none leading-relaxed text-neutral-800">
-              {about.value.content}
-            </PlateMarkdown>
-          </div>
-        </article>
-      </main>
-    </div>
-  )
+  return <Article content={{ variant: 'page', title: 'About', content: about.value.content }} />
 }

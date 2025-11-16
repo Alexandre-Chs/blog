@@ -1,38 +1,76 @@
 import { Link } from '@tanstack/react-router'
 import type { Article } from '@/db/schema'
-import { formatDate } from '@/utils/formatDate'
 import { PlateMarkdown } from '@/components/PlateMarkdown'
+import { formatDate } from '@/utils/formatDate'
 
-type ArticlePropsType = {
-  article: Article
-  articles: Array<Article>
-  index: number
+type ArticleContent = Article & {
+  variant: 'article'
+  authorName?: string | null
 }
 
-export default function Article({ article, articles, index }: ArticlePropsType) {
-  const isLast = index === articles.length - 1
-  const authorName = (article as Article & { authorName?: string }).authorName ?? 'Editorial Team'
+type StaticContent = {
+  variant: 'page'
+  title: string
+  content: string
+}
+
+type ArticleProps = {
+  content: ArticleContent | StaticContent
+}
+
+export default function Article({ content }: ArticleProps) {
+  return (
+    <div className="flex flex-1 flex-col bg-white text-neutral-900" style={{ fontFamily: 'Inter, sans-serif' }}>
+      <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 md:py-20">
+        {content.variant === 'article' ? (
+          <ArticleContentView content={content} />
+        ) : (
+          <PageContentView content={content} />
+        )}
+
+        <div className="mt-12 text-sm">
+          <Link to="/" className="text-neutral-600 hover:text-neutral-900 hover:underline">
+            ← Back
+          </Link>
+        </div>
+      </main>
+    </div>
+  )
+}
+
+function ArticleContentView({ content }: { content: ArticleContent }) {
+  const authorName = content.authorName ?? 'Editorial team'
+  const primaryDate = formatDate(content.publishedAt)
 
   return (
-    <article
-      className={`space-y-3 sm:space-y-4 ${isLast ? '' : 'pb-10 md:pb-12'} ${isLast ? '' : 'border-b border-neutral-100'}`}
-      style={{ fontFamily: 'Inter, sans-serif' }}
-    >
-      <p className="text-xs font-medium uppercase tracking-[0.3em] text-neutral-500">
-        {formatDate(article.publishedAt)}
-      </p>
+    <article className="space-y-6">
+      <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">{primaryDate}</p>
 
-      <Link params={{ slug: article.slug }} to="/$slug" className="group block">
-        <h2 className="cursor-pointer text-2xl font-semibold leading-snug text-neutral-900 group-hover:underline">
-          {article.title}
-        </h2>
-      </Link>
+      <h1 className="text-4xl font-semibold leading-tight text-neutral-900 md:text-[3.2rem]">{content.title}</h1>
 
-      <p className="text-base leading-relaxed text-neutral-700">
-        <PlateMarkdown>{article.content.slice(0, 100) + (article.content.length > 100 ? '...' : '')}</PlateMarkdown>
-      </p>
+      <div className="flex flex-col gap-2 text-sm text-neutral-500 sm:flex-row sm:items-center sm:gap-3">
+        <span className="font-medium text-neutral-600">{authorName}</span>
+      </div>
 
-      <p className="text-sm font-medium text-neutral-500">{authorName}</p>
+      <div className="pt-6 text-neutral-800">
+        <PlateMarkdown className="prose prose-lg max-w-none leading-relaxed text-neutral-800">
+          {content.content}
+        </PlateMarkdown>
+      </div>
+    </article>
+  )
+}
+
+function PageContentView({ content }: { content: StaticContent }) {
+  return (
+    <article className="space-y-6">
+      <h1 className="text-4xl font-semibold leading-tight text-neutral-900 md:text-[3.2rem]">{content.title}</h1>
+
+      <div className="pt-6 text-neutral-800">
+        <PlateMarkdown className="prose prose-lg max-w-none leading-relaxed text-neutral-800">
+          {content.content}
+        </PlateMarkdown>
+      </div>
     </article>
   )
 }
