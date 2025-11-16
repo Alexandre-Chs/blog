@@ -21,8 +21,9 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
   )
 }
 
-export default function SettingsPage() {
+export default function SettingsGeneralPage() {
   const settingsGeneralListFn = useServerFn(settingsGeneralList)
+  const settingsGeneralUpdateFn = useServerFn(settingsGeneralUpdate)
   const router = useRouter()
 
   const { data: defaultFormValue, isSuccess } = useQuery({
@@ -31,7 +32,7 @@ export default function SettingsPage() {
   })
 
   const settingsGeneralMutation = useMutation({
-    mutationFn: settingsGeneralUpdate,
+    mutationFn: settingsGeneralUpdateFn,
     onSuccess: () => {
       toast.success('Settings updated successfully!')
       router.invalidate()
@@ -46,7 +47,7 @@ export default function SettingsPage() {
   })
 
   useEffect(() => {
-    if (isSuccess) form.reset(defaultFormValue)
+    if (isSuccess) form.reset(defaultFormValue.value)
   }, [defaultFormValue])
 
   const form = useForm({

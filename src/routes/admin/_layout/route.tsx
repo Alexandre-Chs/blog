@@ -20,7 +20,7 @@ export const Route = createFileRoute('/admin/_layout')({
     return {
       user: session.user,
       settings: {
-        general: settingsGeneral,
+        general: settingsGeneral.value!,
       },
     }
   },

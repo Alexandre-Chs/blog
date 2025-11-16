@@ -33,7 +33,10 @@ const data = {
     },
     {
       title: 'Settings',
-      items: [{ title: 'General', url: '/admin/settings' }],
+      items: [
+        { title: 'General', url: '/admin/settings' },
+        { title: 'About', url: '/admin/settings/about' },
+      ],
     },
   ],
 }

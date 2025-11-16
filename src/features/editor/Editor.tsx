@@ -20,9 +20,10 @@ import { ToolbarButton } from '@/components/ui/toolbar'
 
 type EditorPropsType = {
   ref: React.Ref<PlateEditorType>
+  placeholder?: string
 }
 
-export default function Editor({ ref }: EditorPropsType) {
+export default function Editor({ ref, placeholder }: EditorPropsType) {
   const editor = usePlateEditor({
     plugins: [
       BoldPlugin,
@@ -58,7 +59,7 @@ export default function Editor({ ref }: EditorPropsType) {
         <ToolbarButton className="px-2">Reset</ToolbarButton>
       </FixedToolbar>
       <EditorContainer>
-        <PlateEditor placeholder="Type your amazing content here..." />
+        <PlateEditor placeholder={placeholder ? placeholder : 'Type your amazing content here...'} />
       </EditorContainer>
     </Plate>
   )

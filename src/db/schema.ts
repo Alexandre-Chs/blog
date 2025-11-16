@@ -87,7 +87,12 @@ export const articles = pgTable('articles', {
 
 export type Article = InferSelectModel<typeof articles>
 
+type SettingsMap = {
+  general: { name: string }
+  about: { content: string }
+}
+
 export const settings = pgTable('settings', {
   key: text('key').primaryKey(),
-  value: jsonb('value').$type<{ name?: string }>(),
+  value: jsonb('value').$type<SettingsMap[keyof SettingsMap]>(),
 })

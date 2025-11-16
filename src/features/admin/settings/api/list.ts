@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm'
 import { settings } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
+import { validateSettings } from '@/zod/settings'
 
 export const settingsGeneralformSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -17,11 +18,9 @@ export const settingsGeneralList = createServerFn({ method: 'GET' })
     if (!res[0]) return { name: 'my blog' }
 
     const row = res[0]
+    const validValue = validateSettings('general', row.value)
 
-    const parsed = settingsGeneralformSchema.safeParse(row.value)
-    if (!parsed.success) return { name: 'my blog' }
-
-    return parsed.data
+    return { key: 'general', value: validValue }
   })
 
 export const settingsGeneralUpdate = createServerFn({ method: 'POST' })
@@ -30,15 +29,17 @@ export const settingsGeneralUpdate = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     const { name } = data
 
+    const validName = validateSettings('general', { name })
+
     await db
       .insert(settings)
       .values({
         key: 'general',
-        value: { name },
+        value: validName,
       })
       .onConflictDoUpdate({
         target: settings.key,
-        set: { value: { name } },
+        set: { value: validName },
       })
 
     return { success: true }
