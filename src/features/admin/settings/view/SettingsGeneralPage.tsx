@@ -47,19 +47,27 @@ export default function SettingsGeneralPage() {
   })
 
   useEffect(() => {
-    if (isSuccess) form.reset(defaultFormValue.value)
+    if (isSuccess) {
+      const value = defaultFormValue.value
+
+      form.reset({
+        name: value.name,
+        tagline: value.tagline ?? '',
+      })
+    }
   }, [defaultFormValue])
 
   const form = useForm({
     defaultValues: {
       name: '',
+      tagline: '',
     },
     validationLogic: revalidateLogic(),
     validators: {
       onDynamic: settingsGeneralformSchema,
     },
     onSubmit: ({ value }) => {
-      settingsGeneralMutation.mutate({ data: { name: value.name } })
+      settingsGeneralMutation.mutate({ data: { name: value.name, tagline: value.tagline.trim() } })
     },
   })
 
@@ -72,7 +80,7 @@ export default function SettingsGeneralPage() {
           form.handleSubmit()
         }}
       >
-        <div>
+        <div className="space-y-8">
           <form.Field
             name="name"
             children={(field) => {
@@ -87,6 +95,27 @@ export default function SettingsGeneralPage() {
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="Edit name project"
+                    />
+                  </div>
+                  <FieldInfo field={field} />
+                </>
+              )
+            }}
+          />
+          <form.Field
+            name="tagline"
+            children={(field) => {
+              return (
+                <>
+                  <div className="grid w-full items-center gap-3">
+                    <Label htmlFor={field.name}>Tagline (next to logo)</Label>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="Displayed next to the logo when not empty"
                     />
                   </div>
                   <FieldInfo field={field} />

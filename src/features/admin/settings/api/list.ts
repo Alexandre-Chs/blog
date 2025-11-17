@@ -8,14 +8,13 @@ import { validateSettings } from '@/zod/settings'
 
 export const settingsGeneralformSchema = z.object({
   name: z.string().min(1, 'Name is required'),
+  tagline: z.string().min(0),
 })
 
 export const settingsGeneralList = createServerFn({ method: 'GET' })
   .middleware([adminMiddleware])
   .handler(async () => {
     const res = await db.select().from(settings).where(eq(settings.key, 'general')).limit(1)
-
-    if (!res[0]) return { name: 'my blog' }
 
     const row = res[0]
     const validValue = validateSettings('general', row.value)
@@ -27,9 +26,9 @@ export const settingsGeneralUpdate = createServerFn({ method: 'POST' })
   .middleware([adminMiddleware])
   .inputValidator(settingsGeneralformSchema)
   .handler(async ({ data }) => {
-    const { name } = data
+    const { name, tagline } = data
 
-    const validName = validateSettings('general', { name })
+    const validName = validateSettings('general', { name, tagline })
 
     await db
       .insert(settings)

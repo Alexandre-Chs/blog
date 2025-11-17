@@ -6,15 +6,11 @@ export const Route = createFileRoute('/_blog')({
     // safe for public
     const settingsGeneral = await settingsGeneralListBlog()
 
-    return {
-      settings: {
-        general: settingsGeneral?.value,
-      },
-    }
+    return { ...settingsGeneral?.value }
   },
 
   head: ({ match }) => {
-    const projectName = match.context.settings.general?.name
+    const projectName = match.context.name
     return {
       meta: [
         {
@@ -32,7 +28,7 @@ export const Route = createFileRoute('/_blog')({
 })
 
 function RouteComponent() {
-  const { settings } = Route.useRouteContext()
+  const { name, tagline } = Route.useRouteContext()
 
   return (
     <div className="flex min-h-screen flex-col px-8 lg:px-0">
@@ -44,9 +40,11 @@ function RouteComponent() {
               className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight md:pr-8"
               style={{ fontFamily: 'Inter, sans-serif' }}
             >
-              {settings.general?.name}
+              {name}
             </Link>
-            <div className="text-center md:text-left text-lg mt-5 md:pl-8">Best way to find setups.</div>
+            {tagline && tagline.trim().length > 0 && (
+              <div className="text-center md:text-left text-lg mt-5 md:pl-8">{tagline}</div>
+            )}
           </div>
         </header>
         <main className="flex flex-1 flex-col">
@@ -62,7 +60,7 @@ function RouteComponent() {
               className="text-lg font-semibold tracking-tight text-gray-900 hover:text-gray-600"
               style={{ fontFamily: 'Inter, sans-serif' }}
             >
-              {settings.general?.name}
+              {name}
             </Link>
           </div>
           <div className="mt-8 md:mt-0 flex flex-col md:flex-row gap-12">

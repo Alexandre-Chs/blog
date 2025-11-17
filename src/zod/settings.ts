@@ -3,6 +3,7 @@ import z from 'zod'
 export const settingsSchemas = {
   general: z.object({
     name: z.string().min(1),
+    tagline: z.string().optional(),
   }),
 
   about: z.object({
