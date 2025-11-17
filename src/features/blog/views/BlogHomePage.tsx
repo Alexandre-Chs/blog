@@ -49,7 +49,7 @@ const BlogHomePage = () => {
             <article className="overflow-hidden rounded-lg border border-neutral-100 bg-white h-[400px]">
               <div className="overflow-hidden">
                 {coverImageUrl ? (
-                  <img src="/public/articleimg.png" alt={article.title} className="h-[200px] w-full object-cover" />
+                  <img src="/articleimg.png" alt={article.title} className="h-[200px] w-full object-cover" />
                 ) : (
                   <div className="h-[200px] w-full bg-gray-50" />
                 )}
@@ -60,7 +60,10 @@ const BlogHomePage = () => {
                 <h2 className="text-2xl font-semibold leading-snug text-neutral-900">{article.title}</h2>
                 <p className="mt-1 text-sm leading-relaxed text-neutral-600">
                   <PlateMarkdown>
-                    {article.content.slice(0, 140) + (article.content.length > 140 ? '…' : '')}
+                    {article.content
+                      .replace(/[*_#`[\]]/g, '')
+                      .replace(/\s+/g, ' ')
+                      .slice(0, 140) + (article.content.length > 140 ? '…' : '')}
                   </PlateMarkdown>
                 </p>
               </div>

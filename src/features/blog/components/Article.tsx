@@ -42,7 +42,7 @@ function ArticleContentView({ content }: { content: ArticleContent }) {
       <div className="overflow-hidden rounded-3xl bg-gray-50">
         {coverImageUrl ? (
           <img
-            src="/public/articleimg.png"
+            src="/articleimg.png"
             alt={content.title}
             className="shadow-sm rounded-lg object-cover h-[300px] w-full hover:shadow-md transition-shadow duration-200"
           />
