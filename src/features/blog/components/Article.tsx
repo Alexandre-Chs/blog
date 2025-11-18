@@ -22,13 +22,13 @@ type ArticleProps = {
 export default function Article({ content }: ArticleProps) {
   return (
     <div className="flex flex-1 flex-col bg-white text-neutral-900" style={{ fontFamily: 'Inter, sans-serif' }}>
-      <main className="mx-auto w-full max-w-5xl py-6 md:py-12">
+      <div className="mx-auto w-full max-w-5xl py-6 md:py-12">
         {content.variant === 'article' ? (
           <ArticleContentView content={content} />
         ) : (
           <PageContentView content={content} />
         )}
-      </main>
+      </div>
     </div>
   )
 }
@@ -51,10 +51,8 @@ function ArticleContentView({ content }: { content: ArticleContent }) {
         )}
       </div>
 
-      <header>
-        <h1 className="text-4xl font-semibold leading-tight text-neutral-900 md:text-[3.2rem]">{content.title}</h1>
-        {primaryDate && <p className="mt-2 text-sm text-neutral-500">{primaryDate}</p>}
-      </header>
+      <h1 className="text-4xl font-semibold leading-tight text-neutral-900 md:text-[3.2rem]">{content.title}</h1>
+      {primaryDate && <p className="mt-2 text-sm text-neutral-500">{primaryDate}</p>}
 
       <div className="pt-2 text-neutral-800">
         <PlateMarkdown className="prose prose-lg max-w-none leading-relaxed text-neutral-800">
