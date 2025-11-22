@@ -1,4 +1,5 @@
-import { boolean, integer, jsonb, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { boolean, integer, jsonb, pgEnum, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
+import { relations } from 'drizzle-orm'
 import type { InferSelectModel } from 'drizzle-orm'
 
 export const userRoleEnum = pgEnum('role', ['user', 'admin'])
@@ -85,7 +86,55 @@ export const articles = pgTable('articles', {
   publishedAt: timestamp('published_at'),
 })
 
+export const articlesRelations = relations(articles, ({ many }) => ({
+  articlesToMedias: many(articlesToMedias),
+}))
+
 export type Article = InferSelectModel<typeof articles>
+
+export const medias = pgTable('medias', {
+  id: text('id').primaryKey(),
+  key: text('key').notNull().unique(),
+  mimetype: text('mimetype').notNull(),
+  width: integer('width'),
+  height: integer('height'),
+  size: integer('size').notNull(),
+  alt: text('alt').default(''),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+export type Media = InferSelectModel<typeof medias>
+
+export const mediasRelations = relations(medias, ({ many }) => ({
+  articlesToMedias: many(articlesToMedias),
+}))
+
+export const mediaRoleEnum = pgEnum('media_role', ['thumbnail', 'inline', 'og_image'])
+
+export const articlesToMedias = pgTable(
+  'articles_to_medias',
+  {
+    articleId: text('article_id')
+      .notNull()
+      .references(() => articles.id, { onDelete: 'cascade' }),
+    mediaId: text('media_id')
+      .notNull()
+      .references(() => medias.id, { onDelete: 'cascade' }),
+    role: mediaRoleEnum().notNull().default('inline'),
+  },
+  (t) => [primaryKey({ columns: [t.articleId, t.mediaId, t.role] })],
+)
+
+export const articlesToMediasRelations = relations(articlesToMedias, ({ one }) => ({
+  media: one(medias, {
+    fields: [articlesToMedias.mediaId],
+    references: [medias.id],
+  }),
+  article: one(articles, {
+    fields: [articlesToMedias.articleId],
+    references: [articles.id],
+  }),
+}))
 
 type SettingsMap = {
   general: { name: string }

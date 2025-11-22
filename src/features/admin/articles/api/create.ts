@@ -5,6 +5,7 @@ import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
 
 const articleCreateSchema = z.object({
+  articleId: z.uuid(),
   title: z.string().min(1),
   content: z.string().min(1),
 })
@@ -18,7 +19,7 @@ export const articleCreate = createServerFn({ method: 'POST' })
     const [article] = await db
       .insert(articles)
       .values({
-        id: crypto.randomUUID(),
+        id: data.articleId,
         title: data.title,
         content: data.content,
         status: 'published',

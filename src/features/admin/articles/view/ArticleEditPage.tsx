@@ -5,6 +5,7 @@ import { MarkdownPlugin } from '@platejs/markdown'
 import { toast } from 'sonner'
 import { useServerFn } from '@tanstack/react-start'
 import { articleById, articleUpdate } from '../api/edit'
+import UploadThumbnail from '../../medias/components/UploadThumbnail'
 import type { PlateEditor } from 'platejs/react'
 import Editor from '@/features/editor/Editor'
 import { Button } from '@/components/ui/button'
@@ -97,6 +98,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
         <Button disabled={updateArticleMutation.isPending} onClick={handleEditArticle} className="cursor-pointer">
           {updateArticleMutation.isPending ? 'Updating...' : 'Update article'}
         </Button>
+        <UploadThumbnail articleId={articleId} />
       </div>
       <div className="px-4">
         <div className="max-w-5xl mx-auto pb-4 pl-4">

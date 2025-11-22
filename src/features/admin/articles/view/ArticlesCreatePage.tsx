@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
 import { articleCreate } from '../api/create'
+import UploadThumbnail from '../../medias/components/UploadThumbnail'
 import type { PlateEditor } from 'platejs/react'
 import Editor from '@/features/editor/Editor'
 import { Button } from '@/components/ui/button'
@@ -13,6 +14,7 @@ export default function ArticlesCreatePage() {
   const [title, setTitle] = useState<string>('')
   const editorRef = useRef<PlateEditor>(null)
   const createArticleFn = useServerFn(articleCreate)
+  const articleId = crypto.randomUUID()
 
   const navigate = useNavigate()
 
@@ -54,6 +56,7 @@ export default function ArticlesCreatePage() {
 
     createArticleMutation.mutate({
       data: {
+        articleId,
         title: title.trim(),
         content: markdown,
       },
@@ -63,11 +66,15 @@ export default function ArticlesCreatePage() {
   return (
     <ClientOnly fallback={<div>Loading editor...</div>}>
       <div className="flex justify-between items-center p-4">
-        <div>Date</div>
+        <div className="flex items-center gap-x-2">
+          <div>Date</div>
+        </div>
         <Button disabled={createArticleMutation.isPending} onClick={handlePublish}>
           {createArticleMutation.isPending ? 'Publishing...' : 'Publish'}
         </Button>
       </div>
+
+      <UploadThumbnail articleId={articleId} />
 
       <div className="px-4">
         <div className="max-w-5xl mx-auto pb-4 pl-4">

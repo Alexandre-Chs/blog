@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod'
-import { desc, eq, sql } from 'drizzle-orm'
-import { articles, user } from '@/db/schema'
+import { and, desc, eq, sql } from 'drizzle-orm'
+import { articles, articlesToMedias, medias, user } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
 
@@ -19,6 +19,7 @@ export const articlesList = createServerFn({ method: 'GET' })
         title: articles.title,
         slug: articles.slug,
         status: articles.status,
+        thumbnailKey: medias.key,
         createdAt: articles.createdAt,
         updatedAt: articles.updatedAt,
         publishedAt: articles.publishedAt,
@@ -26,6 +27,11 @@ export const articlesList = createServerFn({ method: 'GET' })
       })
       .from(articles)
       .leftJoin(user, eq(articles.authorId, user.id))
+      .leftJoin(
+        articlesToMedias,
+        and(eq(articles.id, articlesToMedias.articleId), eq(articlesToMedias.role, 'thumbnail')),
+      )
+      .leftJoin(medias, eq(articlesToMedias.mediaId, medias.id))
       .where(eq(articles.status, data.status))
       .orderBy(desc(articles.updatedAt))
 
