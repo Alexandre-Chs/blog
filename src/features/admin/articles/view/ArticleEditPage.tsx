@@ -89,6 +89,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
         articleId,
         title: title.trim(),
         content: markdown,
+        publishedAt: new Date(), // !! TODO scheduling with date picker
       },
     })
   }
@@ -97,7 +98,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
     <ClientOnly fallback={<div>Loading editor...</div>}>
       <div className="flex justify-end items-center p-4">
         <Button disabled={updateArticleMutation.isPending} onClick={handleEditArticle} className="cursor-pointer">
-          {updateArticleMutation.isPending ? 'Updating...' : 'Update article'}
+          {updateArticleMutation.isPending ? 'Publishing...' : 'Publish'}
         </Button>
       </div>
       <div className="px-4">

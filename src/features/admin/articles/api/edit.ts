@@ -9,12 +9,6 @@ const articleByIdSchema = z.object({
   articleId: z.uuid(),
 })
 
-const articleUpdateSchema = z.object({
-  articleId: z.uuid(),
-  title: z.string().min(1),
-  content: z.string().min(1),
-})
-
 export const articleById = createServerFn({ method: 'GET' })
   .middleware([adminMiddleware])
   .inputValidator(articleByIdSchema)
@@ -53,6 +47,13 @@ export const articleById = createServerFn({ method: 'GET' })
     }
   })
 
+const articleUpdateSchema = z.object({
+  articleId: z.uuid(),
+  title: z.string().min(1),
+  content: z.string().min(1),
+  publishedAt: z.coerce.date().nullable(),
+})
+
 export const articleUpdate = createServerFn({ method: 'POST' })
   .middleware([adminMiddleware])
   .inputValidator(articleUpdateSchema)
@@ -65,6 +66,7 @@ export const articleUpdate = createServerFn({ method: 'POST' })
         title: title.trim(),
         content,
         updatedAt: new Date(),
+        publishedAt: data.publishedAt ?? null,
       })
       .where(eq(articles.id, articleId))
       .returning()
