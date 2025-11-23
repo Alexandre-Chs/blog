@@ -5,6 +5,7 @@ import { MarkdownPlugin } from '@platejs/markdown'
 import { toast } from 'sonner'
 import { useServerFn } from '@tanstack/react-start'
 import { articleById, articleUpdate } from '../api/edit'
+import ArticleThumbnail from '../../medias/components/ArticleThumbnail'
 import UploadThumbnail from '../../medias/components/UploadThumbnail'
 import type { PlateEditor } from 'platejs/react'
 import Editor from '@/features/editor/Editor'
@@ -21,7 +22,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
   const articleUpdateFn = useServerFn(articleUpdate)
   const navigate = useNavigate()
 
-  const { data: article, isPending } = useQuery({
+  const { data: articleData, isPending } = useQuery({
     queryKey: ['articleEdit', articleId],
     queryFn: () => articleByIdFn({ data: { articleId } }),
   })
@@ -42,18 +43,18 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
   })
 
   useEffect(() => {
-    if (article && editorRef.current) {
-      const plateValue = editorRef.current.getApi(MarkdownPlugin).markdown.deserialize(article.content)
+    if (articleData && editorRef.current) {
+      const plateValue = editorRef.current.getApi(MarkdownPlugin).markdown.deserialize(articleData.article.content)
       editorRef.current.tf.setValue(plateValue)
-      setTitle(article.title)
+      setTitle(articleData.article.title)
     }
-  }, [article])
+  }, [articleData])
 
   if (isPending) {
     return <div>Loading article...</div>
   }
 
-  if (!article) {
+  if (!articleData?.article) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
         <div className="text-xl text-gray-700">Article not found</div>
@@ -98,10 +99,16 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
         <Button disabled={updateArticleMutation.isPending} onClick={handleEditArticle} className="cursor-pointer">
           {updateArticleMutation.isPending ? 'Updating...' : 'Update article'}
         </Button>
-        <UploadThumbnail articleId={articleId} />
       </div>
       <div className="px-4">
         <div className="max-w-5xl mx-auto pb-4 pl-4">
+          <div className="py-4">
+            {articleData.thumbnail ? (
+              <ArticleThumbnail thumbnailKey={articleData.thumbnail.key} articleId={articleId} />
+            ) : (
+              <UploadThumbnail articleId={articleId} />
+            )}
+          </div>
           <input
             value={title}
             onChange={handleTitleChange}

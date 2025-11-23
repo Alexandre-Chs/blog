@@ -97,3 +97,28 @@ export const thumbnailInsertDatabase = createServerFn({ method: 'POST' })
 
     return { success: true }
   })
+
+const thumbnailDeleteDatabaseSchema = z.object({
+  articleId: z.string(),
+})
+
+export const thumbnailDeleteDatabase = createServerFn({ method: 'POST' })
+  .middleware([adminMiddleware])
+  .inputValidator(thumbnailDeleteDatabaseSchema)
+  .handler(async ({ data }) => {
+    await db.transaction(async (tx) => {
+      const [articleToMedia] = await tx
+        .select()
+        .from(articlesToMedias)
+        .where(and(eq(articlesToMedias.articleId, data.articleId), eq(articlesToMedias.role, 'thumbnail')))
+        .limit(1)
+
+      await tx
+        .delete(articlesToMedias)
+        .where(and(eq(articlesToMedias.articleId, data.articleId), eq(articlesToMedias.role, 'thumbnail')))
+
+      await tx.delete(medias).where(eq(medias.id, articleToMedia.mediaId))
+    })
+
+    return { success: true }
+  })

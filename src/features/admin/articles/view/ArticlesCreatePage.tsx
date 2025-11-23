@@ -78,10 +78,11 @@ export default function ArticlesCreatePage({ articleId }: ArticlesCreatePageProp
         </Button>
       </div>
 
-      <UploadThumbnail articleId={articleId} />
-
       <div className="px-4">
         <div className="max-w-5xl mx-auto pb-4 pl-4">
+          <div className="py-4">
+            <UploadThumbnail articleId={articleId} />
+          </div>
           <input
             value={title}
             onChange={handleTitleChange}

@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod'
-import { eq } from 'drizzle-orm'
-import { articles } from '@/db/schema'
+import { and, eq } from 'drizzle-orm'
+import { articles, articlesToMedias, medias } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
 
@@ -21,11 +21,36 @@ export const articleById = createServerFn({ method: 'GET' })
   .handler(async ({ data }) => {
     const articleId = data.articleId
 
-    const article = await db.query.articles.findFirst({
-      where: eq(articles.id, articleId),
-    })
+    const [article] = await db.select().from(articles).where(eq(articles.id, articleId))
 
-    return article
+    const media = await db
+      .select({
+        id: medias.id,
+        key: medias.key,
+        mimetype: medias.mimetype,
+        size: medias.size,
+        role: articlesToMedias.role,
+      })
+      .from(articlesToMedias)
+      .leftJoin(medias, eq(medias.id, articlesToMedias.mediaId))
+      .where(and(eq(articlesToMedias.articleId, articleId), eq(articlesToMedias.role, 'thumbnail')))
+
+    let thumbnail = null
+
+    if (media.length > 0 && media[0].key) {
+      thumbnail = {
+        id: media[0].id,
+        key: media[0].key,
+        mimetype: media[0].mimetype,
+        size: media[0].size,
+        role: media[0].role,
+      }
+    }
+
+    return {
+      article,
+      thumbnail,
+    }
   })
 
 export const articleUpdate = createServerFn({ method: 'POST' })
