@@ -1,8 +1,18 @@
 import { createServerFn } from '@tanstack/react-start'
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import z from 'zod'
-import { articles, user } from '@/db/schema'
+import { articles, articlesToMedias, medias, user } from '@/db/schema'
 import { db } from '@/index'
+
+type ArticleRow = typeof articles.$inferSelect
+type MediaRow = typeof medias.$inferSelect
+
+type BlogArticle = ArticleRow & {
+  authorName: string
+  thumbnail?: MediaRow & {
+    thumbnailUrl?: string | null
+  }
+}
 
 const articleBySlugSchema = z.object({
   slug: z.string().min(1),
@@ -11,29 +21,43 @@ const articleBySlugSchema = z.object({
 export const articleBySlug = createServerFn({ method: 'GET' })
   .inputValidator(articleBySlugSchema)
   .handler(async ({ data }) => {
+    const imageBaseUrl = process.env.S3_PUBLIC_BASE_URL
+
     const rows = await db
       .select({
-        id: articles.id,
-        title: articles.title,
-        content: articles.content,
-        slug: articles.slug,
-        createdAt: articles.createdAt,
-        updatedAt: articles.updatedAt,
-        publishedAt: articles.publishedAt,
-        readTime: articles.readTime,
-        views: articles.views,
+        article: articles,
         authorName: user.name,
+        media: medias,
       })
       .from(articles)
       .leftJoin(user, eq(articles.authorId, user.id))
+      .leftJoin(
+        articlesToMedias,
+        and(eq(articles.id, articlesToMedias.articleId), eq(articlesToMedias.role, 'thumbnail')),
+      )
+      .leftJoin(medias, eq(articlesToMedias.mediaId, medias.id))
       .where(eq(articles.slug, data.slug))
       .limit(1)
 
-    const article = rows.at(0)
+    const row = rows.at(0)
 
-    if (!article) {
+    if (!row) {
       return null
     }
 
-    return article
+    const { article, authorName, media } = row
+
+    const base: BlogArticle = {
+      ...article,
+      authorName: authorName ?? 'Unknown author',
+    }
+
+    if (media && media.id) {
+      base.thumbnail = {
+        ...media,
+        thumbnailUrl: media.key ? `${imageBaseUrl}${media.key}` : null,
+      }
+    }
+
+    return base
   })

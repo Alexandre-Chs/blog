@@ -42,7 +42,6 @@ export default function ArticlePage({ slug }: ArticlePageProps) {
     <Article
       content={{
         variant: 'article',
-        authorId: article.authorName || 'unknown',
         ...article,
       }}
     />

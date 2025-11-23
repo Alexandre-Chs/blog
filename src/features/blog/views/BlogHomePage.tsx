@@ -42,14 +42,17 @@ const BlogHomePage = () => {
     <section className="grid gap-8 lg:grid-cols-2 md:gap-10 mt-20">
       {articles.map((article) => {
         const date = formatDate(article.publishedAt ?? article.updatedAt)
-        const coverImageUrl = (article as typeof article & { coverImageUrl?: string | null }).coverImageUrl || true
 
         return (
           <Link key={article.id} params={{ slug: article.slug }} to="/$slug" className="block">
             <article className="overflow-hidden rounded-lg border border-neutral-100 bg-white h-[400px]">
               <div className="overflow-hidden">
-                {coverImageUrl ? (
-                  <img src="/articleimg.png" alt={article.title} className="h-[200px] w-full object-cover" />
+                {article.thumbnail.thumbnailUrl ? (
+                  <img
+                    src={article.thumbnail.thumbnailUrl}
+                    alt={article.thumbnail.alt || ''}
+                    className="h-[200px] w-full object-cover"
+                  />
                 ) : (
                   <div className="h-[200px] w-full bg-gray-50" />
                 )}

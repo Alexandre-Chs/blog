@@ -52,7 +52,7 @@ function RouteComponent() {
         </main>
       </div>
 
-      <footer className="shrink-0 bg-gray-50 w-full rounded-t-4xl">
+      <footer className="shrink-0 bg-gray-50 w-full rounded-t-4xl mt-8">
         <div className="mx-auto w-full max-w-5xl px-6 py-12 flex flex-col md:flex-row justify-between">
           <div className="flex flex-col">
             <Link

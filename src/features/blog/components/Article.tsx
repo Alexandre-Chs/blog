@@ -1,12 +1,13 @@
-import { Link } from '@tanstack/react-router'
-import type { Article } from '@/db/schema'
+import type { Article, Media } from '@/db/schema'
 import { PlateMarkdown } from '@/components/PlateMarkdown'
 import { formatDate } from '@/utils/formatDate'
 
 type ArticleContent = Article & {
   variant: 'article'
-  authorName?: string | null
-  coverImageUrl?: string | null
+  authorName: string
+  thumbnail?: Media & {
+    thumbnailUrl?: string | null
+  }
 }
 
 type StaticContent = {
@@ -35,15 +36,14 @@ export default function Article({ content }: ArticleProps) {
 
 function ArticleContentView({ content }: { content: ArticleContent }) {
   const primaryDate = formatDate(content.publishedAt)
-  const coverImageUrl = content.coverImageUrl || true
 
   return (
     <article className="space-y-8">
       <div className="overflow-hidden rounded-3xl bg-gray-50">
-        {coverImageUrl ? (
+        {content.thumbnail?.thumbnailUrl ? (
           <img
-            src="/articleimg.png"
-            alt={content.title}
+            src={content.thumbnail.thumbnailUrl}
+            alt={content.thumbnail.alt || ''}
             className="shadow-sm rounded-lg object-cover h-[300px] w-full hover:shadow-md transition-shadow duration-200"
           />
         ) : (
