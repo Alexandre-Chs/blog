@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
 import { articlesList } from '../api/list'
 import ArticleActions from './ArticleActions'
+import { formatDate } from '@/utils/formatDate'
 
 type ArticlesListProps = {
   articleStatus: 'published' | 'scheduled' | 'draft'
@@ -36,19 +37,19 @@ export default function ArticlesList({ articleStatus }: ArticlesListProps) {
                   />
                 ) : (
                   <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-md bg-muted text-base font-semibold text-muted-foreground">
-                    {article.title.trim().charAt(0).toUpperCase()}
+                    {article.title.trim().charAt(0).toUpperCase() || 'A'}
                   </div>
                 )}
                 <div className="flex flex-col justify-between flex-1">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="truncate text-base font-semibold text-foreground">{article.title.trim()}</div>
-                    <span className="flex-shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-medium capitalize text-muted-foreground">
-                      {article.publishedAt && article.publishedAt > new Date()
-                        ? 'scheduled'
-                        : article.publishedAt
-                          ? 'published'
-                          : 'draft'}
-                    </span>
+                    <div className="truncate text-base font-semibold text-foreground">
+                      {article.title.trim() || 'Draft'}
+                    </div>
+                    {article.publishedAt && (
+                      <span className="flex-shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-medium capitalize text-muted-foreground">
+                        {formatDate(article.publishedAt)}
+                      </span>
+                    )}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm">{article.authorName ? article.authorName : 'Author unknown'}</span>

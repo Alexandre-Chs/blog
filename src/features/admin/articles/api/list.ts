@@ -41,7 +41,7 @@ export const articlesList = createServerFn({ method: 'GET' })
       )
       .leftJoin(medias, eq(articlesToMedias.mediaId, medias.id))
       .where(whereCondition)
-      .orderBy(desc(articles.updatedAt))
+      .orderBy(desc(articles.publishedAt))
 
     return rows
   })
