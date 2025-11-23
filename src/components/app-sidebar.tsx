@@ -69,7 +69,9 @@ export function AppSidebar({ projectName, ...props }: AppSidebarProps) {
                 {item.items.map((itm) => (
                   <SidebarMenuItem key={itm.title}>
                     <SidebarMenuButton asChild isActive={handleRouteActive(itm.url)}>
-                      <Link to={itm.url}>{itm.title}</Link>
+                      <Link to={itm.url} preload={itm.title === 'Create article' ? false : 'intent'}>
+                        {itm.title}
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

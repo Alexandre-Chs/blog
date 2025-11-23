@@ -65,13 +65,10 @@ export const verification = pgTable('verification', {
     .notNull(),
 })
 
-export const statusEnum = pgEnum('status', ['draft', 'scheduled', 'published'])
-
 export const articles = pgTable('articles', {
   id: text('id').primaryKey(),
   title: text('title').notNull(),
   content: text('content').notNull(),
-  status: statusEnum().notNull().default('draft'),
   authorId: text('author_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),

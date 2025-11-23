@@ -4,17 +4,20 @@ import { MarkdownPlugin } from '@platejs/markdown'
 import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
-import { articleCreate } from '../api/create'
+import { articleUpdate } from '../api/create'
 import UploadThumbnail from '../../medias/components/UploadThumbnail'
 import type { PlateEditor } from 'platejs/react'
 import Editor from '@/features/editor/Editor'
 import { Button } from '@/components/ui/button'
 
-export default function ArticlesCreatePage() {
+type ArticlesCreatePageProps = {
+  articleId: string
+}
+
+export default function ArticlesCreatePage({ articleId }: ArticlesCreatePageProps) {
   const [title, setTitle] = useState<string>('')
   const editorRef = useRef<PlateEditor>(null)
-  const createArticleFn = useServerFn(articleCreate)
-  const articleId = crypto.randomUUID()
+  const articleUpdateFn = useServerFn(articleUpdate)
 
   const navigate = useNavigate()
 
@@ -22,8 +25,8 @@ export default function ArticlesCreatePage() {
     setTitle(evt.target.value)
   }
 
-  const createArticleMutation = useMutation({
-    mutationFn: createArticleFn,
+  const updateArticleMutation = useMutation({
+    mutationFn: articleUpdateFn,
     onSuccess: () => {
       toast.success('Article published successfully!')
       navigate({ to: '/admin/articles' })
@@ -54,11 +57,12 @@ export default function ArticlesCreatePage() {
       return
     }
 
-    createArticleMutation.mutate({
+    updateArticleMutation.mutate({
       data: {
         articleId,
         title: title.trim(),
         content: markdown,
+        publishedAt: new Date(), // !! TODO scheduling with date picker
       },
     })
   }
@@ -69,8 +73,8 @@ export default function ArticlesCreatePage() {
         <div className="flex items-center gap-x-2">
           <div>Date</div>
         </div>
-        <Button disabled={createArticleMutation.isPending} onClick={handlePublish}>
-          {createArticleMutation.isPending ? 'Publishing...' : 'Publish'}
+        <Button disabled={updateArticleMutation.isPending} onClick={handlePublish}>
+          {updateArticleMutation.isPending ? 'Publishing...' : 'Publish'}
         </Button>
       </div>
 

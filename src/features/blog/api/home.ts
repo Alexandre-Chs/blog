@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { and, desc, eq, isNotNull } from 'drizzle-orm'
+import { and, desc, eq, isNotNull, lte } from 'drizzle-orm'
 import { articles, user } from '@/db/schema'
 import { db } from '@/index'
 
@@ -10,8 +10,8 @@ export const articlesPublished = createServerFn({ method: 'GET' }).handler(async
     })
     .from(articles)
     .leftJoin(user, eq(articles.authorId, user.id))
-    .where(and(eq(articles.status, 'published'), isNotNull(articles.publishedAt)))
-    .orderBy(desc(articles.updatedAt))
+    .where(and(isNotNull(articles.publishedAt), lte(articles.publishedAt, new Date())))
+    .orderBy(desc(articles.publishedAt))
 
   return rows.map((row) => row.article)
 })

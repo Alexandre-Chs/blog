@@ -17,7 +17,6 @@ export const articleBySlug = createServerFn({ method: 'GET' })
         title: articles.title,
         content: articles.content,
         slug: articles.slug,
-        status: articles.status,
         createdAt: articles.createdAt,
         updatedAt: articles.updatedAt,
         publishedAt: articles.publishedAt,

@@ -43,7 +43,11 @@ export default function ArticlesList({ articleStatus }: ArticlesListProps) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="truncate text-base font-semibold text-foreground">{article.title.trim()}</div>
                     <span className="flex-shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-medium capitalize text-muted-foreground">
-                      {article.status}
+                      {article.publishedAt && article.publishedAt > new Date()
+                        ? 'scheduled'
+                        : article.publishedAt
+                          ? 'published'
+                          : 'draft'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
