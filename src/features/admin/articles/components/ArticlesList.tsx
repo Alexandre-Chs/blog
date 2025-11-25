@@ -49,7 +49,7 @@ export default function ArticlesList({ articleStatus }: ArticlesListProps) {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm">{article.authorName ? article.authorName : 'Author unknown'}</span>
-                    <ArticleActions articleId={article.id} />
+                    <ArticleActions articleId={article.id} articleStatus={articleStatus} />
                   </div>
                 </div>
               </article>
