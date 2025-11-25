@@ -10,7 +10,6 @@ type ArticlesListProps = {
 
 export default function ArticlesList({ articleStatus }: ArticlesListProps) {
   const articlesListsFn = useServerFn(articlesList)
-  const imageBaseUrl = import.meta.env.VITE_S3_PUBLIC_BASE_URL
 
   const { data: articles } = useQuery({
     queryKey: ['articles', articleStatus],
@@ -30,11 +29,8 @@ export default function ArticlesList({ articleStatus }: ArticlesListProps) {
           return (
             <div key={article.id} className={`${!isLast ? 'border-b border-border/70' : ''}`}>
               <article className="flex gap-4 px-4 py-5 sm:px-6">
-                {article.thumbnailKey ? (
-                  <img
-                    src={`${imageBaseUrl}${article.thumbnailKey}`}
-                    className="flex h-14 w-14 flex-shrink-0 rounded-md object-cover"
-                  />
+                {article.thumbnailUrl ? (
+                  <img src={article.thumbnailUrl} className="flex h-14 w-14 flex-shrink-0 rounded-md object-cover" />
                 ) : (
                   <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-md bg-muted text-base font-semibold text-muted-foreground">
                     {article.title.trim().charAt(0).toUpperCase() || 'A'}

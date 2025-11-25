@@ -43,7 +43,10 @@ export const articlesList = createServerFn({ method: 'GET' })
       .where(whereCondition)
       .orderBy(desc(articles.publishedAt))
 
-    return rows
+    return rows.map((row) => ({
+      ...row,
+      thumbnailUrl: row.thumbnailKey ? `${process.env.S3_PUBLIC_BASE_URL}${row.thumbnailKey}` : null,
+    }))
   })
 
 export const articlesListCount = createServerFn({ method: 'GET' })

@@ -105,7 +105,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
         <div className="max-w-5xl mx-auto pb-4 pl-4">
           <div className="py-4">
             {articleData.thumbnail ? (
-              <ArticleThumbnail thumbnailKey={articleData.thumbnail.key} articleId={articleId} />
+              <ArticleThumbnail thumbnailUrl={articleData.thumbnail.url} articleId={articleId} />
             ) : (
               <UploadThumbnail articleId={articleId} />
             )}

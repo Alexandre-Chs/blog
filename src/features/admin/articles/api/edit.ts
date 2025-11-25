@@ -35,6 +35,7 @@ export const articleById = createServerFn({ method: 'GET' })
       thumbnail = {
         id: media[0].id,
         key: media[0].key,
+        url: `${process.env.S3_PUBLIC_BASE_URL}${media[0].key}`,
         mimetype: media[0].mimetype,
         size: media[0].size,
         role: media[0].role,

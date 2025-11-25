@@ -5,15 +5,14 @@ import { useQueryClient } from '@tanstack/react-query'
 import { thumbnailDeleteDatabase, thumbnailInsertDatabase, thumbnailSignedUrl } from '../api/thumbnail'
 
 type ArticleThumbnailProps = {
-  thumbnailKey: string
+  thumbnailUrl: string
   articleId: string
 }
 
-export default function ArticleThumbnail({ thumbnailKey, articleId }: ArticleThumbnailProps) {
+export default function ArticleThumbnail({ thumbnailUrl, articleId }: ArticleThumbnailProps) {
   const queryClient = useQueryClient()
   const thumbnailInsertDatabaseFn = useServerFn(thumbnailInsertDatabase)
   const thumbnailSignedUrlFn = useServerFn(thumbnailSignedUrl)
-  const imageBaseUrl = import.meta.env.VITE_S3_PUBLIC_BASE_URL
 
   const handleUploadThumbnail = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const file = evt.target.files?.[0]
@@ -67,7 +66,7 @@ export default function ArticleThumbnail({ thumbnailKey, articleId }: ArticleThu
   return (
     <div className="group relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-lg">
       <img
-        src={`${imageBaseUrl}${thumbnailKey}`}
+        src={thumbnailUrl}
         alt="Article thumbnail"
         className="h-full w-full rounded-lg object-cover transition duration-200 group-hover:blur-sm"
       />
