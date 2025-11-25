@@ -4,6 +4,7 @@ import { and, eq } from 'drizzle-orm'
 import { articles, articlesToMedias, medias } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
+import { generateUniqueSlug } from '@/utils/slug'
 
 const articleByIdSchema = z.object({
   articleId: z.uuid(),
@@ -60,11 +61,14 @@ export const articleUpdate = createServerFn({ method: 'POST' })
   .inputValidator(articleUpdateSchema)
   .handler(async ({ data }) => {
     const { articleId, title, content } = data
+    const trimmedTitle = title.trim()
+    const slug = await generateUniqueSlug(trimmedTitle)
 
     const [updatedArticle] = await db
       .update(articles)
       .set({
-        title: title.trim(),
+        title: trimmedTitle,
+        slug,
         content,
         updatedAt: new Date(),
         publishedAt: data.publishedAt ?? null,
