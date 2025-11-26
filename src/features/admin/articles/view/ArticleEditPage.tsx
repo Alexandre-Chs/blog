@@ -105,21 +105,26 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
         <div className="max-w-5xl mx-auto pb-4 pl-4">
           <div className="py-4">
             {articleData.thumbnail ? (
-              <ArticleThumbnail thumbnailUrl={articleData.thumbnail.url} articleId={articleId} />
+              <ArticleThumbnail
+                thumbnailUrl={articleData.thumbnail.url}
+                articleId={articleId}
+                alt={articleData.thumbnail.alt}
+              />
             ) : (
               <UploadThumbnail articleId={articleId} />
             )}
           </div>
-          <input
-            value={title}
-            onChange={handleTitleChange}
-            type="text"
-            placeholder="Title"
-            className="outline-none bg-transparent text-2xl w-full"
-          />
-        </div>
-        <div className="max-w-5xl mx-auto">
-          <Editor ref={editorRef} />
+
+          <div className="max-w-5xl mx-auto pt-6">
+            <input
+              value={title}
+              onChange={handleTitleChange}
+              type="text"
+              placeholder="Title"
+              className="outline-none bg-transparent text-2xl w-full"
+            />
+            <Editor ref={editorRef} />
+          </div>
         </div>
       </div>
     </ClientOnly>

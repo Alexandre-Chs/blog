@@ -98,6 +98,28 @@ export const thumbnailInsertDatabase = createServerFn({ method: 'POST' })
     return { success: true }
   })
 
+const thumbnailAltUpdateSchema = z.object({
+  articleId: z.uuid(),
+  alt: z.string(),
+})
+
+export const thumbnailUpdateAlt = createServerFn({ method: 'POST' })
+  .middleware([adminMiddleware])
+  .inputValidator(thumbnailAltUpdateSchema)
+  .handler(async ({ data }) => {
+    const articleToMedia = await db
+      .select({ mediaId: articlesToMedias.mediaId })
+      .from(articlesToMedias)
+      .where(and(eq(articlesToMedias.articleId, data.articleId), eq(articlesToMedias.role, 'thumbnail')))
+      .limit(1)
+
+    if (!articleToMedia.length) throw new Error('No thumbnail found for this article.')
+
+    await db.update(medias).set({ alt: data.alt }).where(eq(medias.id, articleToMedia[0].mediaId))
+
+    return { success: true }
+  })
+
 const thumbnailDeleteDatabaseSchema = z.object({
   articleId: z.string(),
 })

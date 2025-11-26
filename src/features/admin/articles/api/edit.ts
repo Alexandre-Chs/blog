@@ -16,19 +16,20 @@ export const articleById = createServerFn({ method: 'GET' })
   .handler(async ({ data }) => {
     const articleId = data.articleId
 
-    const [article] = await db.select().from(articles).where(eq(articles.id, articleId))
+  const [article] = await db.select().from(articles).where(eq(articles.id, articleId))
 
-    const media = await db
-      .select({
-        id: medias.id,
-        key: medias.key,
-        mimetype: medias.mimetype,
-        size: medias.size,
-        role: articlesToMedias.role,
-      })
-      .from(articlesToMedias)
-      .leftJoin(medias, eq(medias.id, articlesToMedias.mediaId))
-      .where(and(eq(articlesToMedias.articleId, articleId), eq(articlesToMedias.role, 'thumbnail')))
+  const media = await db
+    .select({
+      id: medias.id,
+      key: medias.key,
+      mimetype: medias.mimetype,
+      size: medias.size,
+      role: articlesToMedias.role,
+      alt: medias.alt,
+    })
+    .from(articlesToMedias)
+    .leftJoin(medias, eq(medias.id, articlesToMedias.mediaId))
+    .where(and(eq(articlesToMedias.articleId, articleId), eq(articlesToMedias.role, 'thumbnail')))
 
     let thumbnail = null
 
@@ -40,6 +41,7 @@ export const articleById = createServerFn({ method: 'GET' })
         mimetype: media[0].mimetype,
         size: media[0].size,
         role: media[0].role,
+        alt: media[0].alt,
       }
     }
 
