@@ -58,7 +58,6 @@ export default function ArticleThumbnail({ thumbnailUrl, articleId, alt }: Artic
   }
 
   const handleAltBlur = async (evt: React.FocusEvent<HTMLInputElement>) => {
-    console.log('on blur!')
     const altNew = evt.target.value.trim()
     try {
       await thumbnailUpdateAltFn({ data: { articleId, alt: altNew } })
