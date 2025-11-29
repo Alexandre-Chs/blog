@@ -1,54 +1,29 @@
 import { ClientOnly, useNavigate } from '@tanstack/react-router'
-import { useEffect, useRef, useState } from 'react'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { MarkdownPlugin } from '@platejs/markdown'
-import { toast } from 'sonner'
-import { useServerFn } from '@tanstack/react-start'
-import { articleById, articleUpdate } from '../api/edit'
 import ArticleThumbnail from '../../medias/components/ArticleThumbnail'
 import UploadThumbnail from '../../medias/components/UploadThumbnail'
-import type { PlateEditor } from 'platejs/react'
 import Editor from '@/features/editor/Editor'
 import { Button } from '@/components/ui/button'
+import { useArticleEditPage } from '@/hooks/useArticleEdit'
 
 type ArticleEditPageProps = {
   articleId: string
 }
 
 export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
-  const editorRef = useRef<PlateEditor>(null)
-  const [title, setTitle] = useState('')
-  const articleByIdFn = useServerFn(articleById)
-  const articleUpdateFn = useServerFn(articleUpdate)
+  const {
+    editorRef,
+    articleData,
+    isPending,
+    title,
+    setTitle,
+    thumbnailAlt,
+    setThumbnailAlt,
+    handleEditArticle,
+    handleThumbnailAltBlur,
+    isPublishing,
+  } = useArticleEditPage(articleId)
+
   const navigate = useNavigate()
-
-  const { data: articleData, isPending } = useQuery({
-    queryKey: ['articleEdit', articleId],
-    queryFn: () => articleByIdFn({ data: { articleId } }),
-  })
-
-  const updateArticleMutation = useMutation({
-    mutationFn: articleUpdateFn,
-    onSuccess: () => {
-      toast.success('Article edited successfully!')
-      navigate({ to: '/admin/articles' })
-    },
-    onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message)
-      } else {
-        toast.error('An error occurred while updating the article.')
-      }
-    },
-  })
-
-  useEffect(() => {
-    if (articleData && editorRef.current) {
-      const plateValue = editorRef.current.getApi(MarkdownPlugin).markdown.deserialize(articleData.article.content)
-      editorRef.current.tf.setValue(plateValue)
-      setTitle(articleData.article.title)
-    }
-  }, [articleData])
 
   if (isPending) {
     return <div>Loading article...</div>
@@ -63,44 +38,14 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
     )
   }
 
-  const handleTitleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(evt.target.value)
-  }
-
-  const handleEditArticle = () => {
-    if (!editorRef.current) {
-      toast.error('Editor initialization failed. Please refresh the page.')
-      return
-    }
-
-    if (!title.trim()) {
-      toast.error('Title is required.')
-      return
-    }
-
-    const markdown = editorRef.current.getApi(MarkdownPlugin).markdown.serialize()
-    if (!markdown || markdown.trim() === '') {
-      toast.error('Content is required.')
-      return
-    }
-
-    updateArticleMutation.mutate({
-      data: {
-        articleId,
-        title: title.trim(),
-        content: markdown,
-        publishedAt: new Date(), // !! TODO scheduling with date picker
-      },
-    })
-  }
-
   return (
     <ClientOnly fallback={<div>Loading editor...</div>}>
       <div className="flex justify-end items-center p-4">
-        <Button disabled={updateArticleMutation.isPending} onClick={handleEditArticle} className="cursor-pointer">
-          {updateArticleMutation.isPending ? 'Publishing...' : 'Publish'}
+        <Button disabled={isPublishing} onClick={handleEditArticle} className="cursor-pointer">
+          {isPublishing ? 'Publishing...' : 'Publish'}
         </Button>
       </div>
+
       <div className="px-4">
         <div className="max-w-5xl mx-auto pb-4 pl-4">
           <div className="py-4">
@@ -108,7 +53,9 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
               <ArticleThumbnail
                 thumbnailUrl={articleData.thumbnail.url}
                 articleId={articleId}
-                alt={articleData.thumbnail.alt}
+                alt={thumbnailAlt}
+                onAltChange={setThumbnailAlt}
+                onAltBlur={handleThumbnailAltBlur}
               />
             ) : (
               <UploadThumbnail articleId={articleId} />
@@ -118,7 +65,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
           <div className="max-w-5xl mx-auto pt-6">
             <input
               value={title}
-              onChange={handleTitleChange}
+              onChange={(e) => setTitle(e.target.value)}
               type="text"
               placeholder="Title"
               className="outline-none bg-transparent text-2xl w-full"

@@ -2,24 +2,26 @@ import { RefreshCw, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useServerFn } from '@tanstack/react-start'
 import { useQueryClient } from '@tanstack/react-query'
-import {
-  thumbnailDeleteDatabase,
-  thumbnailInsertDatabase,
-  thumbnailSignedUrl,
-  thumbnailUpdateAlt,
-} from '../api/thumbnail'
+import { thumbnailDeleteDatabase, thumbnailInsertDatabase, thumbnailSignedUrl } from '../api/thumbnail'
 
 type ArticleThumbnailProps = {
   thumbnailUrl: string
   articleId: string
-  alt?: string | null
+  alt: string
+  onAltChange: (value: string) => void
+  onAltBlur: () => void
 }
 
-export default function ArticleThumbnail({ thumbnailUrl, articleId, alt }: ArticleThumbnailProps) {
+export default function ArticleThumbnail({
+  thumbnailUrl,
+  articleId,
+  alt,
+  onAltChange,
+  onAltBlur,
+}: ArticleThumbnailProps) {
   const queryClient = useQueryClient()
   const thumbnailInsertDatabaseFn = useServerFn(thumbnailInsertDatabase)
   const thumbnailSignedUrlFn = useServerFn(thumbnailSignedUrl)
-  const thumbnailUpdateAltFn = useServerFn(thumbnailUpdateAlt)
 
   const handleUploadThumbnail = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const file = evt.target.files?.[0]
@@ -53,20 +55,6 @@ export default function ArticleThumbnail({ thumbnailUrl, articleId, alt }: Artic
         toast.error(error.message)
       } else {
         toast.error('An unknown error occurred during the upload.')
-      }
-    }
-  }
-
-  const handleAltBlur = async (evt: React.FocusEvent<HTMLInputElement>) => {
-    const altNew = evt.target.value.trim()
-    try {
-      await thumbnailUpdateAltFn({ data: { articleId, alt: altNew } })
-      queryClient.invalidateQueries({ queryKey: ['articleEdit'] })
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message)
-      } else {
-        toast.error('An unknown error occurred while updating the alt text.')
       }
     }
   }
@@ -116,8 +104,9 @@ export default function ArticleThumbnail({ thumbnailUrl, articleId, alt }: Artic
       <input
         type="text"
         name="alt-img"
-        defaultValue={alt ?? ''}
-        onBlur={handleAltBlur}
+        value={alt}
+        onChange={(evt) => onAltChange(evt.target.value)}
+        onBlur={onAltBlur}
         placeholder="Describe the image for accessibility (alt text)"
         className="border-b border-gray-100 pb-1 w-full text-gray-700 placeholder:text-gray-400 focus:border-b-gray-300 focus:outline-none"
       />
