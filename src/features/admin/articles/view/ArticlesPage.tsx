@@ -4,6 +4,7 @@ import ArticlesList from '../components/ArticlesList'
 import { articlesListCount } from '../api/list'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import NavigationName from '@/components/ui/navigation-name'
 
 function ArticlesCount({ count }: { count: number }) {
   return <Badge className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums">{count}</Badge>
@@ -20,7 +21,8 @@ export default function ArticlesPage() {
 
   return (
     <>
-      <Tabs defaultValue="published" className="max-w-3xl mx-auto pt-6 w-full">
+      <NavigationName name="Articles" subtitle="View and filter your published, scheduled, and draft articles" />
+      <Tabs defaultValue="published" className="max-w-3xl mx-auto w-full">
         <TabsList>
           <TabsTrigger value="published">
             Published

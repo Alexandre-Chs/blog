@@ -5,6 +5,7 @@ import Editor from '@/features/editor/Editor'
 import { Button } from '@/components/ui/button'
 import { useArticleEditPage } from '@/hooks/useArticleEdit'
 import { DatePicker } from '@/components/datepicker/DatePicker'
+import NavigationName from '@/components/ui/navigation-name'
 
 type ArticleEditPageProps = {
   articleId: string
@@ -42,50 +43,55 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
     )
   }
 
-  return (
-    <ClientOnly fallback={<div>Loading editor...</div>}>
-      <div className="flex justify-between items-center p-4">
-        <div className="flex gap-x-2">
-          <DatePicker onChange={setPublishedAt} value={publishedAt} placeholder="Pick a publish date" />
-          {publishedAt && (
-            <Button variant="secondary" onClick={handleDeletePublishedAt}>
-              Unpublish
-            </Button>
-          )}
-        </div>
-        <Button disabled={isPublishing} onClick={handleEditArticle} className="cursor-pointer">
-          {isPublishing ? 'Publishing...' : 'Publish'}
-        </Button>
-      </div>
+  const subtitle = articleData.article.title ? `Editing: ${articleData.article.title}` : 'Start writing your article'
 
-      <div className="px-4">
-        <div className="max-w-5xl mx-auto pb-4 pl-4">
-          <div className="py-4">
-            {articleData.thumbnail ? (
-              <ArticleThumbnail
-                thumbnailUrl={articleData.thumbnail.url}
-                articleId={articleId}
-                alt={thumbnailAlt}
-                onAltChange={setThumbnailAlt}
-                onAltBlur={handleThumbnailAltBlur}
-              />
-            ) : (
-              <UploadThumbnail articleId={articleId} />
+  return (
+    <>
+      <NavigationName name="Write your article" subtitle={subtitle} />
+      <ClientOnly fallback={<div>Loading editor...</div>}>
+        <div className="flex justify-between items-center max-w-5xl mx-auto w-full">
+          <div className="flex gap-x-2">
+            <DatePicker onChange={setPublishedAt} value={publishedAt} placeholder="Pick a publish date" />
+            {publishedAt && (
+              <Button variant="secondary" onClick={handleDeletePublishedAt}>
+                Unpublish
+              </Button>
             )}
           </div>
+          <Button disabled={isPublishing} onClick={handleEditArticle} className="cursor-pointer">
+            {isPublishing ? 'Publishing...' : 'Publish'}
+          </Button>
+        </div>
 
-          <div className="max-w-5xl mx-auto pt-6">
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              type="text"
-              placeholder="Title"
-              className="outline-none bg-transparent text-2xl w-full"
-            />
-            <Editor ref={editorRef} />
+        <div className="px-4">
+          <div className="max-w-5xl mx-auto pb-4">
+            <div className="py-4">
+              {articleData.thumbnail ? (
+                <ArticleThumbnail
+                  thumbnailUrl={articleData.thumbnail.url}
+                  articleId={articleId}
+                  alt={thumbnailAlt}
+                  onAltChange={setThumbnailAlt}
+                  onAltBlur={handleThumbnailAltBlur}
+                />
+              ) : (
+                <UploadThumbnail articleId={articleId} />
+              )}
+            </div>
+
+            <div className="max-w-5xl mx-auto pt-6">
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                type="text"
+                placeholder="Title"
+                className="outline-none bg-transparent text-2xl w-full"
+              />
+              <Editor ref={editorRef} />
+            </div>
           </div>
         </div>
-      </div>
-    </ClientOnly>
+      </ClientOnly>
+    </>
   )
 }

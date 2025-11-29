@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import NavigationName from '@/components/ui/navigation-name'
 
 function FieldInfo({ field }: { field: AnyFieldApi }) {
   return (
@@ -121,105 +122,108 @@ export default function SettingsGeneralPage() {
   })
 
   return (
-    <div className="flex flex-col gap-2 max-w-md mx-auto pt-6 w-full">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          form.handleSubmit()
-        }}
-      >
-        <div className="space-y-8">
-          <form.Field
-            name="name"
-            children={(field) => {
-              return (
-                <>
-                  <div className="grid w-full items-center gap-3">
-                    <Label htmlFor={field.name}>Edit name project</Label>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="Edit name project"
-                    />
-                  </div>
-                  <FieldInfo field={field} />
-                </>
-              )
-            }}
-          />
-          <form.Field
-            name="tagline"
-            children={(field) => {
-              return (
-                <>
-                  <div className="grid w-full items-center gap-3">
-                    <Label htmlFor={field.name}>Tagline (next to logo)</Label>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="Displayed next to the logo when not empty"
-                    />
-                  </div>
-                  <FieldInfo field={field} />
-                </>
-              )
-            }}
-          />
-        </div>
-        <div className="mt-2 flex justify-end">
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit, isSubmitting]) => (
-              <Button type="submit" disabled={!canSubmit}>
-                {isSubmitting ? '...' : 'Submit'}
-              </Button>
+    <>
+      <NavigationName name="General Settings" subtitle="Manage your project's basic configuration" />
+      <div className="flex flex-col gap-2 max-w-3xl mx-auto pt-6 w-full">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            form.handleSubmit()
+          }}
+        >
+          <div className="space-y-8">
+            <form.Field
+              name="name"
+              children={(field) => {
+                return (
+                  <>
+                    <div className="grid w-full items-center gap-3">
+                      <Label htmlFor={field.name}>Edit name project</Label>
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="Edit name project"
+                      />
+                    </div>
+                    <FieldInfo field={field} />
+                  </>
+                )
+              }}
+            />
+            <form.Field
+              name="tagline"
+              children={(field) => {
+                return (
+                  <>
+                    <div className="grid w-full items-center gap-3">
+                      <Label htmlFor={field.name}>Tagline (next to logo)</Label>
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="Displayed next to the logo when not empty"
+                      />
+                    </div>
+                    <FieldInfo field={field} />
+                  </>
+                )
+              }}
+            />
+          </div>
+          <div className="mt-2 flex justify-end">
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]) => (
+                <Button type="submit" disabled={!canSubmit}>
+                  {isSubmitting ? '...' : 'Submit'}
+                </Button>
+              )}
+            />
+          </div>
+        </form>
+
+        <Separator className="my-6" />
+
+        <div className="flex flex-col gap-4">
+          <Label htmlFor="favicon-upload">Favicon</Label>
+          <div>
+            {settingsGeneralData?.favicon.url && (
+              <div className="flex items-center gap-2">
+                <img src={settingsGeneralData.favicon.url} alt="favicon image" className="w-8 h-8" />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => document.getElementById('favicon-upload')?.click()}
+                >
+                  Change
+                </Button>
+                <Button type="button" variant="destructive" size="sm" onClick={handleDeleteFavicon}>
+                  Delete
+                </Button>
+              </div>
             )}
-          />
-        </div>
-      </form>
-
-      <Separator className="my-6" />
-
-      <div className="flex flex-col gap-4">
-        <Label htmlFor="favicon-upload">Favicon</Label>
-        <div>
-          {settingsGeneralData?.favicon.url && (
-            <div className="flex items-center gap-2">
-              <img src={settingsGeneralData.favicon.url} alt="favicon image" className="w-8 h-8" />
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => document.getElementById('favicon-upload')?.click()}
-              >
-                Change
-              </Button>
-              <Button type="button" variant="destructive" size="sm" onClick={handleDeleteFavicon}>
-                Delete
-              </Button>
-            </div>
-          )}
-          <Input
-            id="favicon-upload"
-            type="file"
-            accept="image/x-icon,image/png,image/svg+xml"
-            onChange={handleUploadFavicon}
-            className={settingsGeneralData?.favicon.url ? 'hidden' : ''}
-          />
-          <p className="text-sm text-gray-500 mt-2">
-            Add a favicon for your site. A <strong>.ico</strong> file is ideal, but <strong>.png</strong> and{' '}
-            <strong>.svg</strong> are also supported. Recommended sizes: <strong>32×32</strong> or{' '}
-            <strong>64×64</strong>.
-          </p>
+            <Input
+              id="favicon-upload"
+              type="file"
+              accept="image/x-icon,image/png,image/svg+xml"
+              onChange={handleUploadFavicon}
+              className={settingsGeneralData?.favicon.url ? 'hidden' : ''}
+            />
+            <p className="text-sm text-gray-500 mt-2">
+              Add a favicon for your site. A <strong>.ico</strong> file is ideal, but <strong>.png</strong> and{' '}
+              <strong>.svg</strong> are also supported. <br />
+              Recommended sizes: <strong>32×32</strong> or <strong>64×64</strong>.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }

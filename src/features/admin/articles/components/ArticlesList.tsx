@@ -21,7 +21,7 @@ export default function ArticlesList({ articleStatus }: ArticlesListProps) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto pt-10 w-full">
+    <div className="max-w-3xl mx-auto pt-6 w-full">
       <div className="border border-border/70 rounded-xl overflow-hidden">
         {articles.map((article, idx) => {
           const isLast = idx === articles.length - 1

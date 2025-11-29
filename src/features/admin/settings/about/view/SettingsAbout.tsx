@@ -8,6 +8,7 @@ import { settingsAboutList, settingsAboutUpdate } from '../api/list'
 import type { PlateEditor } from 'platejs/react'
 import Editor from '@/features/editor/Editor'
 import { Button } from '@/components/ui/button'
+import NavigationName from '@/components/ui/navigation-name'
 
 export default function SettingsAboutPage() {
   const editorRef = useRef<PlateEditor>(null)
@@ -66,17 +67,24 @@ export default function SettingsAboutPage() {
   }
 
   return (
-    <ClientOnly fallback={<div>Loading editor...</div>}>
-      <div className="flex justify-end items-center p-4">
-        <Button disabled={updateSettingsAboutMutation.isPending} onClick={handleEditArticle} className="cursor-pointer">
-          {updateSettingsAboutMutation.isPending ? 'Updating...' : 'Update about'}
-        </Button>
-      </div>
-      <div className="px-4">
-        <div className="max-w-5xl mx-auto">
-          <Editor ref={editorRef} placeholder="Write about page here..." />
+    <>
+      <NavigationName name="About Page" subtitle="Manage the text shown on the About page in your blog's footer" />
+      <ClientOnly fallback={<div>Loading editor...</div>}>
+        <div className="flex justify-end items-center p-4">
+          <Button
+            disabled={updateSettingsAboutMutation.isPending}
+            onClick={handleEditArticle}
+            className="cursor-pointer"
+          >
+            {updateSettingsAboutMutation.isPending ? 'Updating...' : 'Update about'}
+          </Button>
         </div>
-      </div>
-    </ClientOnly>
+        <div className="px-4">
+          <div className="max-w-5xl mx-auto">
+            <Editor ref={editorRef} placeholder="Write about page here..." />
+          </div>
+        </div>
+      </ClientOnly>
+    </>
   )
 }
