@@ -9,6 +9,12 @@ export const settingsSchemas = {
   about: z.object({
     content: z.string().min(1),
   }),
+
+  favicon: z.object({
+    key: z.string().min(1),
+    mimetype: z.string().min(1),
+    url: z.url(),
+  }),
 }
 
 export type SettingsMap = {

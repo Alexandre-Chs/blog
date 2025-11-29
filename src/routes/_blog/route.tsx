@@ -4,13 +4,13 @@ import { settingsGeneralListBlog } from '@/features/blog/api/settings'
 export const Route = createFileRoute('/_blog')({
   beforeLoad: async () => {
     // safe for public
-    const settingsGeneral = await settingsGeneralListBlog()
-
-    return { ...settingsGeneral?.value }
+    // get only general settings + favicon url
+    return await settingsGeneralListBlog()
   },
 
   head: ({ match }) => {
-    const projectName = match.context.name
+    const projectName = match.context.general.name
+    const faviconUrl = match.context.favicon.url || '/favicon.ico'
     return {
       meta: [
         {
@@ -21,6 +21,12 @@ export const Route = createFileRoute('/_blog')({
           content: 'A blog about ' + projectName,
         },
       ],
+      links: [
+        {
+          rel: 'icon',
+          href: faviconUrl,
+        },
+      ],
     }
   },
 
@@ -28,7 +34,7 @@ export const Route = createFileRoute('/_blog')({
 })
 
 function RouteComponent() {
-  const { name, tagline } = Route.useRouteContext()
+  const settingsGeneralBlog = Route.useRouteContext()
 
   return (
     <div className="flex min-h-screen flex-col px-8 lg:px-0">
@@ -40,10 +46,10 @@ function RouteComponent() {
               className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight md:pr-8"
               style={{ fontFamily: 'Inter, sans-serif' }}
             >
-              {name}
+              {settingsGeneralBlog.general.name}
             </Link>
-            {tagline && tagline.trim().length > 0 && (
-              <div className="text-center md:text-left text-lg mt-5 md:pl-8">{tagline}</div>
+            {settingsGeneralBlog.general.tagline && settingsGeneralBlog.general.tagline.trim().length > 0 && (
+              <div className="text-center md:text-left text-lg mt-5 md:pl-8">{settingsGeneralBlog.general.tagline}</div>
             )}
           </div>
         </header>
@@ -60,7 +66,7 @@ function RouteComponent() {
               className="text-lg font-semibold tracking-tight text-gray-900 hover:text-gray-600"
               style={{ fontFamily: 'Inter, sans-serif' }}
             >
-              {name}
+              {settingsGeneralBlog.general.name}
             </Link>
           </div>
           <div className="mt-8 md:mt-0 flex flex-col md:flex-row gap-12">

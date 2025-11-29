@@ -2,7 +2,8 @@ import { toast } from 'sonner'
 import { useServerFn } from '@tanstack/react-start'
 import { UploadCloud } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
-import { thumbnailInsertDatabase, thumbnailSignedUrl } from '../api/thumbnail'
+import { thumbnailInsertDatabase } from '../api/thumbnail'
+import { mediaSignedUrl } from '../api/media'
 import { Input } from '@/components/ui/input'
 
 type UploadThumbnailProps = {
@@ -10,15 +11,16 @@ type UploadThumbnailProps = {
 }
 
 export default function UploadThumbnail({ articleId }: UploadThumbnailProps) {
-  const thumbnailSignedUrlFn = useServerFn(thumbnailSignedUrl)
+  const mediaSignedUrlFn = useServerFn(mediaSignedUrl)
   const thumbnailInsertDatabaseFn = useServerFn(thumbnailInsertDatabase)
   const queryClient = useQueryClient()
+
   const handleUploadThumbnail = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const file = evt.target.files?.[0]
     if (!file) return
 
     try {
-      const { presigned, key } = await thumbnailSignedUrlFn({
+      const { presigned, key } = await mediaSignedUrlFn({
         data: { contentType: file.type || 'application/octet-stream', size: file.size },
       })
 

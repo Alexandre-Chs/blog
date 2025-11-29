@@ -136,6 +136,7 @@ export const articlesToMediasRelations = relations(articlesToMedias, ({ one }) =
 type SettingsMap = {
   general: { name: string }
   about: { content: string }
+  favicon: { key: string; mimetype: string; url: string }
 }
 
 export const settings = pgTable('settings', {
