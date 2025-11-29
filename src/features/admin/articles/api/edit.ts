@@ -16,20 +16,20 @@ export const articleById = createServerFn({ method: 'GET' })
   .handler(async ({ data }) => {
     const articleId = data.articleId
 
-  const [article] = await db.select().from(articles).where(eq(articles.id, articleId))
+    const [article] = await db.select().from(articles).where(eq(articles.id, articleId))
 
-  const media = await db
-    .select({
-      id: medias.id,
-      key: medias.key,
-      mimetype: medias.mimetype,
-      size: medias.size,
-      role: articlesToMedias.role,
-      alt: medias.alt,
-    })
-    .from(articlesToMedias)
-    .leftJoin(medias, eq(medias.id, articlesToMedias.mediaId))
-    .where(and(eq(articlesToMedias.articleId, articleId), eq(articlesToMedias.role, 'thumbnail')))
+    const media = await db
+      .select({
+        id: medias.id,
+        key: medias.key,
+        mimetype: medias.mimetype,
+        size: medias.size,
+        role: articlesToMedias.role,
+        alt: medias.alt,
+      })
+      .from(articlesToMedias)
+      .leftJoin(medias, eq(medias.id, articlesToMedias.mediaId))
+      .where(and(eq(articlesToMedias.articleId, articleId), eq(articlesToMedias.role, 'thumbnail')))
 
     let thumbnail = null
 
@@ -75,6 +75,21 @@ export const articleUpdate = createServerFn({ method: 'POST' })
         updatedAt: new Date(),
         publishedAt: data.publishedAt ?? null,
       })
+      .where(eq(articles.id, articleId))
+      .returning()
+
+    return { success: true, article: updatedArticle }
+  })
+
+export const articleDeletePublishedAt = createServerFn({ method: 'POST' })
+  .middleware([adminMiddleware])
+  .inputValidator(z.object({ articleId: z.uuid() }))
+  .handler(async ({ data }) => {
+    const { articleId } = data
+
+    const [updatedArticle] = await db
+      .update(articles)
+      .set({ publishedAt: null })
       .where(eq(articles.id, articleId))
       .returning()
 

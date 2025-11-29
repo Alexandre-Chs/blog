@@ -5,16 +5,20 @@ import { MarkdownPlugin } from '@platejs/markdown'
 import { toast } from 'sonner'
 import { useServerFn } from '@tanstack/react-start'
 import type { PlateEditor } from 'platejs/react'
-import { articleById, articleUpdate } from '@/features/admin/articles/api/edit'
+import { articleById, articleDeletePublishedAt, articleUpdate } from '@/features/admin/articles/api/edit'
 import { thumbnailUpdateAlt } from '@/features/admin/medias/api/thumbnail'
 
 export function useArticleEditPage(articleId: string) {
+  const [publishedAt, setPublishedAt] = useState<Date | undefined>(undefined)
   const editorRef = useRef<PlateEditor>(null)
   const [title, setTitle] = useState('')
   const [thumbnailAlt, setThumbnailAlt] = useState('')
+
   const articleByIdFn = useServerFn(articleById)
   const articleUpdateFn = useServerFn(articleUpdate)
   const thumbnailUpdateAltFn = useServerFn(thumbnailUpdateAlt)
+  const articleDeletePublishedAtFn = useServerFn(articleDeletePublishedAt)
+
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
@@ -29,6 +33,7 @@ export function useArticleEditPage(articleId: string) {
     editorRef.current.tf.setValue(plateValue)
     setTitle(articleData.article.title)
     setThumbnailAlt(articleData.thumbnail?.alt ?? '')
+    setPublishedAt(articleData.article.publishedAt ? new Date(articleData.article.publishedAt) : undefined)
   }, [articleData])
 
   const updateArticleMutation = useMutation({
@@ -63,7 +68,7 @@ export function useArticleEditPage(articleId: string) {
         articleId,
         title: title.trim(),
         content: markdown,
-        publishedAt: new Date(),
+        publishedAt: publishedAt ?? new Date(),
       },
     })
   }
@@ -79,6 +84,11 @@ export function useArticleEditPage(articleId: string) {
     }
   }
 
+  const handleDeletePublishedAt = async () => {
+    await articleDeletePublishedAtFn({ data: { articleId } })
+    queryClient.invalidateQueries({ queryKey: ['articleEdit', articleId] })
+  }
+
   return {
     editorRef,
     articleData,
@@ -89,6 +99,9 @@ export function useArticleEditPage(articleId: string) {
     setThumbnailAlt,
     handleEditArticle,
     handleThumbnailAltBlur,
+    handleDeletePublishedAt,
     isPublishing: updateArticleMutation.isPending,
+    publishedAt,
+    setPublishedAt,
   }
 }

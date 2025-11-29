@@ -4,6 +4,7 @@ import UploadThumbnail from '../../medias/components/UploadThumbnail'
 import Editor from '@/features/editor/Editor'
 import { Button } from '@/components/ui/button'
 import { useArticleEditPage } from '@/hooks/useArticleEdit'
+import { DatePicker } from '@/components/datepicker/DatePicker'
 
 type ArticleEditPageProps = {
   articleId: string
@@ -20,7 +21,10 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
     setThumbnailAlt,
     handleEditArticle,
     handleThumbnailAltBlur,
+    handleDeletePublishedAt,
     isPublishing,
+    setPublishedAt,
+    publishedAt,
   } = useArticleEditPage(articleId)
 
   const navigate = useNavigate()
@@ -40,7 +44,15 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
 
   return (
     <ClientOnly fallback={<div>Loading editor...</div>}>
-      <div className="flex justify-end items-center p-4">
+      <div className="flex justify-between items-center p-4">
+        <div className="flex gap-x-2">
+          <DatePicker onChange={setPublishedAt} value={publishedAt} placeholder="Pick a publish date" />
+          {publishedAt && (
+            <Button variant="secondary" onClick={handleDeletePublishedAt}>
+              Unpublish
+            </Button>
+          )}
+        </div>
         <Button disabled={isPublishing} onClick={handleEditArticle} className="cursor-pointer">
           {isPublishing ? 'Publishing...' : 'Publish'}
         </Button>
