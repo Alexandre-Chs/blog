@@ -6,6 +6,16 @@ import { toast } from 'sonner'
 import { articleDelete } from '../api/delete'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 
 type ArticleActionsProps = {
   articleId: string
@@ -46,7 +56,7 @@ export default function ArticleActions({ articleId }: ArticleActionsProps) {
   }
 
   return (
-    <div className="gap-x-1">
+    <div className="flex gap-x-1">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
@@ -63,23 +73,42 @@ export default function ArticleActions({ articleId }: ArticleActionsProps) {
           <p>Edit article</p>
         </TooltipContent>
       </Tooltip>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            aria-label="Delete article"
-            disabled={articleDeleteMutation.isPending}
-            className="cursor-pointer text-red-600 hover:bg-red-600/10 hover:text-red-600"
-            onClick={handleArticleDelete}
-          >
-            <Trash2 />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Delete artcle</p>
-        </TooltipContent>
-      </Tooltip>
+
+      <Dialog>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Delete article"
+                className="cursor-pointer text-red-600 hover:bg-red-600/10 hover:text-red-600"
+              >
+                <Trash2 />
+              </Button>
+            </DialogTrigger>
+          </TooltipTrigger>
+
+          <TooltipContent>
+            <p>Delete article</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Delete article</DialogTitle>
+            <DialogDescription>This action cannot be undone.</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button type="submit" onClick={handleArticleDelete}>
+              Delete article
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
