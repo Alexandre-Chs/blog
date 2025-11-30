@@ -23,6 +23,7 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AdminLayoutSettingsIndexRouteImport } from './routes/admin/_layout/settings/index'
 import { Route as AdminLayoutCalendarIndexRouteImport } from './routes/admin/_layout/calendar/index'
 import { Route as AdminLayoutArticlesIndexRouteImport } from './routes/admin/_layout/articles/index'
+import { Route as AdminLayoutSettingsAiIndexRouteImport } from './routes/admin/_layout/settings/ai/index'
 import { Route as AdminLayoutSettingsAboutIndexRouteImport } from './routes/admin/_layout/settings/about/index'
 import { Route as AdminLayoutArticlesCreateIndexRouteImport } from './routes/admin/_layout/articles/create/index'
 import { Route as AdminLayoutArticlesArticleIdEditIndexRouteImport } from './routes/admin/_layout/articles/$articleId/edit/index'
@@ -95,6 +96,12 @@ const AdminLayoutArticlesIndexRoute =
     path: '/articles/',
     getParentRoute: () => AdminLayoutRouteRoute,
   } as any)
+const AdminLayoutSettingsAiIndexRoute =
+  AdminLayoutSettingsAiIndexRouteImport.update({
+    id: '/settings/ai/',
+    path: '/settings/ai/',
+    getParentRoute: () => AdminLayoutRouteRoute,
+  } as any)
 const AdminLayoutSettingsAboutIndexRoute =
   AdminLayoutSettingsAboutIndexRouteImport.update({
     id: '/settings/about/',
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminLayoutSettingsIndexRoute
   '/admin/articles/create': typeof AdminLayoutArticlesCreateIndexRoute
   '/admin/settings/about': typeof AdminLayoutSettingsAboutIndexRoute
+  '/admin/settings/ai': typeof AdminLayoutSettingsAiIndexRoute
   '/admin/articles/$articleId/edit': typeof AdminLayoutArticlesArticleIdEditIndexRoute
 }
 export interface FileRoutesByTo {
@@ -143,6 +151,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminLayoutSettingsIndexRoute
   '/admin/articles/create': typeof AdminLayoutArticlesCreateIndexRoute
   '/admin/settings/about': typeof AdminLayoutSettingsAboutIndexRoute
+  '/admin/settings/ai': typeof AdminLayoutSettingsAiIndexRoute
   '/admin/articles/$articleId/edit': typeof AdminLayoutArticlesArticleIdEditIndexRoute
 }
 export interface FileRoutesById {
@@ -162,6 +171,7 @@ export interface FileRoutesById {
   '/admin/_layout/settings/': typeof AdminLayoutSettingsIndexRoute
   '/admin/_layout/articles/create/': typeof AdminLayoutArticlesCreateIndexRoute
   '/admin/_layout/settings/about/': typeof AdminLayoutSettingsAboutIndexRoute
+  '/admin/_layout/settings/ai/': typeof AdminLayoutSettingsAiIndexRoute
   '/admin/_layout/articles/$articleId/edit/': typeof AdminLayoutArticlesArticleIdEditIndexRoute
 }
 export interface FileRouteTypes {
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/articles/create'
     | '/admin/settings/about'
+    | '/admin/settings/ai'
     | '/admin/articles/$articleId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/articles/create'
     | '/admin/settings/about'
+    | '/admin/settings/ai'
     | '/admin/articles/$articleId/edit'
   id:
     | '__root__'
@@ -213,6 +225,7 @@ export interface FileRouteTypes {
     | '/admin/_layout/settings/'
     | '/admin/_layout/articles/create/'
     | '/admin/_layout/settings/about/'
+    | '/admin/_layout/settings/ai/'
     | '/admin/_layout/articles/$articleId/edit/'
   fileRoutesById: FileRoutesById
 }
@@ -315,6 +328,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutArticlesIndexRouteImport
       parentRoute: typeof AdminLayoutRouteRoute
     }
+    '/admin/_layout/settings/ai/': {
+      id: '/admin/_layout/settings/ai/'
+      path: '/settings/ai'
+      fullPath: '/admin/settings/ai'
+      preLoaderRoute: typeof AdminLayoutSettingsAiIndexRouteImport
+      parentRoute: typeof AdminLayoutRouteRoute
+    }
     '/admin/_layout/settings/about/': {
       id: '/admin/_layout/settings/about/'
       path: '/settings/about'
@@ -362,6 +382,7 @@ interface AdminLayoutRouteRouteChildren {
   AdminLayoutSettingsIndexRoute: typeof AdminLayoutSettingsIndexRoute
   AdminLayoutArticlesCreateIndexRoute: typeof AdminLayoutArticlesCreateIndexRoute
   AdminLayoutSettingsAboutIndexRoute: typeof AdminLayoutSettingsAboutIndexRoute
+  AdminLayoutSettingsAiIndexRoute: typeof AdminLayoutSettingsAiIndexRoute
   AdminLayoutArticlesArticleIdEditIndexRoute: typeof AdminLayoutArticlesArticleIdEditIndexRoute
 }
 
@@ -372,6 +393,7 @@ const AdminLayoutRouteRouteChildren: AdminLayoutRouteRouteChildren = {
   AdminLayoutSettingsIndexRoute: AdminLayoutSettingsIndexRoute,
   AdminLayoutArticlesCreateIndexRoute: AdminLayoutArticlesCreateIndexRoute,
   AdminLayoutSettingsAboutIndexRoute: AdminLayoutSettingsAboutIndexRoute,
+  AdminLayoutSettingsAiIndexRoute: AdminLayoutSettingsAiIndexRoute,
   AdminLayoutArticlesArticleIdEditIndexRoute:
     AdminLayoutArticlesArticleIdEditIndexRoute,
 }

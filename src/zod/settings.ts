@@ -15,6 +15,11 @@ export const settingsSchemas = {
     mimetype: z.string().min(1),
     url: z.url(),
   }),
+
+  ai: z.object({
+    context: z.string(),
+    defaultModel: z.string(),
+  }),
 }
 
 export type SettingsMap = {

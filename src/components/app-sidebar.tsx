@@ -35,6 +35,7 @@ const data = {
       title: 'Settings',
       items: [
         { title: 'General', url: '/admin/settings' },
+        { title: 'AI', url: '/admin/settings/ai' },
         { title: 'About', url: '/admin/settings/about' },
       ],
     },
