@@ -1,24 +1,20 @@
-import { useEffect } from 'react'
+import { useState } from 'react'
 import { revalidateLogic, useForm } from '@tanstack/react-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
+import { Check, ChevronsUpDown } from 'lucide-react'
 import { SettingsAiFormSchema, settingsAiList, settingsAiUpdate } from '../api/settings'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import NavigationName from '@/components/ui/navigation-name'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
+import { cn } from '@/lib/utils'
+import { getOpenrouterModels } from '@/lib/openrouter/api'
 
 function FieldInfo({ field }: { field: AnyFieldApi }) {
   return (
@@ -32,13 +28,34 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export default function SettingsAiPage() {
+  const [open, setOpen] = useState(false)
   const settingsAiUpdateFn = useServerFn(settingsAiUpdate)
   const settingsAiListFn = useServerFn(settingsAiList)
+  const getOpenrouterModelsFn = useServerFn(getOpenrouterModels)
   const router = useRouter()
 
-  const { data: settingsAiData, isSuccess } = useQuery({
+  const { data: settingsAiData } = useQuery({
     queryKey: ['settingsAi'],
     queryFn: () => settingsAiListFn(),
+  })
+
+  const { data: models } = useQuery({
+    queryKey: ['openrouterModels'],
+    queryFn: async () => await getOpenrouterModelsFn(),
+  })
+
+  const form = useForm({
+    defaultValues: {
+      context: settingsAiData?.context ?? '',
+      defaultModel: settingsAiData?.defaultModel ?? '',
+    },
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: SettingsAiFormSchema,
+    },
+    onSubmit: ({ value }) => {
+      settingsAiMutation.mutate({ data: { context: value.context, defaultModel: value.defaultModel } })
+    },
   })
 
   const settingsAiMutation = useMutation({
@@ -53,31 +70,6 @@ export default function SettingsAiPage() {
       } else {
         toast.error('An error occurred while updating the article.')
       }
-    },
-  })
-
-  useEffect(() => {
-    if (isSuccess) {
-      const value = settingsAiData
-
-      form.reset({
-        context: value.context,
-        defaultModel: value.defaultModel,
-      })
-    }
-  }, [settingsAiData])
-
-  const form = useForm({
-    defaultValues: {
-      context: '',
-      defaultModel: '',
-    },
-    validationLogic: revalidateLogic(),
-    validators: {
-      onDynamic: SettingsAiFormSchema,
-    },
-    onSubmit: ({ value }) => {
-      settingsAiMutation.mutate({ data: { context: value.context, defaultModel: value.defaultModel } })
     },
   })
 
@@ -119,23 +111,62 @@ export default function SettingsAiPage() {
                 <>
                   <div className="grid w-full items-center gap-3">
                     <Label htmlFor={field.name}>Default AI Model</Label>
+                    <span className="italic text-xs">
+                      You can find all models and their details
+                      <a
+                        href="https://openrouter.ai/models"
+                        target="_blank"
+                        className="font-bold text-blue-500 ml-1 hover:underline"
+                      >
+                        here
+                      </a>
+                      <br />
+                      Type "free" to find all free models.
+                    </span>
 
-                    <Select value={field.state.value} onValueChange={(value) => field.handleChange(value)}>
-                      <SelectTrigger className="w-[280px]">
-                        <SelectValue placeholder="Select a model" />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>OpenRouter Models</SelectLabel>
-                          <SelectItem value="openrouter/anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</SelectItem>
-                          <SelectItem value="openrouter/openai/gpt-4.1">GPT‑4.1</SelectItem>
-                          <SelectItem value="openrouter/google/gemini-flash-1.5">Gemini Flash 1.5</SelectItem>
-                          <SelectItem value="openrouter/meta/llama-3.1-70b">Llama 3.1 70B</SelectItem>
-                          <SelectItem value="openrouter/qwen/qwen2.5-72b">Qwen 2.5 72B</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                    <Popover open={open} onOpenChange={setOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={open}
+                          className="w-full justify-between"
+                        >
+                          {field.state.value
+                            ? (models?.find((model) => model.id === field.state.value)?.name ?? field.state.value)
+                            : 'Select a model...'}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0">
+                        <Command>
+                          <CommandInput placeholder="Search model..." className="h-9" />
+                          <CommandList>
+                            <CommandEmpty>No model found.</CommandEmpty>
+                            <CommandGroup heading="OpenRouter Models">
+                              {models?.map((model) => (
+                                <CommandItem
+                                  key={model.id}
+                                  value={model.id}
+                                  onSelect={(currentValue) => {
+                                    field.handleChange(currentValue === field.state.value ? '' : currentValue)
+                                    setOpen(false)
+                                  }}
+                                >
+                                  {model.name}
+                                  <Check
+                                    className={cn(
+                                      'ml-auto h-4 w-4',
+                                      field.state.value === model.id ? 'opacity-100' : 'opacity-0',
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </div>
 
                   <FieldInfo field={field} />
