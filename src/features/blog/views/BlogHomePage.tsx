@@ -61,14 +61,14 @@ const BlogHomePage = () => {
               <div className="px-6 py-6 sm:px-8 sm:py-7">
                 <p className="mb-1 text-xs text-neutral-500">{date}</p>
                 <h2 className="text-2xl font-semibold leading-snug text-neutral-900">{article.title}</h2>
-                <p className="mt-1 text-sm leading-relaxed text-neutral-600">
+                <div className="mt-1 text-sm leading-relaxed text-neutral-600">
                   <PlateMarkdown>
                     {article.content
                       .replace(/[*_#`[\]]/g, '')
                       .replace(/\s+/g, ' ')
                       .slice(0, 140) + (article.content.length > 140 ? '…' : '')}
                   </PlateMarkdown>
-                </p>
+                </div>
               </div>
             </article>
           </Link>
