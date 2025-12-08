@@ -1,10 +1,5 @@
 import { ClientOnly, useNavigate } from '@tanstack/react-router'
 import { Sparkles } from 'lucide-react'
-import { useState } from 'react'
-import { useServerFn } from '@tanstack/react-start'
-import { useMutation } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { MarkdownPlugin } from '@platejs/markdown'
 import ArticleThumbnail from '../../medias/components/ArticleThumbnail'
 import UploadThumbnail from '../../medias/components/UploadThumbnail'
 import Editor from '@/features/editor/Editor'
@@ -16,7 +11,6 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { generateArticle } from '@/lib/openrouter/api'
 import { useAiAssistant } from '@/hooks/useAiAssistant'
 
 type ArticleEditPageProps = {
@@ -49,7 +43,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
     setAiAdditionalInfo,
     generateArticleMutation,
     handleGenerateArticle,
-  } = useAiAssistant(editorRef)
+  } = useAiAssistant(editorRef, setTitle)
 
   const navigate = useNavigate()
 

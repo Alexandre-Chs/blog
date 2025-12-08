@@ -30,22 +30,54 @@ export const generateArticle = createServerFn({ method: 'POST' })
 
     if (!aiSettings.defaultModel) throw new Error('No default AI model configured. Please set one in AI settings.')
 
+    const baseContext =
+      aiSettings.context || 'You are an expert blog article writer for agencies, founders, and solopreneurs.'
+
+    const formattingInstructions = `
+      You MUST respond with a single valid JSON object and nothing else.
+      The object must contain:
+      - "title": string
+      - "content": string (full article in Markdown)
+
+      STRICT RULES:
+      - The "content" field MUST NOT contain the title. Do NOT repeat or restate the title inside "content".
+      - "content" must begin directly with an introduction paragraph or section — NEVER with "# {title}".
+      - Use headings (##, ###), paragraphs, bullet lists.
+      - NEVER use Markdown tables ("|").
+      - Do not wrap JSON in code fences.
+      - Output must be valid JSON, parseable by JSON.parse.
+    `
+
+    const systemContent = `${baseContext} You are the writing engine for this project. The preceding text is the global project context defined by the user. It MUST always guide tone, structure, and article positioning. ${formattingInstructions}`
+    const userContent = `You must write a full article on the subject: "${data.subject}". The complementary information provided by the user is: "${data.additionalInfo ?? 'none'}". Follow the system rules strictly.`
+
     const response = await openrouter.chat.completions.create({
       model: aiSettings.defaultModel,
       messages: [
         {
           role: 'system',
-          content: aiSettings.context || 'You are a helpful article writing assistant.',
+          content: systemContent,
         },
         {
           role: 'user',
-          content: `Write a comprehensive article about: ${data.subject}${data.additionalInfo ? `\n\nAdditional context: ${data.additionalInfo}` : ''}`,
+          content: userContent,
         },
       ],
     })
 
+    const raw = response.choices[0]?.message?.content || ''
+    const parsed = JSON.parse(raw) as { title?: string; content?: string }
+
+    let title = ''
+    let content = ''
+
+    if (parsed.title) title = parsed.title
+    if (parsed.content) content = parsed.content
+
+    if (!title && !content) throw new Error('AI response is missing title or content. Please try again.')
+
     return {
-      content: response.choices[0]?.message?.content || '',
-      model: aiSettings.defaultModel,
+      title,
+      content,
     }
   })

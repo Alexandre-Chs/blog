@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import type { PlateEditor } from 'platejs/react'
 import { generateArticle } from '@/lib/openrouter/api'
 
-export function useAiAssistant(editorRef: React.RefObject<PlateEditor | null>) {
+export function useAiAssistant(editorRef: React.RefObject<PlateEditor | null>, setTitle: (title: string) => void) {
   const [aiSheetOpen, setAiSheetOpen] = useState(false)
   const [aiSubject, setAiSubject] = useState('')
   const [aiAdditionalInfo, setAiAdditionalInfo] = useState('')
@@ -20,9 +20,10 @@ export function useAiAssistant(editorRef: React.RefObject<PlateEditor | null>) {
         toast.error('Editor not ready')
         return
       }
-
-      const plateValue = editorRef.current.getApi(MarkdownPlugin).markdown.deserialize(data.content)
+      const { title, content } = data
+      const plateValue = editorRef.current.getApi(MarkdownPlugin).markdown.deserialize(content)
       editorRef.current.tf.setValue(plateValue)
+      setTitle(title)
 
       toast.success('Article generated successfully!')
       setAiSheetOpen(false)
