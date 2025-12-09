@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useAiAssistant } from '@/hooks/useAiAssistant'
+import { AiLoader } from '@/components/ui/ai-loader'
 
 type ArticleEditPageProps = {
   articleId: string
@@ -41,8 +42,9 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
     setAiSubject,
     aiAdditionalInfo,
     setAiAdditionalInfo,
-    generateArticleMutation,
     handleGenerateArticle,
+    isGenerating,
+    streamingText,
   } = useAiAssistant(editorRef, setTitle)
 
   const navigate = useNavigate()
@@ -82,35 +84,38 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
                     Let AI help you write your article. Provide a subject and any additional details.
                   </SheetDescription>
                 </SheetHeader>
-                <div className="space-y-6 py-6 px-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="ai-subject">Article Subject *</Label>
-                    <Input
-                      id="ai-subject"
-                      placeholder="e.g., The future of web development"
-                      value={aiSubject}
-                      onChange={(e) => setAiSubject(e.target.value)}
-                    />
+                {isGenerating ? (
+                  <AiLoader streamingText={streamingText} className="px-4" />
+                ) : (
+                  <div className="space-y-6 py-6 px-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="ai-subject">Article Subject *</Label>
+                      <Input
+                        id="ai-subject"
+                        placeholder="e.g., The future of web development"
+                        value={aiSubject}
+                        onChange={(e) => setAiSubject(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="ai-additional">Additional Information</Label>
+                      <Textarea
+                        id="ai-additional"
+                        placeholder="Add any specific points, tone, or context you'd like the AI to consider..."
+                        className="min-h-[150px]"
+                        value={aiAdditionalInfo}
+                        onChange={(e) => setAiAdditionalInfo(e.target.value)}
+                      />
+                    </div>
+                    <Button
+                      onClick={handleGenerateArticle}
+                      disabled={!aiSubject.trim()}
+                      className="w-full gap-2 cursor-pointer"
+                    >
+                      <Sparkles className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="ai-additional">Additional Information</Label>
-                    <Textarea
-                      id="ai-additional"
-                      placeholder="Add any specific points, tone, or context you'd like the AI to consider..."
-                      className="min-h-[150px]"
-                      value={aiAdditionalInfo}
-                      onChange={(e) => setAiAdditionalInfo(e.target.value)}
-                    />
-                  </div>
-                  <Button
-                    onClick={handleGenerateArticle}
-                    disabled={!aiSubject.trim() || generateArticleMutation.isPending}
-                    className="w-full gap-2 cursor-pointer"
-                  >
-                    <Sparkles className="h-4 w-4" />
-                    {generateArticleMutation.isPending ? 'Generating...' : 'Generate Article'}
-                  </Button>
-                </div>
+                )}
               </SheetContent>
             </Sheet>
 

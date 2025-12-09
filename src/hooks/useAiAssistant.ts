@@ -1,7 +1,6 @@
 import { MarkdownPlugin } from '@platejs/markdown'
-import { useMutation } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
 import type { PlateEditor } from 'platejs/react'
 import { generateArticle } from '@/lib/openrouter/api'
@@ -13,38 +12,61 @@ export function useAiAssistant(editorRef: React.RefObject<PlateEditor | null>, s
 
   const generateArticleFn = useServerFn(generateArticle)
 
-  const generateArticleMutation = useMutation({
-    mutationFn: generateArticleFn,
-    onSuccess: (data) => {
-      if (!editorRef.current) {
-        toast.error('Editor not ready')
-        return
-      }
-      const { title, content } = data
-      const plateValue = editorRef.current.getApi(MarkdownPlugin).markdown.deserialize(content)
-      editorRef.current.tf.setValue(plateValue)
-      setTitle(title)
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [streamingText, setStreamingText] = useState('')
 
-      toast.success('Article generated successfully!')
-      setAiSheetOpen(false)
-    },
-    onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message)
-      } else {
-        toast.error('Failed to generate article')
-      }
-    },
-  })
+  const handleGenerateArticle = useCallback(async () => {
+    setIsGenerating(true)
+    setStreamingText('')
 
-  const handleGenerateArticle = () => {
-    generateArticleMutation.mutate({
-      data: {
-        subject: aiSubject,
-        additionalInfo: aiAdditionalInfo || undefined,
-      },
-    })
-  }
+    let finalTitle = ''
+    let finalContent = ''
+    let chunkCount = 0
+    let lastUpdate = Date.now()
+
+    try {
+      for await (const msg of await generateArticleFn({
+        data: { subject: aiSubject, additionalInfo: aiAdditionalInfo },
+      })) {
+        finalTitle = msg.title
+        finalContent = msg.content
+
+        chunkCount++
+
+        const now = Date.now()
+        if (chunkCount % 15 === 0 && now - lastUpdate > 800) {
+          const lines = msg.content.split('\n').filter((line) => line.trim())
+          if (lines.length > 0) {
+            const randomLine = lines[Math.floor(Math.random() * lines.length)]
+            setStreamingText(randomLine.slice(0, 100))
+            lastUpdate = now
+          }
+        }
+
+        if (msg.isComplete) {
+          if (!editorRef.current) {
+            toast.error('Editor not ready')
+            setIsGenerating(false)
+            return
+          }
+
+          const plateValue = editorRef.current.getApi(MarkdownPlugin).markdown.deserialize(finalContent)
+          editorRef.current.tf.setValue(plateValue)
+          setTitle(finalTitle)
+
+          toast.success('Article generated successfully!')
+          setAiSheetOpen(false)
+          setIsGenerating(false)
+          setStreamingText('')
+        }
+      }
+    } catch (error) {
+      console.error('Generation error:', error)
+      toast.error('Failed to generate article')
+      setIsGenerating(false)
+      setStreamingText('')
+    }
+  }, [aiSubject, aiAdditionalInfo, generateArticleFn])
 
   return {
     aiSheetOpen,
@@ -53,7 +75,8 @@ export function useAiAssistant(editorRef: React.RefObject<PlateEditor | null>, s
     setAiSubject,
     aiAdditionalInfo,
     setAiAdditionalInfo,
-    generateArticleMutation,
     handleGenerateArticle,
+    isGenerating,
+    streamingText,
   }
 }

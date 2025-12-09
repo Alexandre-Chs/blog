@@ -6,6 +6,7 @@ import type { OpenRouterModel } from './types'
 import { db } from '@/index'
 import { settings } from '@/db/schema'
 import { validateSettings } from '@/zod/settings'
+import { adminMiddleware } from '@/middlewares/admin'
 
 const openrouter = new OpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
@@ -23,10 +24,13 @@ const generateArticleSchema = z.object({
 })
 
 export const generateArticle = createServerFn({ method: 'POST' })
+  .middleware([adminMiddleware])
   .inputValidator(generateArticleSchema)
-  .handler(async ({ data }) => {
+  .handler(async function* ({ data }) {
     const row = await db.select().from(settings).where(eq(settings.key, 'ai')).limit(1)
     const aiSettings = row.length ? validateSettings('ai', row[0].value) : { context: '', defaultModel: '' }
+
+    console.log('le ai settings utilise est', aiSettings)
 
     if (!aiSettings.defaultModel) throw new Error('No default AI model configured. Please set one in AI settings.')
 
@@ -34,18 +38,18 @@ export const generateArticle = createServerFn({ method: 'POST' })
       aiSettings.context || 'You are an expert blog article writer for agencies, founders, and solopreneurs.'
 
     const formattingInstructions = `
-      You MUST respond with a single valid JSON object and nothing else.
-      The object must contain:
-      - "title": string
-      - "content": string (full article in Markdown)
+      Write a full article in Markdown following this EXACT structure:
+      
+      - First line: The article title (plain text, no markdown formatting)
+      - Second line: Empty line
+      - Rest: The full article content in Markdown
 
       STRICT RULES:
-      - The "content" field MUST NOT contain the title. Do NOT repeat or restate the title inside "content".
-      - "content" must begin directly with an introduction paragraph or section — NEVER with "# {title}".
-      - Use headings (##, ###), paragraphs, bullet lists.
-      - NEVER use Markdown tables ("|").
-      - Do not wrap JSON in code fences.
-      - Output must be valid JSON, parseable by JSON.parse.
+      - First line is ONLY the title (no # or other formatting)
+      - Do NOT repeat the title in the content
+      - Use headings (##, ###), paragraphs, bullet lists in the content
+      - NEVER use Markdown tables ("|")
+      - Content starts directly after the empty line
     `
 
     const systemContent = `${baseContext} You are the writing engine for this project. The preceding text is the global project context defined by the user. It MUST always guide tone, structure, and article positioning. ${formattingInstructions}`
@@ -53,6 +57,7 @@ export const generateArticle = createServerFn({ method: 'POST' })
 
     const response = await openrouter.chat.completions.create({
       model: aiSettings.defaultModel,
+      stream: true,
       messages: [
         {
           role: 'system',
@@ -65,19 +70,38 @@ export const generateArticle = createServerFn({ method: 'POST' })
       ],
     })
 
-    const raw = response.choices[0]?.message?.content || ''
-    const parsed = JSON.parse(raw) as { title?: string; content?: string }
+    let fullText = ''
 
-    let title = ''
-    let content = ''
+    for await (const chunk of response) {
+      const delta = chunk.choices[0]?.delta?.content || ''
+      fullText += delta
 
-    if (parsed.title) title = parsed.title
-    if (parsed.content) content = parsed.content
+      const parsed = extractTitleAndContent(fullText)
 
-    if (!title && !content) throw new Error('AI response is missing title or content. Please try again.')
+      yield {
+        title: parsed.title,
+        content: parsed.content,
+        isComplete: false,
+      }
+    }
 
-    return {
-      title,
-      content,
+    const final = extractTitleAndContent(fullText)
+    yield {
+      title: final.title,
+      content: final.content,
+      isComplete: true,
     }
   })
+
+function extractTitleAndContent(text: string): { title: string; content: string } {
+  const lines = text.split('\n')
+
+  if (lines.length === 0) return { title: '', content: '' }
+  const title = lines[0].trim()
+  const contentLines = lines.slice(1)
+
+  if (contentLines.length > 0 && contentLines[0].trim() === '') contentLines.shift()
+  const content = contentLines.join('\n').trim()
+
+  return { title, content }
+}
