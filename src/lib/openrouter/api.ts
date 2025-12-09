@@ -30,8 +30,6 @@ export const generateArticle = createServerFn({ method: 'POST' })
     const row = await db.select().from(settings).where(eq(settings.key, 'ai')).limit(1)
     const aiSettings = row.length ? validateSettings('ai', row[0].value) : { context: '', defaultModel: '' }
 
-    console.log('le ai settings utilise est', aiSettings)
-
     if (!aiSettings.defaultModel) throw new Error('No default AI model configured. Please set one in AI settings.')
 
     const baseContext =

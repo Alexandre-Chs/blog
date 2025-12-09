@@ -68,70 +68,71 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
     <>
       <NavigationName name="Write your article" subtitle={subtitle} />
       <ClientOnly fallback={<div>Loading editor...</div>}>
-        <div className="flex justify-between items-center max-w-5xl mx-auto w-full">
-          <div className="flex gap-x-2">
-            <Sheet open={aiSheetOpen} onOpenChange={setAiSheetOpen}>
-              <SheetTrigger asChild>
-                <Button variant="outline" className="gap-2">
-                  <Sparkles className="h-4 w-4" />
-                  AI Assistant
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:max-w-lg">
-                <SheetHeader>
-                  <SheetTitle>AI Writing Assistant</SheetTitle>
-                  <SheetDescription>
-                    Let AI help you write your article. Provide a subject and any additional details.
-                  </SheetDescription>
-                </SheetHeader>
-                {isGenerating ? (
-                  <AiLoader streamingText={streamingText} className="px-4" />
-                ) : (
-                  <div className="space-y-6 py-6 px-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="ai-subject">Article Subject *</Label>
-                      <Input
-                        id="ai-subject"
-                        placeholder="e.g., The future of web development"
-                        value={aiSubject}
-                        onChange={(e) => setAiSubject(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="ai-additional">Additional Information</Label>
-                      <Textarea
-                        id="ai-additional"
-                        placeholder="Add any specific points, tone, or context you'd like the AI to consider..."
-                        className="min-h-[150px]"
-                        value={aiAdditionalInfo}
-                        onChange={(e) => setAiAdditionalInfo(e.target.value)}
-                      />
-                    </div>
-                    <Button
-                      onClick={handleGenerateArticle}
-                      disabled={!aiSubject.trim()}
-                      className="w-full gap-2 cursor-pointer"
-                    >
-                      <Sparkles className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
-              </SheetContent>
-            </Sheet>
-
-            <DatePicker onChange={setPublishedAt} value={publishedAt} placeholder="Pick a publish date" />
-            {publishedAt && (
-              <Button variant="secondary" onClick={handleDeletePublishedAt}>
-                Unpublish
-              </Button>
-            )}
-          </div>
-          <Button disabled={isPublishing} onClick={handleEditArticle} className="cursor-pointer">
-            {isPublishing ? 'Publishing...' : 'Publish'}
-          </Button>
-        </div>
-
         <div className="px-4">
+          <div className="flex justify-between items-center max-w-5xl mx-auto w-full">
+            <div className="flex gap-x-2">
+              <DatePicker onChange={setPublishedAt} value={publishedAt} placeholder="Pick a publish date" />
+              {publishedAt && (
+                <Button variant="secondary" onClick={handleDeletePublishedAt}>
+                  Unpublish
+                </Button>
+              )}
+            </div>
+            <div className="flex items-center gap-x-2">
+              <Sheet open={aiSheetOpen} onOpenChange={setAiSheetOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="gap-2">
+                    <Sparkles className="h-4 w-4" />
+                    AI Assistant
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-full sm:max-w-lg">
+                  <SheetHeader>
+                    <SheetTitle>AI Writing Assistant</SheetTitle>
+                    <SheetDescription>
+                      Let AI help you write your article. Provide a subject and any additional details.
+                    </SheetDescription>
+                  </SheetHeader>
+                  {isGenerating ? (
+                    <AiLoader streamingText={streamingText} className="px-4" />
+                  ) : (
+                    <div className="space-y-6 py-6 px-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="ai-subject">Article Subject *</Label>
+                        <Input
+                          id="ai-subject"
+                          placeholder="e.g., The future of web development"
+                          value={aiSubject}
+                          onChange={(e) => setAiSubject(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="ai-additional">Additional Information</Label>
+                        <Textarea
+                          id="ai-additional"
+                          placeholder="Add any specific points, tone, or context you'd like the AI to consider..."
+                          className="min-h-[150px]"
+                          value={aiAdditionalInfo}
+                          onChange={(e) => setAiAdditionalInfo(e.target.value)}
+                        />
+                      </div>
+                      <Button
+                        onClick={handleGenerateArticle}
+                        disabled={!aiSubject.trim()}
+                        className="w-full gap-2 cursor-pointer"
+                      >
+                        Generate
+                        <Sparkles className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </SheetContent>
+              </Sheet>
+              <Button disabled={isPublishing} onClick={handleEditArticle} className="cursor-pointer">
+                {isPublishing ? 'Publishing...' : 'Publish'}
+              </Button>
+            </div>
+          </div>
           <div className="max-w-5xl mx-auto pb-4">
             <div className="py-4">
               {articleData.thumbnail ? (
