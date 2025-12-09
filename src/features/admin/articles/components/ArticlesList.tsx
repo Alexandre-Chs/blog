@@ -36,9 +36,9 @@ export default function ArticlesList({ articleStatus }: ArticlesListProps) {
                     {article.title.trim().charAt(0).toUpperCase() || 'A'}
                   </div>
                 )}
-                <div className="flex flex-col justify-between flex-1">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="truncate text-base font-semibold text-foreground">
+                <div className="flex flex-col justify-between flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-3 min-w-0">
+                    <div className="truncate text-base font-semibold text-foreground min-w-0 flex-1">
                       {article.title.trim() || 'Draft'}
                     </div>
                     {article.publishedAt && (
