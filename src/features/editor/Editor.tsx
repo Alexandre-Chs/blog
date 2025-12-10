@@ -58,7 +58,7 @@ export default function Editor({ ref, placeholder }: EditorPropsType) {
         <div className="flex-1" />
         <ToolbarButton className="px-2">Reset</ToolbarButton>
       </FixedToolbar>
-      <EditorContainer className="bg-white pb-4 rounded-b-xl">
+      <EditorContainer className="bg-white pb-4 rounded-b-xl min-h-48">
         <PlateEditor placeholder={placeholder ? placeholder : 'Type your amazing content here...'} />
       </EditorContainer>
     </Plate>

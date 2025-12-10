@@ -153,8 +153,8 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 type="text"
-                placeholder="Title"
-                className="outline-none bg-white text-2xl w-full mb-6 p-2 rounded-xl"
+                placeholder="Article title here..."
+                className="outline-none bg-white w-full mb-6 p-2 rounded-xl"
               />
               <Editor ref={editorRef} />
             </div>
