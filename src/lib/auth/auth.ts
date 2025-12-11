@@ -14,6 +14,10 @@ export const auth = betterAuth({
     schema,
   }),
   trustedOrigins,
+  rateLimit: {
+    window: 60,
+    max: 10,
+  },
   emailAndPassword: {
     enabled: true,
     disableSignUp: false,
