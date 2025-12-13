@@ -9,8 +9,10 @@ export const galleryList = createServerFn({ method: 'GET' })
   .middleware([adminMiddleware])
   .handler(async () => {
     try {
+      const folder = process.env.S3_FOLDER_NAME || 'blog'
       const command = new ListObjectsV2Command({
         Bucket: process.env.S3_BUCKET_NAME,
+        Prefix: `${folder}/`,
       })
 
       const response = await s3Client.send(command)
@@ -43,14 +45,15 @@ export const galleryList = createServerFn({ method: 'GET' })
     }
   })
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|jpeg|png|webp|avif|gif)$/i
+const UUID_REGEX =
+  /^[a-zA-Z0-9_-]+\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|jpeg|png|webp|avif)$/i
 
 const galleryDeleteSchema = z.object({
   key: z
     .string()
     .min(1, 'Image key is required')
     .regex(UUID_REGEX, 'Invalid image key format')
-    .refine((key) => !key.includes('..') && !key.includes('/'), 'Invalid characters in image key'),
+    .refine((key) => !key.includes('..'), 'Invalid characters in image key'),
 })
 
 export const galleryDelete = createServerFn({ method: 'POST' })

@@ -19,9 +19,7 @@ export const mediaSignedUrl = createServerFn({ method: 'POST' })
   .middleware([adminMiddleware])
   .inputValidator(mediaSignedSchema)
   .handler(async ({ data }) => {
-    if (!process.env.S3_BUCKET_NAME) {
-      throw new Error('S3_BUCKET_NAME is not configured')
-    }
+    if (!process.env.S3_BUCKET_NAME) throw new Error('S3_BUCKET_NAME is not configured')
 
     if (data.type === 'favicon') {
       if (!allowedContentTypesFavicons.includes(data.contentType)) throw new Error('File type not allowed for favicon')
@@ -34,7 +32,9 @@ export const mediaSignedUrl = createServerFn({ method: 'POST' })
     }
 
     const extension = data.contentType.split('/')[1] ?? 'jpg'
-    const key = `${crypto.randomUUID()}.${extension}`
+
+    const folder = process.env.S3_FOLDER_NAME || 'blog'
+    const key = `${folder}/${crypto.randomUUID()}.${extension}`
 
     const command = new PutObjectCommand({
       Bucket: process.env.S3_BUCKET_NAME,
@@ -43,7 +43,6 @@ export const mediaSignedUrl = createServerFn({ method: 'POST' })
       ACL: 'public-read',
     })
 
-    // s3Client error type, but i follow the doc...
     const presigned = await getSignedUrl(s3Client as any, command, {
       expiresIn: 5 * 60,
       signableHeaders: new Set(['content-type']),
