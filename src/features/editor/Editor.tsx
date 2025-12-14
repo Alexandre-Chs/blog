@@ -8,7 +8,6 @@ import {
   ItalicPlugin,
   UnderlinePlugin,
 } from '@platejs/basic-nodes/react'
-import { MarkdownPlugin } from '@platejs/markdown'
 import { Plate, usePlateEditor } from 'platejs/react'
 import type { PlateEditor as PlateEditorType } from 'platejs/react'
 import { BlockquoteElement } from '@/components/ui/blockquote-node'
@@ -17,6 +16,7 @@ import { FixedToolbar } from '@/components/ui/fixed-toolbar'
 import { H1Element, H2Element, H3Element } from '@/components/ui/heading-node'
 import { MarkToolbarButton } from '@/components/ui/mark-toolbar-button'
 import { ToolbarButton } from '@/components/ui/toolbar'
+import { MarkdownKit } from '@/components/editor/plugins/markdown-kit'
 
 type EditorPropsType = {
   ref: React.Ref<PlateEditorType>
@@ -33,7 +33,7 @@ export default function Editor({ ref, placeholder }: EditorPropsType) {
       H2Plugin.withComponent(H2Element),
       H3Plugin.withComponent(H3Element),
       BlockquotePlugin.withComponent(BlockquoteElement),
-      MarkdownPlugin,
+      ...MarkdownKit,
     ],
   })
 
