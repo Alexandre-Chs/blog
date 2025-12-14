@@ -4,7 +4,7 @@ import { FormDevtoolsPlugin } from '@tanstack/react-form-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import { Toaster } from 'sonner'
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
+import TanStackQueryDevtools from '../hooks/integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 import type { QueryClient } from '@tanstack/react-query'
 

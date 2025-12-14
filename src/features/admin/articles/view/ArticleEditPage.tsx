@@ -1,18 +1,19 @@
 import { ClientOnly, useNavigate } from '@tanstack/react-router'
 import { Sparkles } from 'lucide-react'
+
 import ArticleThumbnail from '../../medias/components/ArticleThumbnail'
 import UploadThumbnail from '../../medias/components/UploadThumbnail'
-import Editor from '@/features/editor/Editor'
-import { Button } from '@/components/ui/button'
-import { useArticleEditPage } from '@/hooks/useArticleEdit'
 import { DatePicker } from '@/components/datepicker/DatePicker'
+import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor'
+import { AiLoader } from '@/components/ui/ai-loader'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import NavigationName from '@/components/ui/navigation-name'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useAiAssistant } from '@/hooks/useAiAssistant'
-import { AiLoader } from '@/components/ui/ai-loader'
+import { useArticleEditPage } from '@/hooks/useArticleEdit'
 
 type ArticleEditPageProps = {
   articleId: string
@@ -63,7 +64,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
   }
 
   const subtitle = articleData.article.title ? `Editing: ${articleData.article.title}` : 'Start writing your article'
-
+  const initialContent = articleData.article.content || 'Type your amazing content here...'
   return (
     <>
       <NavigationName name="Write your article" subtitle={subtitle} />
@@ -156,7 +157,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
                 placeholder="Article title here..."
                 className="outline-none bg-white w-full mb-6 p-2 rounded-xl"
               />
-              <Editor ref={editorRef} />
+              <SimpleEditor ref={editorRef} initialContent={initialContent} />
             </div>
           </div>
         </div>

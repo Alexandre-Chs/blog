@@ -3,15 +3,15 @@ import { toast } from 'sonner'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { ClientOnly, useNavigate } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
-import { MarkdownPlugin } from '@platejs/markdown'
+
 import { settingsAboutList, settingsAboutUpdate } from '../api/list'
-import type { PlateEditor } from 'platejs/react'
-import Editor from '@/features/editor/Editor'
+import type { SimpleEditorRef } from '@/components/tiptap-templates/simple/simple-editor'
 import { Button } from '@/components/ui/button'
 import NavigationName from '@/components/ui/navigation-name'
+import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor'
 
 export default function SettingsAboutPage() {
-  const editorRef = useRef<PlateEditor>(null)
+  const editorRef = useRef<SimpleEditorRef>(null)
   const navigate = useNavigate()
   const settingsAboutFn = useServerFn(settingsAboutList)
   const settingsAboutUpdateFn = useServerFn(settingsAboutUpdate)
@@ -37,9 +37,8 @@ export default function SettingsAboutPage() {
   })
 
   useEffect(() => {
-    if (aboutContent && editorRef.current) {
-      const plateValue = editorRef.current.getApi(MarkdownPlugin).markdown.deserialize(aboutContent.value.content)
-      editorRef.current.tf.setValue(plateValue)
+    if (aboutContent && editorRef.current && aboutContent.value.content) {
+      editorRef.current.setMarkdown(aboutContent.value.content)
     }
   }, [aboutContent])
 
@@ -53,7 +52,7 @@ export default function SettingsAboutPage() {
       return
     }
 
-    const markdown = editorRef.current.getApi(MarkdownPlugin).markdown.serialize()
+    const markdown = editorRef.current.getMarkdown()
     if (!markdown || markdown.trim() === '') {
       toast.error('Content is required.')
       return
@@ -81,7 +80,7 @@ export default function SettingsAboutPage() {
         </div>
         <div className="max-w-5xl mx-auto pt-6 bg-sidebar rounded-xl p-6 border border-sidebar-border w-full">
           <div className="w-full">
-            <Editor ref={editorRef} placeholder="Write about page here..." />
+            <SimpleEditor ref={editorRef} initialContent={aboutContent?.value.content || 'Type here...'} />
           </div>
         </div>
       </ClientOnly>

@@ -1,19 +1,21 @@
 import { useEffect } from 'react'
-import { Plate, PlateContent, usePlateEditor } from 'platejs/react'
-import {
-  BlockquotePlugin,
-  BoldPlugin,
-  H1Plugin,
-  H2Plugin,
-  H3Plugin,
-  ItalicPlugin,
-  UnderlinePlugin,
-} from '@platejs/basic-nodes/react'
-import { MarkdownPlugin } from '@platejs/markdown'
-import { BlockquoteElement } from '@/components/ui/blockquote-node'
-import { H1Element, H2Element, H3Element } from '@/components/ui/heading-node'
-import { MarkdownKit } from '@/components/editor/plugins/markdown-kit'
-import { TableKit } from '@/components/editor/plugins/table-kit'
+import { CodeBlock } from '@tiptap/extension-code-block'
+import { Image } from '@tiptap/extension-image'
+import { TaskItem, TaskList } from '@tiptap/extension-list'
+import { Typography } from '@tiptap/extension-typography'
+import { Markdown } from '@tiptap/markdown'
+import { EditorContent, useEditor } from '@tiptap/react'
+import { StarterKit } from '@tiptap/starter-kit'
+
+import { HorizontalRule } from '@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node-extension'
+
+import '@/components/tiptap-node/blockquote-node/blockquote-node.scss'
+import '@/components/tiptap-node/code-block-node/code-block-node.scss'
+import '@/components/tiptap-node/heading-node/heading-node.scss'
+import '@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node.scss'
+import '@/components/tiptap-node/image-node/image-node.scss'
+import '@/components/tiptap-node/list-node/list-node.scss'
+import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
 
 export interface PlateMarkdownProps {
   children: string
@@ -21,29 +23,31 @@ export interface PlateMarkdownProps {
 }
 
 export function PlateMarkdown({ children, className }: PlateMarkdownProps) {
-  const editor = usePlateEditor({
-    plugins: [
-      BoldPlugin,
-      ItalicPlugin,
-      UnderlinePlugin,
-      H1Plugin.withComponent(H1Element),
-      H2Plugin.withComponent(H2Element),
-      H3Plugin.withComponent(H3Element),
-      BlockquotePlugin.withComponent(BlockquoteElement),
-      ...TableKit,
-      ...MarkdownKit,
+  const editor = useEditor({
+    editable: false,
+    immediatelyRender: false,
+    extensions: [
+      StarterKit.configure({
+        horizontalRule: false,
+        codeBlock: false,
+      }),
+      Markdown,
+      CodeBlock,
+      HorizontalRule,
+      TaskList,
+      TaskItem.configure({ nested: true }),
+      Image,
+      Typography,
     ],
+    content: children,
+    contentType: 'markdown',
   })
 
   useEffect(() => {
-    // Désérialiser le Markdown en Plate value
-    editor.tf.reset() // Vider le contenu précédent
-    editor.tf.setValue(editor.getApi(MarkdownPlugin).markdown.deserialize(children))
+    if (editor && children) {
+      editor.commands.setContent(children, { contentType: 'markdown' })
+    }
   }, [children, editor])
 
-  return (
-    <Plate editor={editor}>
-      <PlateContent readOnly className={className} />
-    </Plate>
-  )
+  return <EditorContent editor={editor} className={className} />
 }

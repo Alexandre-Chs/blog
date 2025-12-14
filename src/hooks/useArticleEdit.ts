@@ -1,16 +1,16 @@
 import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { MarkdownPlugin } from '@platejs/markdown'
 import { toast } from 'sonner'
 import { useServerFn } from '@tanstack/react-start'
-import type { PlateEditor } from 'platejs/react'
+
+import type { SimpleEditorRef } from '@/components/tiptap-templates/simple/simple-editor'
 import { articleById, articleDeletePublishedAt, articleUpdate } from '@/features/admin/articles/api/edit'
 import { thumbnailUpdateAlt } from '@/features/admin/medias/api/thumbnail'
 
 export function useArticleEditPage(articleId: string) {
   const [publishedAt, setPublishedAt] = useState<Date | undefined>(undefined)
-  const editorRef = useRef<PlateEditor>(null)
+  const editorRef = useRef<SimpleEditorRef>(null)
   const [title, setTitle] = useState('')
   const [thumbnailAlt, setThumbnailAlt] = useState('')
 
@@ -29,8 +29,7 @@ export function useArticleEditPage(articleId: string) {
 
   useEffect(() => {
     if (!articleData || !editorRef.current) return
-    const plateValue = editorRef.current.getApi(MarkdownPlugin).markdown.deserialize(articleData.article.content)
-    editorRef.current.tf.setValue(plateValue)
+    editorRef.current.setMarkdown(articleData.article.content)
     setTitle(articleData.article.title)
     setThumbnailAlt(articleData.thumbnail?.alt ?? '')
     setPublishedAt(articleData.article.publishedAt ? new Date(articleData.article.publishedAt) : undefined)
@@ -57,7 +56,7 @@ export function useArticleEditPage(articleId: string) {
       toast.error('Title is required.')
       return
     }
-    const markdown = editorRef.current.getApi(MarkdownPlugin).markdown.serialize()
+    const markdown = editorRef.current.getMarkdown()
     if (!markdown || markdown.trim() === '') {
       toast.error('Content is required.')
       return

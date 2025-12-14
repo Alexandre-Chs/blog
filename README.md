@@ -14,7 +14,6 @@ A simple, self-hosted blogging platform built with modern web technologies.
 - [TanStack Start](https://tanstack.com/start) — Full-stack React framework
 - [Drizzle ORM](https://orm.drizzle.team/) — TypeScript ORM
 - [PostgreSQL](https://www.postgresql.org/) — Database
-- [Plate](https://platejs.org/) — Rich text editor
 - [Tailwind CSS](https://tailwindcss.com/) — Styling
 
 ## Getting Started

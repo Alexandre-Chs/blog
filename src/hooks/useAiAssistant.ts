@@ -1,11 +1,11 @@
-import { MarkdownPlugin } from '@platejs/markdown'
 import { useServerFn } from '@tanstack/react-start'
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
-import type { PlateEditor } from 'platejs/react'
+
+import type { SimpleEditorRef } from '@/components/tiptap-templates/simple/simple-editor'
 import { generateArticle } from '@/lib/openrouter/api'
 
-export function useAiAssistant(editorRef: React.RefObject<PlateEditor | null>, setTitle: (title: string) => void) {
+export function useAiAssistant(editorRef: React.RefObject<SimpleEditorRef | null>, setTitle: (title: string) => void) {
   const [aiSheetOpen, setAiSheetOpen] = useState(false)
   const [aiSubject, setAiSubject] = useState('')
   const [aiAdditionalInfo, setAiAdditionalInfo] = useState('')
@@ -50,8 +50,7 @@ export function useAiAssistant(editorRef: React.RefObject<PlateEditor | null>, s
             return
           }
 
-          const plateValue = editorRef.current.getApi(MarkdownPlugin).markdown.deserialize(finalContent)
-          editorRef.current.tf.setValue(plateValue)
+          editorRef.current.setMarkdown(finalContent)
           setTitle(finalTitle)
 
           toast.success('Article generated successfully!')
