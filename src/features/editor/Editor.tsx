@@ -17,6 +17,7 @@ import { H1Element, H2Element, H3Element } from '@/components/ui/heading-node'
 import { MarkToolbarButton } from '@/components/ui/mark-toolbar-button'
 import { ToolbarButton } from '@/components/ui/toolbar'
 import { MarkdownKit } from '@/components/editor/plugins/markdown-kit'
+import { TableKit } from '@/components/editor/plugins/table-kit'
 
 type EditorPropsType = {
   ref: React.Ref<PlateEditorType>
@@ -33,6 +34,7 @@ export default function Editor({ ref, placeholder }: EditorPropsType) {
       H2Plugin.withComponent(H2Element),
       H3Plugin.withComponent(H3Element),
       BlockquotePlugin.withComponent(BlockquoteElement),
+      ...TableKit,
       ...MarkdownKit,
     ],
   })
@@ -55,6 +57,15 @@ export default function Editor({ ref, placeholder }: EditorPropsType) {
         <MarkToolbarButton nodeType="underline" tooltip="Underline (⌘+U)">
           U
         </MarkToolbarButton>
+        <div className="h-6 w-px bg-gray-300 mx-1" />
+        <ToolbarButton
+          onClick={() => {
+            editor.tf.insert.table({ header: true })
+          }}
+          tooltip="Insert Table"
+        >
+          Table
+        </ToolbarButton>
         <div className="flex-1" />
         <ToolbarButton className="px-2">Reset</ToolbarButton>
       </FixedToolbar>

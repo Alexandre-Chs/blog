@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { Plate, PlateContent, usePlateEditor } from 'platejs/react'
-import { MarkdownPlugin } from '@platejs/markdown'
 import {
   BlockquotePlugin,
   BoldPlugin,
@@ -10,8 +9,11 @@ import {
   ItalicPlugin,
   UnderlinePlugin,
 } from '@platejs/basic-nodes/react'
+import { MarkdownPlugin } from '@platejs/markdown'
 import { BlockquoteElement } from '@/components/ui/blockquote-node'
 import { H1Element, H2Element, H3Element } from '@/components/ui/heading-node'
+import { MarkdownKit } from '@/components/editor/plugins/markdown-kit'
+import { TableKit } from '@/components/editor/plugins/table-kit'
 
 export interface PlateMarkdownProps {
   children: string
@@ -28,7 +30,8 @@ export function PlateMarkdown({ children, className }: PlateMarkdownProps) {
       H2Plugin.withComponent(H2Element),
       H3Plugin.withComponent(H3Element),
       BlockquotePlugin.withComponent(BlockquoteElement),
-      MarkdownPlugin,
+      ...TableKit,
+      ...MarkdownKit,
     ],
   })
 
