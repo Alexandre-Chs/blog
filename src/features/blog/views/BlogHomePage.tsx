@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { articlesPublished } from '../api/home'
 import { formatDate } from '@/utils/formatDate'
-import { PlateMarkdown } from '@/components/PlateMarkdown'
+import { EditorMarkdown } from '@/components/PlateMarkdown'
 
 const BlogHomePage = () => {
   const { data: articles, isPending } = useQuery({
@@ -62,12 +62,12 @@ const BlogHomePage = () => {
                 <p className="mb-1 text-xs text-neutral-500">{date}</p>
                 <h2 className="text-2xl font-semibold leading-snug text-neutral-900">{article.title}</h2>
                 <div className="mt-1 text-sm leading-relaxed text-neutral-600">
-                  <PlateMarkdown>
+                  <EditorMarkdown>
                     {article.content
                       .replace(/[*_#`[\]]/g, '')
                       .replace(/\s+/g, ' ')
                       .slice(0, 140) + (article.content.length > 140 ? '…' : '')}
-                  </PlateMarkdown>
+                  </EditorMarkdown>
                 </div>
               </div>
             </article>

@@ -1,5 +1,5 @@
 import { Bot } from 'lucide-react'
-import { PlateMarkdown } from '../PlateMarkdown'
+import { EditorMarkdown } from '../PlateMarkdown'
 import { cn } from '@/lib/utils'
 
 function AiLoader({ className, streamingText }: { className?: string; streamingText: string }) {
@@ -27,9 +27,9 @@ function AiLoader({ className, streamingText }: { className?: string; streamingT
             </div>
             {streamingText && (
               <div className="text-sm text-muted-foreground leading-relaxed">
-                <p key={streamingText} className="line-clamp-1 truncate animate-fade-in">
-                  <PlateMarkdown>{streamingText}</PlateMarkdown>
-                </p>
+                <div key={streamingText} className="line-clamp-1 truncate animate-fade-in">
+                  <EditorMarkdown>{streamingText}</EditorMarkdown>
+                </div>
               </div>
             )}
           </div>

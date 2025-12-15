@@ -22,7 +22,7 @@ export interface PlateMarkdownProps {
   className?: string
 }
 
-export function PlateMarkdown({ children, className }: PlateMarkdownProps) {
+export function EditorMarkdown({ children, className }: PlateMarkdownProps) {
   const editor = useEditor({
     editable: false,
     immediatelyRender: false,

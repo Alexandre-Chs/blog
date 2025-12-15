@@ -10,7 +10,7 @@ import { Markdown } from '@tiptap/markdown'
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 
-import type { Editor } from '@tiptap/react'
+import type { Editor as TipTapEditor } from '@tiptap/react'
 
 // --- UI Primitives ---
 import { Button } from '@/components/tiptap-ui-primitive/button'
@@ -55,7 +55,7 @@ export interface SimpleEditorRef {
   setMarkdown: (markdown: string) => void
   getHTML: () => string
   clear: () => void
-  editor: Editor | null
+  editor: TipTapEditor | null
 }
 
 export interface SimpleEditorProps {
@@ -113,7 +113,7 @@ const MobileToolbarContent = ({ onBack }: { onBack: () => void }) => (
   </>
 )
 
-export const SimpleEditor = forwardRef<SimpleEditorRef, SimpleEditorProps>((props, ref) => {
+export const Editor = forwardRef<SimpleEditorRef, SimpleEditorProps>((props, ref) => {
   const isMobile = useIsBreakpoint()
   const { height } = useWindowSize()
   const [mobileView, setMobileView] = useState<'main' | 'link'>('main')
@@ -221,4 +221,4 @@ export const SimpleEditor = forwardRef<SimpleEditorRef, SimpleEditorProps>((prop
   )
 })
 
-SimpleEditor.displayName = 'SimpleEditor'
+Editor.displayName = 'Editor'

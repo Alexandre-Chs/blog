@@ -6,9 +6,9 @@ import { useServerFn } from '@tanstack/react-start'
 
 import { settingsAboutList, settingsAboutUpdate } from '../api/list'
 import type { SimpleEditorRef } from '@/components/tiptap-templates/simple/simple-editor'
+import { Editor } from '@/components/tiptap-templates/simple/simple-editor'
 import { Button } from '@/components/ui/button'
 import NavigationName from '@/components/ui/navigation-name'
-import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor'
 
 export default function SettingsAboutPage() {
   const editorRef = useRef<SimpleEditorRef>(null)
@@ -80,7 +80,7 @@ export default function SettingsAboutPage() {
         </div>
         <div className="max-w-5xl mx-auto pt-6 bg-sidebar rounded-xl p-6 border border-sidebar-border w-full">
           <div className="w-full">
-            <SimpleEditor ref={editorRef} initialContent={aboutContent?.value.content || 'Type here...'} />
+            <Editor ref={editorRef} initialContent={aboutContent?.value.content || 'Type here...'} />
           </div>
         </div>
       </ClientOnly>

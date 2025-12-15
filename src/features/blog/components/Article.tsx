@@ -1,5 +1,5 @@
 import type { Article, Media } from '@/db/schema'
-import { PlateMarkdown } from '@/components/PlateMarkdown'
+import { EditorMarkdown } from '@/components/PlateMarkdown'
 import { formatDate } from '@/utils/formatDate'
 
 type ArticleContent = Article & {
@@ -55,9 +55,9 @@ function ArticleContentView({ content }: { content: ArticleContent }) {
       {primaryDate && <p className="mt-2 text-sm text-neutral-500">{primaryDate}</p>}
 
       <div className="pt-2 text-neutral-800">
-        <PlateMarkdown className="prose prose-lg max-w-none leading-relaxed text-neutral-800">
+        <EditorMarkdown className="prose prose-lg max-w-none leading-relaxed text-neutral-800">
           {content.content}
-        </PlateMarkdown>
+        </EditorMarkdown>
       </div>
     </article>
   )
@@ -69,9 +69,9 @@ function PageContentView({ content }: { content: StaticContent }) {
       <h1 className="text-4xl font-semibold leading-tight text-neutral-900 md:text-[3.2rem]">{content.title}</h1>
 
       <div className="pt-2 text-neutral-800">
-        <PlateMarkdown className="prose prose-lg max-w-none leading-relaxed text-neutral-800">
+        <EditorMarkdown className="prose prose-lg max-w-none leading-relaxed text-neutral-800">
           {content.content}
-        </PlateMarkdown>
+        </EditorMarkdown>
       </div>
     </article>
   )

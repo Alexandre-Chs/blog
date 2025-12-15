@@ -1,10 +1,8 @@
 import { ClientOnly, useNavigate } from '@tanstack/react-router'
 import { Sparkles } from 'lucide-react'
-
 import ArticleThumbnail from '../../medias/components/ArticleThumbnail'
 import UploadThumbnail from '../../medias/components/UploadThumbnail'
 import { DatePicker } from '@/components/datepicker/DatePicker'
-import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor'
 import { AiLoader } from '@/components/ui/ai-loader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,6 +12,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Textarea } from '@/components/ui/textarea'
 import { useAiAssistant } from '@/hooks/useAiAssistant'
 import { useArticleEditPage } from '@/hooks/useArticleEdit'
+import { Editor } from '@/components/tiptap-templates/simple/simple-editor'
 
 type ArticleEditPageProps = {
   articleId: string
@@ -157,7 +156,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
                 placeholder="Article title here..."
                 className="outline-none bg-white w-full mb-6 p-2 rounded-xl"
               />
-              <SimpleEditor ref={editorRef} initialContent={initialContent} />
+              <Editor ref={editorRef} initialContent={initialContent} />
             </div>
           </div>
         </div>

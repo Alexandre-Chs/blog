@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import type { Article } from '@/db/schema'
 import { formatDate } from '@/utils/formatDate'
-import { PlateMarkdown } from '@/components/PlateMarkdown'
+import { EditorMarkdown } from '@/components/PlateMarkdown'
 
 type ArticlePropsType = {
   article: Article
@@ -28,9 +28,9 @@ export default function ArticleHome({ article, articles, index }: ArticlePropsTy
         </h2>
       </Link>
 
-      <p className="text-base leading-relaxed text-neutral-700">
-        <PlateMarkdown>{article.content.slice(0, 100) + (article.content.length > 100 ? '...' : '')}</PlateMarkdown>
-      </p>
+      <div className="text-base leading-relaxed text-neutral-700">
+        <EditorMarkdown>{article.content.slice(0, 100) + (article.content.length > 100 ? '...' : '')}</EditorMarkdown>
+      </div>
 
       <p className="text-sm font-medium text-neutral-500">{authorName}</p>
     </article>
