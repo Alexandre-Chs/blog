@@ -12,7 +12,7 @@ interface ToolbarProps extends BaseProps {
 }
 
 const useToolbarNavigation = (toolbarRef: React.RefObject<HTMLDivElement | null>) => {
-  const [items, setItems] = useState<HTMLElement[]>([])
+  const [items, setItems] = useState<Array<HTMLElement>>([])
 
   const collectItems = useCallback(() => {
     if (!toolbarRef.current) return []

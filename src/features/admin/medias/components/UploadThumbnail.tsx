@@ -54,7 +54,7 @@ export default function UploadThumbnail({ articleId }: UploadThumbnailProps) {
   return (
     <label
       htmlFor="thumbnail-upload"
-      className="h-[300px] group relative flex w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50/50 px-4 py-6 text-center transition hover:border-gray-300 hover:bg-gray-100"
+      className="h-[300px] group relative flex w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-100 bg-gray-50/10 px-4 py-6 text-center transition hover:border-gray-200 hover:bg-gray-50"
     >
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white border">
         <UploadCloud className="text-gray-500" size={20} />

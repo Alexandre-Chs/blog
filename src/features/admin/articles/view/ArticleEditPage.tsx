@@ -148,13 +148,13 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
               )}
             </div>
 
-            <div className="max-w-5xl mx-auto pt-6 bg-sidebar rounded-xl p-6 border border-sidebar-border">
+            <div className="max-w-5xl mx-auto pt-8 pb-8">
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 type="text"
                 placeholder="Article title here..."
-                className="outline-none bg-white w-full mb-6 p-2 rounded-xl"
+                className="outline-none bg-white w-full mb-6 text-xl font-medium placeholder:text-gray-400"
               />
               <Editor ref={editorRef} initialContent={initialContent} />
             </div>

@@ -196,10 +196,11 @@ export const Editor = forwardRef<SimpleEditorRef, SimpleEditorProps>((props, ref
   )
 
   return (
-    <div className="">
+    <div className="border rounded-md">
       <EditorContext.Provider value={{ editor }}>
         <Toolbar
           ref={toolbarRef}
+          className="!bg-gray-50 rounded-t-md"
           style={{
             ...(isMobile
               ? {
