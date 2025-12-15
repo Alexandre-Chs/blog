@@ -47,7 +47,7 @@ export function useArticleEditPage(articleId: string) {
     },
   })
 
-  const handleEditArticle = () => {
+  const handlePublishArticle = () => {
     if (!editorRef.current) {
       toast.error('Editor initialization failed. Please refresh the page.')
       return
@@ -96,7 +96,7 @@ export function useArticleEditPage(articleId: string) {
     setTitle,
     thumbnailAlt,
     setThumbnailAlt,
-    handleEditArticle,
+    handlePublishArticle,
     handleThumbnailAltBlur,
     handleDeletePublishedAt,
     isPublishing: updateArticleMutation.isPending,

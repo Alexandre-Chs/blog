@@ -18,6 +18,19 @@ type ArticleEditPageProps = {
   articleId: string
 }
 
+type ButtonPublishProps = {
+  isPublishing: boolean
+  handlePublishArticle: () => void
+}
+
+function ButtonPublish({ isPublishing, handlePublishArticle }: ButtonPublishProps) {
+  return (
+    <Button disabled={isPublishing} onClick={handlePublishArticle}>
+      {isPublishing ? 'Publishing...' : 'Publish'}
+    </Button>
+  )
+}
+
 export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
   const {
     editorRef,
@@ -27,7 +40,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
     setTitle,
     thumbnailAlt,
     setThumbnailAlt,
-    handleEditArticle,
+    handlePublishArticle,
     handleThumbnailAltBlur,
     handleDeletePublishedAt,
     isPublishing,
@@ -128,9 +141,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
                   )}
                 </SheetContent>
               </Sheet>
-              <Button disabled={isPublishing} onClick={handleEditArticle} className="cursor-pointer">
-                {isPublishing ? 'Publishing...' : 'Publish'}
-              </Button>
+              <ButtonPublish isPublishing={isPublishing} handlePublishArticle={handlePublishArticle} />
             </div>
           </div>
           <div className="max-w-5xl mx-auto pb-4">
