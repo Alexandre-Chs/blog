@@ -144,3 +144,24 @@ export const settings = pgTable('settings', {
   key: text('key').primaryKey(),
   value: jsonb('value').$type<SettingsMap[keyof SettingsMap]>(),
 })
+
+export const deviceEnum = pgEnum('device', ['desktop', 'mobile', 'tablet'])
+export type Device = 'desktop' | 'mobile' | 'tablet'
+
+export const visits = pgTable('visits', {
+  id: text('id').primaryKey(),
+  startedAt: timestamp('started_at').notNull(),
+  lastSeenAt: timestamp('last_seen_at').notNull(),
+  pages: text('pages').array().notNull().default([]),
+  pageViews: integer('page_views').notNull().default(0),
+  entryPage: text('entry_page').notNull(),
+  exitPage: text('exit_page').notNull(),
+  referrer: text('referrer'),
+  country: text('country'),
+  browser: text('browser'),
+  duration: integer('duration'),
+  device: deviceEnum(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+export type Visit = InferSelectModel<typeof visits>

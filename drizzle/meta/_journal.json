@@ -57,6 +57,13 @@
       "when": 1763890814565,
       "tag": "0007_unknown_jamie_braddock",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1766127679525,
+      "tag": "0008_smart_marvel_zombies",
+      "breakpoints": true
     }
   ]
 }
