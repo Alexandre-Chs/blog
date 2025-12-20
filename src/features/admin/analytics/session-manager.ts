@@ -96,3 +96,24 @@ export async function saveSessionDatabase(session: Session) {
     console.error('Error saving session to database:', error, session)
   }
 }
+
+// cron to save inactive sessions
+export function saveInactiveSessions() {
+  setInterval(
+    () => {
+      if (!activeSessions.size) return
+
+      const now = Date.now()
+      const sessions = activeSessions.entries()
+
+      for (const [hash, session] of sessions) {
+        const inactiveSession = now - session.lastSeenAt.getTime()
+        if (inactiveSession > SESSION_TIMEOUT) {
+          saveSessionDatabase(session)
+          activeSessions.delete(hash)
+        }
+      }
+    },
+    5 * 60 * 1000, // 5 minutes
+  )
+}
