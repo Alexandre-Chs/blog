@@ -3,7 +3,6 @@ import { getRequest } from '@tanstack/react-start/server'
 import z from 'zod'
 import { createSession, findActiveSession, updateSession } from './session-manager'
 import { getVisitorHashes } from './hash'
-import { cronAnalytics } from './cron'
 import type { Device } from '@/db/schema'
 
 const trackPageViewSchema = z.object({
@@ -28,8 +27,6 @@ export const trackPageView = createServerFn({ method: 'POST' })
     const userAgent = request.headers.get('user-agent') || 'unknown'
     const referrer = request.headers.get('referer') || 'unknown'
     const path = data.data.path || 'unknown'
-
-    // cronAnalytics()
 
     const { previousHash, currentHash } = getVisitorHashes(ip, userAgent)
 

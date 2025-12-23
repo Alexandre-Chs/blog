@@ -1,5 +1,5 @@
 import crypto from 'node:crypto'
-import { getCurrentSalts } from './salt-generator'
+import { getCurrentSalts } from './cron'
 
 export function calculateHash(ip: string, userAgent: string, salt: string) {
   const data = `${ip}|${userAgent}|${salt}`
@@ -8,10 +8,6 @@ export function calculateHash(ip: string, userAgent: string, salt: string) {
 
 export function getVisitorHashes(ip: string, userAgent: string) {
   const { currentSalt, previousSalt } = getCurrentSalts()
-
-  if (!currentSalt || !previousSalt) {
-    throw new Error('Salts are not initialized')
-  }
 
   return {
     currentHash: calculateHash(ip, userAgent, currentSalt),
