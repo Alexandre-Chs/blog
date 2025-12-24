@@ -32,6 +32,10 @@ const data = {
       items: [{ title: 'Calendar', url: '/admin/calendar' }],
     },
     {
+      title: 'Analytics',
+      items: [{ title: 'Overview', url: '/admin/analytics' }],
+    },
+    {
       title: 'Settings',
       items: [
         { title: 'General', url: '/admin/settings' },

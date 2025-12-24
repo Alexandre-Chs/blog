@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequest } from '@tanstack/react-start/server'
 import z from 'zod'
-import { createSession, findActiveSession, updateSession } from './session-manager'
+import { activeSessions, createSession, findActiveSession, updateSession } from './session-manager'
 import { getVisitorHashes } from './hash'
 import type { Device } from '@/db/schema'
 
@@ -42,3 +42,10 @@ export const trackPageView = createServerFn({ method: 'POST' })
 
     return true
   })
+
+export const currentVisitors = createServerFn({ method: 'GET' }).handler(() => {
+  const now = Date.now()
+  const ONE_MINUTE = 60 * 1000
+
+  return Array.from(activeSessions.values()).filter((session) => now - session.lastSeenAt.getTime() < ONE_MINUTE).length
+})
