@@ -1,8 +1,6 @@
-import { Cron } from 'croner'
+import { Cron, scheduledJobs } from 'croner'
 import { activeSessions, saveSessionDatabase } from './session-manager'
 import { SESSION_TIMEOUT } from './session-manager'
-
-let cronInitialized = false
 
 function generateRandomSalt() {
   return Math.random().toString(36).substring(2) + Date.now().toString(36)
@@ -18,12 +16,12 @@ export function getCurrentSalts() {
   }
 }
 
-function initializeCrons() {
-  if (cronInitialized) {
-    return
-  }
+function stopAllJobs() {
+  scheduledJobs.forEach((job) => job.stop())
+}
 
-  cronInitialized = true
+function initializeCrons() {
+  stopAllJobs()
 
   new Cron('*/5 * * * *', () => {
     if (!activeSessions.size) return
