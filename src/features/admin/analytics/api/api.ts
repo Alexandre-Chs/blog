@@ -28,6 +28,9 @@ export const trackPageView = createServerFn({ method: 'POST' })
     const referrer = request.headers.get('referer') || 'unknown'
     const path = data.data.path || 'unknown'
 
+    // avoid all admin paths
+    if (path.startsWith('/admin')) return true
+
     const { previousHash, currentHash } = getVisitorHashes(ip, userAgent)
 
     let session = findActiveSession(currentHash, previousHash)
