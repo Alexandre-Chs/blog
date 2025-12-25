@@ -39,7 +39,6 @@ function initializeCrons() {
   })
 
   new Cron('* * * * * *', { interval: 90 }, () => {
-    console.log('changement de salt!')
     previousSalt = currentSalt!
     currentSalt = generateRandomSalt()
   })
