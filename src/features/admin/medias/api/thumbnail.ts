@@ -73,18 +73,37 @@ export const thumbnailDeleteDatabase = createServerFn({ method: 'POST' })
   .inputValidator(thumbnailDeleteDatabaseSchema)
   .handler(async ({ data }) => {
     await db.transaction(async (tx) => {
-      const [articleToMedia] = await tx
-        .select()
-        .from(articlesToMedias)
+      await tx
+        .delete(articlesToMedias)
         .where(and(eq(articlesToMedias.articleId, data.articleId), eq(articlesToMedias.role, 'thumbnail')))
-        .limit(1)
+    })
 
+    return { success: true }
+  })
+
+const thumbnailFromGallerySchema = z.object({
+  articleId: z.string(),
+  key: z.string(),
+})
+
+export const thumbnailFromGallery = createServerFn({ method: 'POST' })
+  .middleware([adminMiddleware])
+  .inputValidator(thumbnailFromGallerySchema)
+  .handler(async ({ data }) => {
+    const mediaId = await db.select({ id: medias.id }).from(medias).where(eq(medias.key, data.key)).limit(1)
+
+    if (mediaId.length === 0) throw new Error('An error occurred while selecting the media from gallery.')
+
+    await db.transaction(async (tx) => {
+      // prevent duplicate thumbnails
       await tx
         .delete(articlesToMedias)
         .where(and(eq(articlesToMedias.articleId, data.articleId), eq(articlesToMedias.role, 'thumbnail')))
 
-      await tx.delete(medias).where(eq(medias.id, articleToMedia.mediaId))
+      await tx.insert(articlesToMedias).values({
+        articleId: data.articleId,
+        mediaId: mediaId[0].id,
+        role: 'thumbnail',
+      })
     })
-
-    return { success: true }
   })

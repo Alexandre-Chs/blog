@@ -1,9 +1,12 @@
 import { RefreshCw, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useServerFn } from '@tanstack/react-start'
-import { useQueryClient } from '@tanstack/react-query'
-import { thumbnailDeleteDatabase, thumbnailInsertDatabase } from '../api/thumbnail'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { thumbnailDeleteDatabase, thumbnailFromGallery, thumbnailInsertDatabase } from '../api/thumbnail'
 import { mediaSignedUrl } from '../api/media'
+import { GalleryModal } from './GalleryModal'
+import { GalleryImage } from '../../settings/gallery/api/types'
+import { Button } from '@/components/ui/button'
 
 type ArticleThumbnailProps = {
   thumbnailUrl: string
@@ -23,6 +26,20 @@ export default function ArticleThumbnail({
   const queryClient = useQueryClient()
   const thumbnailInsertDatabaseFn = useServerFn(thumbnailInsertDatabase)
   const mediaSignedUrlFn = useServerFn(mediaSignedUrl)
+  const thumbnailFromGalleryFn = useServerFn(thumbnailFromGallery)
+
+  const galleryMutation = useMutation({
+    mutationFn: async (key: string) => {
+      await thumbnailFromGalleryFn({ data: { articleId, key } })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['articleEdit'] })
+      toast.success('Thumbnail selected successfully')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
+    },
+  })
 
   const handleUploadThumbnail = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const file = evt.target.files?.[0]
@@ -73,6 +90,10 @@ export default function ArticleThumbnail({
     }
   }
 
+  const handleSelectGalleryImage = (image: GalleryImage) => {
+    galleryMutation.mutate(image.key)
+  }
+
   return (
     <div className="flex flex-col gap-y-2">
       <div className="group relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-lg">
@@ -81,25 +102,37 @@ export default function ArticleThumbnail({
           alt="Article thumbnail"
           className="h-full w-full rounded-lg object-cover transition duration-200 group-hover:blur-sm"
         />
-        <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 transition duration-200 group-hover:opacity-100">
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-100">
-            <RefreshCw className="h-4 w-4" />
-            <span>Change</span>
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/avif"
-              onChange={handleUploadThumbnail}
-              className="sr-only"
-            />
-          </label>
-          <button
-            type="button"
-            onClick={handleDeleteThumbnail}
-            className="cursor-pointer inline-flex items-center gap-2 rounded-full bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-red-600"
-          >
-            <Trash2 className="h-4 w-4" />
-            <span>Delete</span>
-          </button>
+        <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 transition duration-200 group-hover:opacity-100">
+          <div className="flex items-center justify-center gap-x-3 w-fit mx-auto">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-sm bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-100">
+              <RefreshCw className="h-4 w-4" />
+              <span>Change</span>
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/avif"
+                onChange={handleUploadThumbnail}
+                className="sr-only"
+              />
+            </label>
+            <Button
+              type="button"
+              onClick={handleDeleteThumbnail}
+              className="cursor-pointer bg-red-500 hover:bg-red-600"
+            >
+              <Trash2 className="h-4 w-4" />
+              <span>Delete</span>
+            </Button>
+          </div>
+
+          <div className="my-4 flex items-center justify-center">
+            <div className="flex items-center gap-3 text-xs text-gray-400">
+              <span className="h-px w-12 bg-black" />
+              <span className="text-black">or</span>
+              <span className="h-px w-12 bg-black" />
+            </div>
+          </div>
+
+          <GalleryModal onSelect={handleSelectGalleryImage} buttonText="Select from Gallery" />
         </div>
       </div>
       <input
