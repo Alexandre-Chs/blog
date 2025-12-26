@@ -1,11 +1,11 @@
 import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
-import { settingsGeneralListBlog } from '@/features/blog/api/settings'
+import { blogSettingsGeneralRead } from '@/features/blog/blog-settings-general-read.api'
 
 export const Route = createFileRoute('/_blog')({
   beforeLoad: async () => {
     // safe for public
     // get only general settings + favicon url
-    return await settingsGeneralListBlog()
+    return await blogSettingsGeneralRead()
   },
 
   head: ({ match }) => {

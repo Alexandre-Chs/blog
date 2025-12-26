@@ -9,7 +9,7 @@ type ArticlePropsType = {
   index: number
 }
 
-export default function ArticleHome({ article, articles, index }: ArticlePropsType) {
+export default function BlogArticleHome({ article, articles, index }: ArticlePropsType) {
   const isLast = index === articles.length - 1
   const authorName = (article as Article & { authorName?: string }).authorName ?? 'Editorial Team'
 

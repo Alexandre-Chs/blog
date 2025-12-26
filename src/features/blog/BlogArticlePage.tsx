@@ -1,15 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
-import ArticleNotFound from '@/features/blog/components/ArticleNotFound'
-import Article from '@/features/blog/components/Article'
-import { articleBySlug } from '@/features/blog/api/articles'
+import ArticleNotFound from '@/features/blog/BlogArticleNotFound'
+import Article from '@/features/blog/BlogArticle'
+import { blogArticleRead } from '@/features/blog/blog-article-read.api'
 
 type ArticlePageProps = {
   slug: string
 }
 
-export default function ArticlePage({ slug }: ArticlePageProps) {
-  const articleBySlugFn = useServerFn(articleBySlug)
+export default function BlogArticlePage({ slug }: ArticlePageProps) {
+  const articleBySlugFn = useServerFn(blogArticleRead)
   const {
     data: article,
     isPending,

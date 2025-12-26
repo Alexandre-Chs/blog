@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
-import Article from '@/features/blog/components/Article'
-import { settingsAboutListBlog } from '@/features/blog/api/about'
+import Article from '@/features/blog/BlogArticle'
+import { blogSettingsAboutRead } from '@/features/blog/blog-settings-about-read.api'
 
-export default function AboutPage() {
-  const aboutFn = useServerFn(settingsAboutListBlog)
+export default function BlogAboutPage() {
+  const aboutFn = useServerFn(blogSettingsAboutRead)
 
   const {
     data: about,

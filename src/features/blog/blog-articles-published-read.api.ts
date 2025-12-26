@@ -3,7 +3,7 @@ import { and, desc, eq, isNotNull, lte } from 'drizzle-orm'
 import { articles, articlesToMedias, medias, user } from '@/db/schema'
 import { db } from '@/index'
 
-export const articlesPublished = createServerFn({ method: 'GET' }).handler(async () => {
+export const blogArticlesPublishedRead = createServerFn({ method: 'GET' }).handler(async () => {
   const imageBaseUrl = process.env.S3_PUBLIC_BASE_URL
   const articlesRows = await db
     .select({

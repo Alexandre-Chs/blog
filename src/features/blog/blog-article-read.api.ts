@@ -14,12 +14,12 @@ type BlogArticle = ArticleRow & {
   }
 }
 
-const articleBySlugSchema = z.object({
+const blogArticleReadSchema = z.object({
   slug: z.string().min(1),
 })
 
-export const articleBySlug = createServerFn({ method: 'GET' })
-  .inputValidator(articleBySlugSchema)
+export const blogArticleRead = createServerFn({ method: 'GET' })
+  .inputValidator(blogArticleReadSchema)
   .handler(async ({ data }) => {
     const imageBaseUrl = process.env.S3_PUBLIC_BASE_URL
 

@@ -20,7 +20,7 @@ type ArticleProps = {
   content: ArticleContent | StaticContent
 }
 
-export default function Article({ content }: ArticleProps) {
+export default function BlogArticle({ content }: ArticleProps) {
   return (
     <div className="flex flex-1 flex-col bg-white text-neutral-900" style={{ fontFamily: 'Inter, sans-serif' }}>
       <div className="mx-auto w-full max-w-5xl py-6 md:py-12">

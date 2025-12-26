@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
-import { articlesPublished } from '../api/home'
+import { blogArticlesPublishedRead } from './blog-articles-published-read.api'
 import { formatDate } from '@/utils/formatDate'
 import { EditorMarkdown } from '@/components/PlateMarkdown'
 
 const BlogHomePage = () => {
   const { data: articles, isPending } = useQuery({
-    queryKey: ['articlesPublished'],
-    queryFn: articlesPublished,
+    queryKey: ['blogArticlesPublishedRead'],
+    queryFn: blogArticlesPublishedRead,
   })
 
   if (isPending) {

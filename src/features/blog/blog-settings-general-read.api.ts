@@ -4,7 +4,7 @@ import { settings } from '@/db/schema'
 import { db } from '@/index'
 import { validateSettings } from '@/zod/settings'
 
-export const settingsGeneralListBlog = createServerFn({ method: 'GET' }).handler(async () => {
+export const blogSettingsGeneralRead = createServerFn({ method: 'GET' }).handler(async () => {
   const rows = await db
     .select()
     .from(settings)
