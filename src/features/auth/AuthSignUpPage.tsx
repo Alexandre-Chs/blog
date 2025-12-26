@@ -15,7 +15,7 @@ type SignUpFormType = {
   confirmPassword: string
 }
 
-export default function SignUpPage() {
+export default function AuthSignUpPage() {
   const [signUpForm, setSignUpForm] = useState<SignUpFormType>({
     email: '',
     password: '',

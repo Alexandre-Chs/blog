@@ -1,7 +1,7 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 import { AppSidebar } from '@/components/app-sidebar'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { getSessionUser } from '@/features/auth/api/auth'
+import { authSessionUserRead } from '@/features/auth/auth-session-user-read.api'
 import { settingsGeneralList } from '@/features/admin/settings/api/settings'
 
 export const Route = createFileRoute('/admin/_layout')({
@@ -14,7 +14,7 @@ export const Route = createFileRoute('/admin/_layout')({
     ],
   }),
   beforeLoad: async () => {
-    const session = await getSessionUser()
+    const session = await authSessionUserRead()
     if (!session?.user) {
       throw redirect({ to: '/admin/login', replace: true })
     }

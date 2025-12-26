@@ -13,7 +13,7 @@ type LoginProps = {
   existUser: boolean
 }
 
-export function Login({ existUser }: LoginProps) {
+export function AuthLoginPage({ existUser }: LoginProps) {
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
   const [error, setError] = useState<string | undefined>(undefined)
 
