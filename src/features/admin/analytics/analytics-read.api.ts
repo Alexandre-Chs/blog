@@ -4,6 +4,7 @@ import { desc, gte } from 'drizzle-orm'
 import type { InferSelectModel } from 'drizzle-orm'
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod'
+import { activeSessions } from './analytics-session'
 
 export type TimeRange = '7d' | '30d'
 export type Visit = InferSelectModel<typeof visits>
@@ -16,50 +17,50 @@ export interface AnalyticsData {
   referrers: { source: string; count: number }[]
 }
 
-const timeRangeSchema = z.object({
+const analyticsReadSchema = z.object({
   timeRange: z.enum(['7d', '30d']),
 })
 
-export const getAnalyticsData = createServerFn({ method: 'GET' })
-  .inputValidator(timeRangeSchema)
+export const analyticsRead = createServerFn({ method: 'GET' })
+  .inputValidator(analyticsReadSchema)
   .handler(async ({ data }) => {
-    return fetchAnalyticsData(data.timeRange)
+    const timeRange = data.timeRange
+    const now = new Date()
+    const days = timeRange === '7d' ? 7 : 30
+    const startDate = new Date(now.setDate(now.getDate() - days))
+
+    const visitsData = await db
+      .select()
+      .from(visits)
+      .where(gte(visits.startedAt, startDate))
+      .limit(9)
+      .orderBy(desc(visits.startedAt))
+
+    const totalViews = visitsData.reduce((sum, v) => sum + (v.pageViews || 0), 0)
+    const uniqueVisitors = visitsData.length
+    const totalDuration = visitsData.reduce((sum, v) => sum + (v.duration || 0), 0)
+    const avgDuration = uniqueVisitors > 0 ? Math.round(totalDuration / uniqueVisitors) : 0
+
+    const viewsOverTime = calculateViewsOverTime(visitsData, timeRange)
+    const topPages = calculateTopPages(visitsData)
+    const referrers = calculateReferrers(visitsData)
+
+    return {
+      totalViews,
+      uniqueVisitors,
+      avgDuration,
+      viewsOverTime,
+      topPages,
+      referrers,
+    }
   })
 
-function getDateRange(timeRange: TimeRange): Date {
-  const now = new Date()
-  const days = timeRange === '7d' ? 7 : 30
-  return new Date(now.setDate(now.getDate() - days))
-}
+export const analyticsCurrentVisitorsRead = createServerFn({ method: 'GET' }).handler(() => {
+  const now = Date.now()
+  const ONE_MINUTE = 60 * 1000
 
-async function fetchAnalyticsData(timeRange: TimeRange): Promise<AnalyticsData> {
-  const startDate = getDateRange(timeRange)
-
-  const visitsData = await db
-    .select()
-    .from(visits)
-    .where(gte(visits.startedAt, startDate))
-    .limit(9)
-    .orderBy(desc(visits.startedAt))
-
-  const totalViews = visitsData.reduce((sum, v) => sum + (v.pageViews || 0), 0)
-  const uniqueVisitors = visitsData.length
-  const totalDuration = visitsData.reduce((sum, v) => sum + (v.duration || 0), 0)
-  const avgDuration = uniqueVisitors > 0 ? Math.round(totalDuration / uniqueVisitors) : 0
-
-  const viewsOverTime = calculateViewsOverTime(visitsData, timeRange)
-  const topPages = calculateTopPages(visitsData)
-  const referrers = calculateReferrers(visitsData)
-
-  return {
-    totalViews,
-    uniqueVisitors,
-    avgDuration,
-    viewsOverTime,
-    topPages,
-    referrers,
-  }
-}
+  return Array.from(activeSessions.values()).filter((session) => now - session.lastSeenAt.getTime() < ONE_MINUTE).length
+})
 
 function calculateViewsOverTime(visitsData: Visit[], timeRange: TimeRange) {
   const days = timeRange === '7d' ? 7 : 30

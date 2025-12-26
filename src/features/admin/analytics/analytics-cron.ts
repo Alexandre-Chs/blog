@@ -1,6 +1,6 @@
 import { Cron, scheduledJobs } from 'croner'
-import { activeSessions, saveSessionDatabase } from './session-manager'
-import { SESSION_TIMEOUT } from './session-manager'
+import { activeSessions, saveSessionDatabase } from './analytics-session'
+import { SESSION_TIMEOUT } from './analytics-session'
 
 function generateRandomSalt() {
   return Math.random().toString(36).substring(2) + Date.now().toString(36)

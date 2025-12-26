@@ -3,7 +3,7 @@ import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '
 import { useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 
-export function ViewsChart({ data }: { data: { date: string; views: number }[] }) {
+export function AnalyticsViewsChart({ data }: { data: { date: string; views: number }[] }) {
   const chartConfig = {
     views: {
       label: 'Page Views',

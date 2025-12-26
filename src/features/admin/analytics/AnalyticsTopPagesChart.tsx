@@ -2,11 +2,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { Bar, BarChart, LabelList, XAxis, YAxis } from 'recharts'
 
-export function RefererChart({ data }: { data: { source: string; count: number }[] }) {
+export function AnalyticsTopPagesChart({ data }: { data: { path: string; views: number }[] }) {
   const chartConfig = {
     visitors: {
       label: 'Visitors',
-      color: 'var(--chart-2)',
+      color: 'var(--chart-1)',
     },
     label: {
       color: 'var(--foreground)',
@@ -14,24 +14,28 @@ export function RefererChart({ data }: { data: { source: string; count: number }
   } satisfies ChartConfig
 
   const formattedData = data.map((item) => ({
-    source: item.source,
-    visitors: item.count,
+    page: item.path === '/' ? 'Home' : item.path.slice(1),
+    visitors: item.views,
   }))
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Referrers</CardTitle>
-        <CardDescription>Traffic sources</CardDescription>
+        <CardTitle>Top Pages</CardTitle>
+        <CardDescription>Most visited pages</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-x-2">
           <div className="flex items-center justify-between [&>div]:text-sm [&>div]:text-muted-foreground [&>div]:mb-2">
-            <div>Source</div>
+            <div>Pages</div>
             <div>Visitors</div>
           </div>
           <div className="flex gap-x-2">
-            <ChartContainer config={chartConfig} className="flex flex-1" style={{ height: formattedData.length * 40 }}>
+            <ChartContainer
+              config={chartConfig}
+              className="flex flex-1 aspect-auto"
+              style={{ height: formattedData.length * 40 }}
+            >
               <BarChart
                 accessibilityLayer
                 data={formattedData}
@@ -41,7 +45,7 @@ export function RefererChart({ data }: { data: { source: string; count: number }
                 }}
               >
                 <YAxis
-                  dataKey="source"
+                  dataKey="page"
                   type="category"
                   tickLine={false}
                   tickMargin={10}
@@ -52,9 +56,9 @@ export function RefererChart({ data }: { data: { source: string; count: number }
                 />
                 <XAxis dataKey="visitors" type="number" hide />
                 <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
-                <Bar dataKey="visitors" fill="var(--chart-2)" radius={4} barSize={30}>
+                <Bar dataKey="visitors" fill="var(--chart-1)" radius={4} barSize={30}>
                   <LabelList
-                    dataKey="source"
+                    dataKey="page"
                     position="insideLeft"
                     offset={8}
                     className="fill-foreground font-medium"
@@ -69,7 +73,7 @@ export function RefererChart({ data }: { data: { source: string; count: number }
             >
               {formattedData.map((item) => (
                 <span
-                  key={item.source}
+                  key={item.page}
                   className="h-[30px] w-[50px] flex items-center justify-center font-medium text-sm"
                 >
                   {item.visitors.toLocaleString()}

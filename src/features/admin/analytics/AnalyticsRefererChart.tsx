@@ -2,11 +2,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { Bar, BarChart, LabelList, XAxis, YAxis } from 'recharts'
 
-export function TopPagesChart({ data }: { data: { path: string; views: number }[] }) {
+export function AnalyticsRefererChart({ data }: { data: { source: string; count: number }[] }) {
   const chartConfig = {
     visitors: {
       label: 'Visitors',
-      color: 'var(--chart-1)',
+      color: 'var(--chart-2)',
     },
     label: {
       color: 'var(--foreground)',
@@ -14,28 +14,24 @@ export function TopPagesChart({ data }: { data: { path: string; views: number }[
   } satisfies ChartConfig
 
   const formattedData = data.map((item) => ({
-    page: item.path === '/' ? 'Home' : item.path.slice(1),
-    visitors: item.views,
+    source: item.source,
+    visitors: item.count,
   }))
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top Pages</CardTitle>
-        <CardDescription>Most visited pages</CardDescription>
+        <CardTitle>Referrers</CardTitle>
+        <CardDescription>Traffic sources</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-x-2">
           <div className="flex items-center justify-between [&>div]:text-sm [&>div]:text-muted-foreground [&>div]:mb-2">
-            <div>Pages</div>
+            <div>Source</div>
             <div>Visitors</div>
           </div>
           <div className="flex gap-x-2">
-            <ChartContainer
-              config={chartConfig}
-              className="flex flex-1 aspect-auto"
-              style={{ height: formattedData.length * 40 }}
-            >
+            <ChartContainer config={chartConfig} className="flex flex-1" style={{ height: formattedData.length * 40 }}>
               <BarChart
                 accessibilityLayer
                 data={formattedData}
@@ -45,7 +41,7 @@ export function TopPagesChart({ data }: { data: { path: string; views: number }[
                 }}
               >
                 <YAxis
-                  dataKey="page"
+                  dataKey="source"
                   type="category"
                   tickLine={false}
                   tickMargin={10}
@@ -56,9 +52,9 @@ export function TopPagesChart({ data }: { data: { path: string; views: number }[
                 />
                 <XAxis dataKey="visitors" type="number" hide />
                 <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
-                <Bar dataKey="visitors" fill="var(--chart-1)" radius={4} barSize={30}>
+                <Bar dataKey="visitors" fill="var(--chart-2)" radius={4} barSize={30}>
                   <LabelList
-                    dataKey="page"
+                    dataKey="source"
                     position="insideLeft"
                     offset={8}
                     className="fill-foreground font-medium"
@@ -73,7 +69,7 @@ export function TopPagesChart({ data }: { data: { path: string; views: number }[
             >
               {formattedData.map((item) => (
                 <span
-                  key={item.page}
+                  key={item.source}
                   className="h-[30px] w-[50px] flex items-center justify-center font-medium text-sm"
                 >
                   {item.visitors.toLocaleString()}

@@ -1,11 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequest } from '@tanstack/react-start/server'
 import z from 'zod'
-import { activeSessions, createSession, findActiveSession, updateSession } from './session-manager'
-import { getVisitorHashes } from './hash'
+import { createSession, findActiveSession, updateSession } from './analytics-session'
+import { getVisitorHashes } from './analytics-hash'
 import type { Device } from '@/db/schema'
 
-const trackPageViewSchema = z.object({
+const analyticsTrackCreateSchema = z.object({
   path: z.string(),
 })
 
@@ -18,8 +18,8 @@ function deviceType(userAgent: string): Device {
   return 'desktop'
 }
 
-export const trackPageView = createServerFn({ method: 'POST' })
-  .inputValidator(trackPageViewSchema)
+export const analyticsTrackCreate = createServerFn({ method: 'POST' })
+  .inputValidator(analyticsTrackCreateSchema)
   .handler((data) => {
     const request = getRequest()
 
@@ -45,10 +45,3 @@ export const trackPageView = createServerFn({ method: 'POST' })
 
     return true
   })
-
-export const currentVisitors = createServerFn({ method: 'GET' }).handler(() => {
-  const now = Date.now()
-  const ONE_MINUTE = 60 * 1000
-
-  return Array.from(activeSessions.values()).filter((session) => now - session.lastSeenAt.getTime() < ONE_MINUTE).length
-})

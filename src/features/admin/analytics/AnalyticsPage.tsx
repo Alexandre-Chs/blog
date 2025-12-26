@@ -2,16 +2,15 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
 import { Clock, Eye, Users } from 'lucide-react'
-import { getAnalyticsData, type TimeRange } from '../api/analytics-loader'
-import { TopPagesChart } from '../components/TopPagesChart'
-import { RefererChart } from '../components/RefererChart'
+import { analyticsCurrentVisitorsRead, analyticsRead, type TimeRange } from './analytics-read.api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import NavigationName from '@/components/ui/navigation-name'
-import { ViewsChart } from '../components/ViewsChart'
-import { ChartSkeleton } from '../components/SkeletonChart'
-import { StatCardSkeleton } from '../components/StatCardSkeleton'
-import { currentVisitors } from '../api/api'
+import { AnalyticsStatCardSkeleton } from './AnalyticsStatCardSkeleton'
+import { AnalyticsSkeletonChart } from './AnalyticsSkeletonChart'
+import { AnalyticsViewsChart } from './AnalyticsViewsChart'
+import { AnalyticsRefererChart } from './AnalyticsRefererChart'
+import { AnalyticsTopPagesChart } from './AnalyticsTopPagesChart'
 
 function StatCard({ title, value, icon: Icon }: { title: string; value: number; icon: typeof Eye }) {
   const formatValue = (val: number) => {
@@ -44,16 +43,16 @@ function StatCard({ title, value, icon: Icon }: { title: string; value: number; 
 
 export function AnalyticsPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>('7d')
-  const getAnalyticsDataFn = useServerFn(getAnalyticsData)
-  const getCurrentVisitorsFn = useServerFn(currentVisitors)
+  const analyticsReadFn = useServerFn(analyticsRead)
+  const getCurrentVisitorsFn = useServerFn(analyticsCurrentVisitorsRead)
 
   const { data, isLoading } = useQuery({
     queryKey: ['analytics', timeRange],
-    queryFn: () => getAnalyticsDataFn({ data: { timeRange } }),
+    queryFn: () => analyticsReadFn({ data: { timeRange } }),
   })
 
   const { data: visitors } = useQuery({
-    queryKey: ['currentVisitors'],
+    queryKey: ['analyticsCurrentVisitorsRead'],
     queryFn: () => getCurrentVisitorsFn(),
     refetchInterval: 60 * 1000,
   })
@@ -77,9 +76,9 @@ export function AnalyticsPage() {
 
         {isLoading ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <StatCardSkeleton />
-            <StatCardSkeleton />
-            <StatCardSkeleton />
+            <AnalyticsStatCardSkeleton />
+            <AnalyticsStatCardSkeleton />
+            <AnalyticsStatCardSkeleton />
           </div>
         ) : data ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -89,18 +88,18 @@ export function AnalyticsPage() {
           </div>
         ) : null}
 
-        {isLoading ? <ChartSkeleton /> : data ? <ViewsChart data={data.viewsOverTime} /> : null}
+        {isLoading ? <AnalyticsSkeletonChart /> : data ? <AnalyticsViewsChart data={data.viewsOverTime} /> : null}
 
         <div className="grid gap-4 md:grid-cols-2">
           {isLoading ? (
             <>
-              <ChartSkeleton />
-              <ChartSkeleton />
+              <AnalyticsSkeletonChart />
+              <AnalyticsSkeletonChart />
             </>
           ) : data ? (
             <>
-              <RefererChart data={data.referrers} />
-              <TopPagesChart data={data.topPages} />
+              <AnalyticsRefererChart data={data.referrers} />
+              <AnalyticsTopPagesChart data={data.topPages} />
             </>
           ) : null}
         </div>

@@ -1,5 +1,5 @@
 import crypto from 'node:crypto'
-import { getCurrentSalts } from './cron'
+import { getCurrentSalts } from './analytics-cron'
 
 export function calculateHash(ip: string, userAgent: string, salt: string) {
   const data = `${ip}|${userAgent}|${salt}`

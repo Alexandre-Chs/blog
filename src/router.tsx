@@ -4,7 +4,7 @@ import * as TanstackQuery from './hooks/integrations/tanstack-query/root-provide
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
-import { trackPageView } from './features/admin/analytics/api/api'
+import { analyticsTrackCreate } from './features/admin/analytics/analytics-track-create.api'
 
 // Create a new router instance
 export const getRouter = () => {
@@ -20,7 +20,7 @@ export const getRouter = () => {
   })
 
   router.subscribe('onResolved', async ({ pathChanged, toLocation }) => {
-    if (pathChanged) await trackPageView({ data: { path: toLocation.pathname } })
+    if (pathChanged) await analyticsTrackCreate({ data: { path: toLocation.pathname } })
   })
 
   setupRouterSsrQueryIntegration({ router, queryClient: rqContext.queryClient })
