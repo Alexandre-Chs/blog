@@ -3,7 +3,6 @@ import { useNavigate } from '@tanstack/react-router'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
 import { toast } from 'sonner'
-import { articleDelete } from '../api/delete'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import {
@@ -16,19 +15,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { articlesArticleDelete } from './articles-article-delete.api'
 
-type ArticleActionsProps = {
+type ArticlesArticleActionsProps = {
   articleId: string
   articleStatus?: 'draft' | 'published' | 'scheduled'
 }
 
-export default function ArticleActions({ articleId }: ArticleActionsProps) {
+export default function ArticlesArticleActions({ articleId }: ArticlesArticleActionsProps) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const articleDeleteFn = useServerFn(articleDelete)
+  const articlesArticleDeletefn = useServerFn(articlesArticleDelete)
 
   const articleDeleteMutation = useMutation({
-    mutationFn: articleDeleteFn,
+    mutationFn: articlesArticleDeletefn,
     onSuccess: () => {
       toast.success('Article deleted successfully!')
       queryClient.invalidateQueries({ queryKey: ['articles'] })

@@ -1,9 +1,9 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { articleCreate } from '@/features/admin/articles/api/create'
+import { articlesArticleCreate } from '@/features/admin/articles/articles-article-create.api'
 
 export const Route = createFileRoute('/admin/_layout/articles/create/')({
   loader: async () => {
-    const { article } = await articleCreate({ data: { articleId: crypto.randomUUID() } })
+    const { article } = await articlesArticleCreate({ data: { articleId: crypto.randomUUID() } })
 
     throw redirect({
       to: '/admin/articles/$articleId/edit',

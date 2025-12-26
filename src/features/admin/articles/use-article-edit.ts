@@ -5,26 +5,28 @@ import { toast } from 'sonner'
 import { useServerFn } from '@tanstack/react-start'
 
 import type { SimpleEditorRef } from '@/components/tiptap-templates/simple/simple-editor'
-import { articleById, articleDeletePublishedAt, articleUpdate } from '@/features/admin/articles/api/edit'
+import { articlesArticleUpdate } from '@/features/admin/articles/articles-article-update.api'
 import { thumbnailUpdateAlt } from '@/features/admin/medias/api/thumbnail'
+import { articlesArticleRead } from './articles-article-read.api'
+import { articlesArticleUnpublish } from './articles-article-unpublish.api'
 
-export function useArticleEditPage(articleId: string) {
+export function useArticleEdit(articleId: string) {
   const [publishedAt, setPublishedAt] = useState<Date | undefined>(undefined)
   const editorRef = useRef<SimpleEditorRef>(null)
   const [title, setTitle] = useState('')
   const [thumbnailAlt, setThumbnailAlt] = useState('')
 
-  const articleByIdFn = useServerFn(articleById)
-  const articleUpdateFn = useServerFn(articleUpdate)
+  const articlesArticleReadFn = useServerFn(articlesArticleRead)
+  const articleUpdateFn = useServerFn(articlesArticleUpdate)
   const thumbnailUpdateAltFn = useServerFn(thumbnailUpdateAlt)
-  const articleDeletePublishedAtFn = useServerFn(articleDeletePublishedAt)
+  const articlesArticleUnpublishFn = useServerFn(articlesArticleUnpublish)
 
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
   const { data: articleData, isPending } = useQuery({
     queryKey: ['articleEdit', articleId],
-    queryFn: () => articleByIdFn({ data: { articleId } }),
+    queryFn: () => articlesArticleReadFn({ data: { articleId } }),
   })
 
   useEffect(() => {
@@ -84,7 +86,7 @@ export function useArticleEditPage(articleId: string) {
   }
 
   const handleDeletePublishedAt = async () => {
-    await articleDeletePublishedAtFn({ data: { articleId } })
+    await articlesArticleUnpublishFn({ data: { articleId } })
     queryClient.invalidateQueries({ queryKey: ['articleEdit', articleId] })
   }
 

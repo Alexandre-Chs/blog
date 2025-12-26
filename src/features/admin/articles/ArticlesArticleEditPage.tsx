@@ -1,7 +1,7 @@
 import { ClientOnly, useNavigate } from '@tanstack/react-router'
 import { Sparkles } from 'lucide-react'
-import ArticleThumbnail from '../../medias/components/ArticleThumbnail'
-import UploadThumbnail from '../../medias/components/UploadThumbnail'
+import ArticleThumbnail from '../medias/components/ArticleThumbnail'
+import UploadThumbnail from '../medias/components/UploadThumbnail'
 import { DatePicker } from '@/components/datepicker/DatePicker'
 import { AiLoader } from '@/components/ui/ai-loader'
 import { Button } from '@/components/ui/button'
@@ -10,8 +10,8 @@ import { Label } from '@/components/ui/label'
 import NavigationName from '@/components/ui/navigation-name'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Textarea } from '@/components/ui/textarea'
-import { useAiAssistant } from '@/hooks/useAiAssistant'
-import { useArticleEditPage } from '@/hooks/useArticleEdit'
+import { useAiAssistant } from '@/features/admin/articles/use-ai-assistant'
+import { useArticleEdit } from '@/features/admin/articles/use-article-edit'
 import { Editor } from '@/components/tiptap-templates/simple/simple-editor'
 
 type ArticleEditPageProps = {
@@ -31,7 +31,7 @@ function ButtonPublish({ isPublishing, handlePublishArticle }: ButtonPublishProp
   )
 }
 
-export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
+export default function ArticlesArticleEditPage({ articleId }: ArticleEditPageProps) {
   const {
     editorRef,
     articleData,
@@ -46,7 +46,7 @@ export default function ArticleEditPage({ articleId }: ArticleEditPageProps) {
     isPublishing,
     setPublishedAt,
     publishedAt,
-  } = useArticleEditPage(articleId)
+  } = useArticleEdit(articleId)
 
   const {
     aiSheetOpen,

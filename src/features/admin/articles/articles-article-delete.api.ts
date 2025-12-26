@@ -5,13 +5,13 @@ import { articles } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
 
-const articleDeleteSchema = z.object({
+const articlesArticleDeleteSchema = z.object({
   articleId: z.uuid(),
 })
 
-export const articleDelete = createServerFn({ method: 'POST' })
+export const articlesArticleDelete = createServerFn({ method: 'POST' })
   .middleware([adminMiddleware])
-  .inputValidator(articleDeleteSchema)
+  .inputValidator(articlesArticleDeleteSchema)
   .handler(async ({ data }) => {
     const articleId = data.articleId
     await db.delete(articles).where(eq(articles.id, articleId))

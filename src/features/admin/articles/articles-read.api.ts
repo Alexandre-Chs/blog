@@ -5,13 +5,13 @@ import { articles, articlesToMedias, medias, user } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
 
-const articlesListSchema = z.object({
+const articlesReadSchema = z.object({
   status: z.enum(['published', 'draft', 'scheduled']),
 })
 
-export const articlesList = createServerFn({ method: 'GET' })
+export const articlesRead = createServerFn({ method: 'GET' })
   .middleware([adminMiddleware])
-  .inputValidator(articlesListSchema)
+  .inputValidator(articlesReadSchema)
   .handler(async ({ data }) => {
     const now = new Date()
 
@@ -49,7 +49,7 @@ export const articlesList = createServerFn({ method: 'GET' })
     }))
   })
 
-export const articlesListCount = createServerFn({ method: 'GET' })
+export const articlesCount = createServerFn({ method: 'GET' })
   .middleware([adminMiddleware])
   .handler(async () => {
     const now = new Date()

@@ -4,13 +4,13 @@ import { articles } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
 
-const articleCreateSchema = z.object({
+const articlesArticleCreateSchema = z.object({
   articleId: z.uuid(),
 })
 
-export const articleCreate = createServerFn({ method: 'POST' })
+export const articlesArticleCreate = createServerFn({ method: 'POST' })
   .middleware([adminMiddleware])
-  .inputValidator(articleCreateSchema)
+  .inputValidator(articlesArticleCreateSchema)
   .handler(async ({ data, context }) => {
     const user = context.adminUser
 

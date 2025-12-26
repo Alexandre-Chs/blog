@@ -1,19 +1,19 @@
 import { useQuery } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
-import { articlesList } from '../api/list'
-import ArticleActions from './ArticleActions'
 import { formatDate } from '@/utils/formatDate'
+import { articlesRead } from './articles-read.api'
+import ArticlesArticleActions from './ArticlesArticleActions'
 
 type ArticlesListProps = {
   articleStatus: 'published' | 'scheduled' | 'draft'
 }
 
-export default function ArticlesList({ articleStatus }: ArticlesListProps) {
-  const articlesListsFn = useServerFn(articlesList)
+export default function ArticlesArticleList({ articleStatus }: ArticlesListProps) {
+  const articlesReadFn = useServerFn(articlesRead)
 
   const { data: articles } = useQuery({
     queryKey: ['articles', articleStatus],
-    queryFn: () => articlesListsFn({ data: { status: articleStatus } }),
+    queryFn: () => articlesReadFn({ data: { status: articleStatus } }),
   })
 
   if (!articles || articles.length === 0) {
@@ -49,7 +49,7 @@ export default function ArticlesList({ articleStatus }: ArticlesListProps) {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm">{article.authorName ? article.authorName : 'Author unknown'}</span>
-                    <ArticleActions articleId={article.id} articleStatus={articleStatus} />
+                    <ArticlesArticleActions articleId={article.id} articleStatus={articleStatus} />
                   </div>
                 </div>
               </article>

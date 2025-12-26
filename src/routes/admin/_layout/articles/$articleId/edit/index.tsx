@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import ArticleEditPage from '@/features/admin/articles/view/ArticleEditPage'
+import ArticlesArticleEditPage from '@/features/admin/articles/ArticlesArticleEditPage'
 
 export const Route = createFileRoute('/admin/_layout/articles/$articleId/edit/')({
   component: RouteComponent,
@@ -8,5 +8,5 @@ export const Route = createFileRoute('/admin/_layout/articles/$articleId/edit/')
 function RouteComponent() {
   const { articleId } = Route.useParams()
 
-  return <ArticleEditPage articleId={articleId} />
+  return <ArticlesArticleEditPage articleId={articleId} />
 }

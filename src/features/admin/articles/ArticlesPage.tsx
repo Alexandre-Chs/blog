@@ -1,23 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
-import ArticlesList from '../components/ArticlesList'
-import { articlesListCount } from '../api/list'
+import ArticlesArticleList from './ArticlesArticleList'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import NavigationName from '@/components/ui/navigation-name'
+import { articlesCount } from './articles-read.api'
 
 function ArticlesCount({ count }: { count: number }) {
   return <Badge className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums">{count}</Badge>
 }
 
 export default function ArticlesPage() {
-  const articlesListCountFn = useServerFn(articlesListCount)
-  const { data: articlesCount } = useQuery({
+  const articlesCountFn = useServerFn(articlesCount)
+
+  const { data } = useQuery({
     queryKey: ['articlesCount'],
-    queryFn: articlesListCountFn,
+    queryFn: articlesCountFn,
   })
 
-  if (!articlesCount) return null
+  if (!data) return null
 
   return (
     <>
@@ -26,25 +27,25 @@ export default function ArticlesPage() {
         <TabsList>
           <TabsTrigger value="published">
             Published
-            <ArticlesCount count={articlesCount['published']} />
+            <ArticlesCount count={data['published']} />
           </TabsTrigger>
           <TabsTrigger value="scheduled">
             Scheduled
-            <ArticlesCount count={articlesCount['scheduled']} />
+            <ArticlesCount count={data['scheduled']} />
           </TabsTrigger>
           <TabsTrigger value="drafts">
             Drafts
-            <ArticlesCount count={articlesCount['draft']} />
+            <ArticlesCount count={data['draft']} />
           </TabsTrigger>
         </TabsList>
         <TabsContent value="published">
-          <ArticlesList articleStatus="published" />
+          <ArticlesArticleList articleStatus="published" />
         </TabsContent>
         <TabsContent value="scheduled">
-          <ArticlesList articleStatus="scheduled" />
+          <ArticlesArticleList articleStatus="scheduled" />
         </TabsContent>
         <TabsContent value="drafts">
-          <ArticlesList articleStatus="draft" />
+          <ArticlesArticleList articleStatus="draft" />
         </TabsContent>
       </Tabs>
     </>
