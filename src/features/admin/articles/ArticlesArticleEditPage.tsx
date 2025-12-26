@@ -1,7 +1,7 @@
 import { ClientOnly, useNavigate } from '@tanstack/react-router'
 import { Sparkles } from 'lucide-react'
-import ArticleThumbnail from '../medias/components/ArticleThumbnail'
-import UploadThumbnail from '../medias/components/UploadThumbnail'
+import ArticlesArticleThumbnail from './ArticlesArticleThumbnail'
+import ArticlesThumbnailUpload from './ArticlesThumbnailUpload'
 import { DatePicker } from '@/components/datepicker/DatePicker'
 import { AiLoader } from '@/components/ui/ai-loader'
 import { Button } from '@/components/ui/button'
@@ -147,7 +147,7 @@ export default function ArticlesArticleEditPage({ articleId }: ArticleEditPagePr
           <div className="max-w-5xl mx-auto pb-4">
             <div className="py-4">
               {articleData.thumbnail ? (
-                <ArticleThumbnail
+                <ArticlesArticleThumbnail
                   thumbnailUrl={articleData.thumbnail.url}
                   articleId={articleId}
                   alt={thumbnailAlt}
@@ -155,7 +155,7 @@ export default function ArticlesArticleEditPage({ articleId }: ArticleEditPagePr
                   onAltBlur={handleThumbnailAltBlur}
                 />
               ) : (
-                <UploadThumbnail articleId={articleId} />
+                <ArticlesThumbnailUpload articleId={articleId} />
               )}
             </div>
 

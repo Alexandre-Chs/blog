@@ -2,13 +2,15 @@ import { RefreshCw, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useServerFn } from '@tanstack/react-start'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { thumbnailDeleteDatabase, thumbnailFromGallery, thumbnailInsertDatabase } from '../api/thumbnail'
-import { mediaSignedUrl } from '../api/media'
-import { GalleryModal } from './GalleryModal'
-import { GalleryImage } from '../../settings/gallery/api/types'
+import { s3SignedUrlCreate } from '../../../lib/s3-signed-url-create.api'
+import { ArticlesGalleryModal } from './ArticlesGalleryModal'
+import { GalleryImage } from '../settings/gallery/api/types'
 import { Button } from '@/components/ui/button'
+import { articlesArticleThumbnailCreate } from './articles-article-thumbnail-create.api'
+import { articlesArticleThumbnailsGallery } from './articles-article-thumbnail-update.api'
+import { articlesArticleThumbnailDelete } from './articles-article-thumbnail-delete.api'
 
-type ArticleThumbnailProps = {
+type ArticlesArticleThumbnailProps = {
   thumbnailUrl: string
   articleId: string
   alt: string
@@ -16,17 +18,17 @@ type ArticleThumbnailProps = {
   onAltBlur: () => void
 }
 
-export default function ArticleThumbnail({
+export default function ArticlesArticleThumbnail({
   thumbnailUrl,
   articleId,
   alt,
   onAltChange,
   onAltBlur,
-}: ArticleThumbnailProps) {
+}: ArticlesArticleThumbnailProps) {
   const queryClient = useQueryClient()
-  const thumbnailInsertDatabaseFn = useServerFn(thumbnailInsertDatabase)
-  const mediaSignedUrlFn = useServerFn(mediaSignedUrl)
-  const thumbnailFromGalleryFn = useServerFn(thumbnailFromGallery)
+  const thumbnailInsertDatabaseFn = useServerFn(articlesArticleThumbnailCreate)
+  const mediaSignedUrlFn = useServerFn(s3SignedUrlCreate)
+  const thumbnailFromGalleryFn = useServerFn(articlesArticleThumbnailsGallery)
 
   const galleryMutation = useMutation({
     mutationFn: async (key: string) => {
@@ -79,7 +81,7 @@ export default function ArticleThumbnail({
 
   const handleDeleteThumbnail = async () => {
     try {
-      await thumbnailDeleteDatabase({ data: { articleId } })
+      await articlesArticleThumbnailDelete({ data: { articleId } })
       queryClient.invalidateQueries({ queryKey: ['articleEdit'] })
     } catch (error) {
       if (error instanceof Error) {
@@ -132,7 +134,7 @@ export default function ArticleThumbnail({
             </div>
           </div>
 
-          <GalleryModal onSelect={handleSelectGalleryImage} buttonText="Select from Gallery" />
+          <ArticlesGalleryModal onSelect={handleSelectGalleryImage} buttonText="Select from Gallery" />
         </div>
       </div>
       <input

@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
-import { mediaSignedUrl } from '../../medias/api/media'
+import { s3SignedUrlCreate } from '../../../../lib/s3-signed-url-create.api'
 import {
   settingsFaviconUpdate,
   settingsGeneralList,
@@ -32,7 +32,7 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 export default function SettingsGeneralPage() {
   const settingsGeneralListFn = useServerFn(settingsGeneralList)
   const settingsGeneralUpdateFn = useServerFn(settingsGeneralUpdate)
-  const mediaSignedUrlFn = useServerFn(mediaSignedUrl)
+  const mediaSignedUrlFn = useServerFn(s3SignedUrlCreate)
   const settingsFaviconUpdateFn = useServerFn(settingsFaviconUpdate)
   const queryClient = useQueryClient()
   const router = useRouter()

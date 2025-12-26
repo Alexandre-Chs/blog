@@ -2,21 +2,22 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useServerFn } from '@tanstack/react-start'
 import { useQueryClient } from '@tanstack/react-query'
-import { thumbnailFromGallery, thumbnailInsertDatabase } from '../api/thumbnail'
-import { mediaSignedUrl } from '../api/media'
+import { s3SignedUrlCreate } from '../../../lib/s3-signed-url-create.api'
 import { Input } from '@/components/ui/input'
-import { GalleryModal } from './GalleryModal'
+import { ArticlesGalleryModal } from './ArticlesGalleryModal'
 import { UploadCloud } from 'lucide-react'
-import { GalleryImage } from '../../settings/gallery/api/types'
+import { GalleryImage } from '../settings/gallery/api/types'
+import { articlesArticleThumbnailCreate } from './articles-article-thumbnail-create.api'
+import { articlesArticleThumbnailsGallery } from './articles-article-thumbnail-update.api'
 
 type UploadThumbnailProps = {
   articleId: string
 }
 
-export default function UploadThumbnail({ articleId }: UploadThumbnailProps) {
-  const mediaSignedUrlFn = useServerFn(mediaSignedUrl)
-  const thumbnailInsertDatabaseFn = useServerFn(thumbnailInsertDatabase)
-  const thumbnailFromGalleryFn = useServerFn(thumbnailFromGallery)
+export default function ArticlesThumbnailUpload({ articleId }: UploadThumbnailProps) {
+  const mediaSignedUrlFn = useServerFn(s3SignedUrlCreate)
+  const thumbnailInsertDatabaseFn = useServerFn(articlesArticleThumbnailCreate)
+  const thumbnailFromGalleryFn = useServerFn(articlesArticleThumbnailsGallery)
   const queryClient = useQueryClient()
 
   const uploadMutation = useMutation({
@@ -95,7 +96,7 @@ export default function UploadThumbnail({ articleId }: UploadThumbnailProps) {
           </div>
         </div>
 
-        <GalleryModal onSelect={handleSelectGalleryImage} buttonText="Select from Gallery" />
+        <ArticlesGalleryModal onSelect={handleSelectGalleryImage} buttonText="Select from Gallery" />
       </label>
     </>
   )

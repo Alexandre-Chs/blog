@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Image as ImageIcon } from 'lucide-react'
-import { galleryList } from '../../settings/gallery/api/gallery'
-import { GalleryImage } from '../../settings/gallery/api/types'
+import { galleryList } from '../settings/gallery/api/gallery'
+import { GalleryImage } from '../settings/gallery/api/types'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
-type GalleryModalProps = {
+type ArticlesGalleryModal = {
   onSelect: (image: GalleryImage) => void
   buttonText?: string
 }
 
-export function GalleryModal({ onSelect, buttonText = 'Select from Gallery' }: GalleryModalProps) {
+export function ArticlesGalleryModal({ onSelect, buttonText = 'Select from Gallery' }: ArticlesGalleryModal) {
   const [open, setOpen] = useState(false)
 
   const { data: galleryImages } = useQuery({

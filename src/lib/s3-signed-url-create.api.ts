@@ -9,15 +9,15 @@ const maxThumbnailSizeBytes = 5 * 1024 * 1024 // 5MB
 const allowedContentTypesMedias = ['image/jpeg', 'image/png', 'image/webp', 'image/avif']
 const allowedContentTypesFavicons = ['image/x-icon', 'image/vnd.microsoft.icon', 'image/png', 'image/svg+xml']
 
-const mediaSignedSchema = z.object({
+const s3SignedUrlCreateSchema = z.object({
   contentType: z.string(),
   size: z.number().nonnegative(),
   type: z.enum(['media', 'favicon']).default('media'),
 })
 
-export const mediaSignedUrl = createServerFn({ method: 'POST' })
+export const s3SignedUrlCreate = createServerFn({ method: 'POST' })
   .middleware([adminMiddleware])
-  .inputValidator(mediaSignedSchema)
+  .inputValidator(s3SignedUrlCreateSchema)
   .handler(async ({ data }) => {
     if (!process.env.S3_BUCKET_NAME) throw new Error('S3_BUCKET_NAME is not configured')
 

@@ -6,9 +6,9 @@ import { useServerFn } from '@tanstack/react-start'
 
 import type { SimpleEditorRef } from '@/components/tiptap-templates/simple/simple-editor'
 import { articlesArticleUpdate } from '@/features/admin/articles/articles-article-update.api'
-import { thumbnailUpdateAlt } from '@/features/admin/medias/api/thumbnail'
 import { articlesArticleRead } from './articles-article-read.api'
 import { articlesArticleUnpublish } from './articles-article-unpublish.api'
+import { articlesArticleThumbnailAltUpdate } from './articles-article-thumbnail-update.api'
 
 export function useArticleEdit(articleId: string) {
   const [publishedAt, setPublishedAt] = useState<Date | undefined>(undefined)
@@ -18,7 +18,7 @@ export function useArticleEdit(articleId: string) {
 
   const articlesArticleReadFn = useServerFn(articlesArticleRead)
   const articleUpdateFn = useServerFn(articlesArticleUpdate)
-  const thumbnailUpdateAltFn = useServerFn(thumbnailUpdateAlt)
+  const thumbnailUpdateAltFn = useServerFn(articlesArticleThumbnailAltUpdate)
   const articlesArticleUnpublishFn = useServerFn(articlesArticleUnpublish)
 
   const queryClient = useQueryClient()
