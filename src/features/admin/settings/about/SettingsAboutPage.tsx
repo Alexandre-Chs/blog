@@ -69,18 +69,20 @@ export default function SettingsAboutPage() {
     <>
       <NavigationName name="About Page" subtitle="Manage the text shown on the About page in your blog's footer" />
       <ClientOnly fallback={<div>Loading editor...</div>}>
-        <div className="flex max-w-5xl mx-auto justify-end items-center pb-4 w-full">
-          <Button
-            disabled={updateSettingsAboutMutation.isPending}
-            onClick={handleEditArticle}
-            className="cursor-pointer"
-          >
-            {updateSettingsAboutMutation.isPending ? 'Updating...' : 'Update about'}
-          </Button>
-        </div>
-        <div className="max-w-5xl mx-auto pt-6 bg-sidebar rounded-xl p-6 border border-sidebar-border w-full">
-          <div className="w-full">
-            <Editor ref={editorRef} initialContent={aboutContent?.value.content || 'Type here...'} />
+        <div className="px-4">
+          <div className="flex max-w-5xl mx-auto justify-end items-center pb-4 w-full">
+            <Button
+              disabled={updateSettingsAboutMutation.isPending}
+              onClick={handleEditArticle}
+              className="cursor-pointer"
+            >
+              {updateSettingsAboutMutation.isPending ? 'Updating...' : 'Update about'}
+            </Button>
+          </div>
+          <div className="max-w-5xl mx-auto pt-6 bg-sidebar rounded-xl p-6 border border-sidebar-border w-full">
+            <div className="w-full">
+              <Editor ref={editorRef} initialContent={aboutContent?.value.content || 'Type here...'} />
+            </div>
           </div>
         </div>
       </ClientOnly>
