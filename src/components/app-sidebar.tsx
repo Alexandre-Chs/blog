@@ -1,5 +1,6 @@
 import { Link, useRouterState } from '@tanstack/react-router'
 import type { ComponentProps } from 'react'
+import { Calendar, FileText, FilePlus, Home, LineChart, Settings, Image as ImageIcon, Bot, BookA } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -18,30 +19,30 @@ const data = {
   navMain: [
     {
       title: 'Dashboard',
-      items: [{ title: 'Overview', url: '/admin', isActive: true }],
+      items: [{ title: 'Home', url: '/admin', isActive: true, icon: Home }],
     },
     {
       title: 'Articles',
       items: [
-        { title: 'All Articles', url: '/admin/articles' },
-        { title: 'Create article', url: '/admin/articles/create' },
+        { title: 'All Articles', url: '/admin/articles', icon: FileText },
+        { title: 'Create article', url: '/admin/articles/create', icon: FilePlus },
       ],
     },
     {
       title: 'Schedule',
-      items: [{ title: 'Calendar', url: '/admin/calendar' }],
+      items: [{ title: 'Calendar', url: '/admin/calendar', icon: Calendar }],
     },
     {
       title: 'Analytics',
-      items: [{ title: 'Overview', url: '/admin/analytics' }],
+      items: [{ title: 'Overview', url: '/admin/analytics', icon: LineChart }],
     },
     {
       title: 'Settings',
       items: [
-        { title: 'General', url: '/admin/settings' },
-        { title: 'Gallery', url: '/admin/settings/gallery' },
-        { title: 'AI', url: '/admin/settings/ai' },
-        { title: 'About', url: '/admin/settings/about' },
+        { title: 'General', url: '/admin/settings', icon: Settings },
+        { title: 'Gallery', url: '/admin/settings/gallery', icon: ImageIcon },
+        { title: 'AI', url: '/admin/settings/ai', icon: Bot },
+        { title: 'About page', url: '/admin/settings/about', icon: BookA },
       ],
     },
   ],
@@ -76,6 +77,7 @@ export function AppSidebar({ projectName, ...props }: AppSidebarProps) {
                   <SidebarMenuItem key={itm.title}>
                     <SidebarMenuButton asChild isActive={handleRouteActive(itm.url)}>
                       <Link to={itm.url} preload={itm.title === 'Create article' ? false : 'intent'}>
+                        <itm.icon className="h-4 w-4" />
                         {itm.title}
                       </Link>
                     </SidebarMenuButton>
