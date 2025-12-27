@@ -81,8 +81,8 @@ export default function ArticlesArticleEditPage({ articleId }: ArticleEditPagePr
     <>
       <NavigationName name="Write your article" subtitle={subtitle} />
       <ClientOnly fallback={<div>Loading editor...</div>}>
-        <div className="px-4">
-          <div className="flex justify-between items-center max-w-5xl mx-auto w-full">
+        <div className="px-4 max-w-5xl mx-auto w-full">
+          <div className="flex flex-1 justify-between items-center">
             <div className="flex gap-x-2">
               <DatePicker onChange={setPublishedAt} value={publishedAt} placeholder="Pick a publish date" />
               {publishedAt && (
@@ -144,7 +144,7 @@ export default function ArticlesArticleEditPage({ articleId }: ArticleEditPagePr
               <ButtonPublish isPublishing={isPublishing} handlePublishArticle={handlePublishArticle} />
             </div>
           </div>
-          <div className="max-w-5xl mx-auto pb-4">
+          <div className="pb-4">
             <div className="py-4">
               {articleData.thumbnail ? (
                 <ArticlesArticleThumbnail

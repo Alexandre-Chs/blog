@@ -79,7 +79,7 @@ export default function SettingsAboutPage() {
               {updateSettingsAboutMutation.isPending ? 'Updating...' : 'Update about'}
             </Button>
           </div>
-          <div className="max-w-5xl mx-auto pt-6 bg-sidebar rounded-xl p-6 border border-sidebar-border w-full">
+          <div className="max-w-5xl mx-auto">
             <div className="w-full">
               <Editor ref={editorRef} initialContent={aboutContent?.value.content || 'Type here...'} />
             </div>
