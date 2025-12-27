@@ -3,22 +3,22 @@ import { toast } from 'sonner'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { ClientOnly, useNavigate } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
-
-import { settingsAboutList, settingsAboutUpdate } from '../api/list'
+import { settingsAboutUpdate } from './settings-about-update.api'
 import type { SimpleEditorRef } from '@/components/tiptap-templates/simple/simple-editor'
 import { Editor } from '@/components/tiptap-templates/simple/simple-editor'
 import { Button } from '@/components/ui/button'
 import NavigationName from '@/components/ui/navigation-name'
+import { settingsAboutRead } from './settings-about-read.api'
 
 export default function SettingsAboutPage() {
   const editorRef = useRef<SimpleEditorRef>(null)
   const navigate = useNavigate()
-  const settingsAboutFn = useServerFn(settingsAboutList)
+  const settingsAboutReadFn = useServerFn(settingsAboutRead)
   const settingsAboutUpdateFn = useServerFn(settingsAboutUpdate)
 
   const { data: aboutContent, isPending } = useQuery({
     queryKey: ['settingsAbout'],
-    queryFn: () => settingsAboutFn(),
+    queryFn: () => settingsAboutReadFn(),
   })
 
   const updateSettingsAboutMutation = useMutation({

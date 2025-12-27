@@ -5,7 +5,6 @@ import { toast } from 'sonner'
 import { useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { Check, ChevronsUpDown } from 'lucide-react'
-import { SettingsAiFormSchema, settingsAiList, settingsAiUpdate } from '../api/settings'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import NavigationName from '@/components/ui/navigation-name'
 import { Label } from '@/components/ui/label'
@@ -15,6 +14,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { cn } from '@/lib/utils'
 import { getOpenrouterModels } from '@/lib/openrouter/api'
+import { settingsAiRead } from './settings-ai-read.api'
+import { settingsAiUpdate, settingsAiUpdateSchema } from './settings-ai-update.api'
 
 function FieldInfo({ field }: { field: AnyFieldApi }) {
   return (
@@ -30,13 +31,13 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 export default function SettingsAiPage() {
   const [open, setOpen] = useState(false)
   const settingsAiUpdateFn = useServerFn(settingsAiUpdate)
-  const settingsAiListFn = useServerFn(settingsAiList)
+  const settingsAiReadFn = useServerFn(settingsAiRead)
   const getOpenrouterModelsFn = useServerFn(getOpenrouterModels)
   const router = useRouter()
 
   const { data: settingsAiData } = useQuery({
     queryKey: ['settingsAi'],
-    queryFn: () => settingsAiListFn(),
+    queryFn: () => settingsAiReadFn(),
   })
 
   const { data: models } = useQuery({
@@ -51,7 +52,7 @@ export default function SettingsAiPage() {
     },
     validationLogic: revalidateLogic(),
     validators: {
-      onDynamic: SettingsAiFormSchema,
+      onDynamic: settingsAiUpdateSchema,
     },
     onSubmit: ({ value }) => {
       settingsAiMutation.mutate({ data: { context: value.context, defaultModel: value.defaultModel } })

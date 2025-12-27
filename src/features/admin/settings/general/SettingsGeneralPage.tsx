@@ -6,17 +6,17 @@ import { useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { s3SignedUrlCreate } from '../../../../lib/s3-signed-url-create.api'
 import {
-  settingsFaviconUpdate,
-  settingsGeneralList,
+  settingsGeneralFaviconUpdate,
   settingsGeneralUpdate,
-  settingsGeneralformSchema,
-} from '../api/settings'
+  settingsGeneralUpdateSchema,
+} from './settings-general-update.api'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import NavigationName from '@/components/ui/navigation-name'
+import { settingsGeneralRead } from './settings-general-read.api'
 
 function FieldInfo({ field }: { field: AnyFieldApi }) {
   return (
@@ -30,16 +30,16 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 export default function SettingsGeneralPage() {
-  const settingsGeneralListFn = useServerFn(settingsGeneralList)
+  const settingsGeneralReadFn = useServerFn(settingsGeneralRead)
   const settingsGeneralUpdateFn = useServerFn(settingsGeneralUpdate)
   const mediaSignedUrlFn = useServerFn(s3SignedUrlCreate)
-  const settingsFaviconUpdateFn = useServerFn(settingsFaviconUpdate)
+  const settingsGeneralFaviconUpdateFn = useServerFn(settingsGeneralFaviconUpdate)
   const queryClient = useQueryClient()
   const router = useRouter()
 
   const { data: settingsGeneralData, isSuccess } = useQuery({
     queryKey: ['settingsGeneral'],
-    queryFn: () => settingsGeneralListFn(),
+    queryFn: () => settingsGeneralReadFn(),
   })
 
   const settingsGeneralMutation = useMutation({
@@ -79,7 +79,7 @@ export default function SettingsGeneralPage() {
         return
       }
 
-      await settingsFaviconUpdateFn({ data: { key, mimetype: file.type } })
+      await settingsGeneralFaviconUpdateFn({ data: { key, mimetype: file.type } })
 
       queryClient.invalidateQueries({ queryKey: ['settingsGeneral'] })
     } catch (error) {
@@ -92,7 +92,7 @@ export default function SettingsGeneralPage() {
   }
 
   const handleDeleteFavicon = async () => {
-    await settingsFaviconUpdateFn({ data: { key: null, mimetype: null } })
+    await settingsGeneralFaviconUpdateFn({ data: { key: null, mimetype: null } })
     queryClient.invalidateQueries({ queryKey: ['settingsGeneral'] })
   }
 
@@ -114,7 +114,7 @@ export default function SettingsGeneralPage() {
     },
     validationLogic: revalidateLogic(),
     validators: {
-      onDynamic: settingsGeneralformSchema,
+      onDynamic: settingsGeneralUpdateSchema,
     },
     onSubmit: ({ value }) => {
       settingsGeneralMutation.mutate({ data: { name: value.name, tagline: value.tagline.trim() } })

@@ -3,8 +3,8 @@ import { useServerFn } from '@tanstack/react-start'
 import { toast } from 'sonner'
 import { ImageIcon, Trash2 } from 'lucide-react'
 import { useState } from 'react'
-import { galleryDelete, galleryList } from '../api/gallery'
-import type { GalleryImage } from '../api/types'
+import { settingsGalleryDelete } from './settings-gallery-delete.api'
+import type { GalleryImage } from './settings-gallery.types'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import NavigationName from '@/components/ui/navigation-name'
@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { settingsGalleryRead } from './settings-gallery-read.api'
 
 type ImageCardProps = {
   image: GalleryImage
@@ -84,11 +85,11 @@ function ImageCard({ image, onDelete, deletingKey }: ImageCardProps) {
   )
 }
 
-export default function GalleryPage() {
+export default function SettingsGalleryPage() {
   const [deletingKey, setDeletingKey] = useState<string | null>(null)
   const queryClient = useQueryClient()
-  const galleryListFn = useServerFn(galleryList)
-  const galleryDeleteFn = useServerFn(galleryDelete)
+  const settingsGalleryReadFn = useServerFn(settingsGalleryRead)
+  const settingsGalleryDeleteFn = useServerFn(settingsGalleryDelete)
 
   const {
     data: images,
@@ -96,11 +97,11 @@ export default function GalleryPage() {
     error,
   } = useQuery({
     queryKey: ['gallery'],
-    queryFn: () => galleryListFn(),
+    queryFn: () => settingsGalleryReadFn(),
   })
 
   const deleteMutation = useMutation({
-    mutationFn: galleryDeleteFn,
+    mutationFn: settingsGalleryDeleteFn,
     onMutate: ({ data: { key } }) => {
       setDeletingKey(key)
     },

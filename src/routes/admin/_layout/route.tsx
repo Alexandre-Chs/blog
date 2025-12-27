@@ -2,7 +2,7 @@ import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 import { AppSidebar } from '@/components/app-sidebar'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { authSessionUserRead } from '@/features/auth/auth-session-user-read.api'
-import { settingsGeneralList } from '@/features/admin/settings/api/settings'
+import { settingsGeneralRead } from '@/features/admin/settings/general/settings-general-read.api'
 
 export const Route = createFileRoute('/admin/_layout')({
   head: () => ({
@@ -23,7 +23,7 @@ export const Route = createFileRoute('/admin/_layout')({
       throw redirect({ to: '/', replace: true })
     }
 
-    const settingsGeneral = await settingsGeneralList()
+    const settingsGeneral = await settingsGeneralRead()
 
     return {
       user: session.user,
