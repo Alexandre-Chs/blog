@@ -21,6 +21,7 @@ import { Route as AdminLayoutIndexRouteImport } from './routes/admin/_layout/ind
 import { Route as BlogSlugIndexRouteImport } from './routes/_blog/$slug/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AdminLayoutSettingsIndexRouteImport } from './routes/admin/_layout/settings/index'
+import { Route as AdminLayoutPlannerIndexRouteImport } from './routes/admin/_layout/planner/index'
 import { Route as AdminLayoutCalendarIndexRouteImport } from './routes/admin/_layout/calendar/index'
 import { Route as AdminLayoutArticlesIndexRouteImport } from './routes/admin/_layout/articles/index'
 import { Route as AdminLayoutAnalyticsIndexRouteImport } from './routes/admin/_layout/analytics/index'
@@ -86,6 +87,11 @@ const AdminLayoutSettingsIndexRoute =
     path: '/settings/',
     getParentRoute: () => AdminLayoutRouteRoute,
   } as any)
+const AdminLayoutPlannerIndexRoute = AdminLayoutPlannerIndexRouteImport.update({
+  id: '/planner/',
+  path: '/planner/',
+  getParentRoute: () => AdminLayoutRouteRoute,
+} as any)
 const AdminLayoutCalendarIndexRoute =
   AdminLayoutCalendarIndexRouteImport.update({
     id: '/calendar/',
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/admin/analytics': typeof AdminLayoutAnalyticsIndexRoute
   '/admin/articles': typeof AdminLayoutArticlesIndexRoute
   '/admin/calendar': typeof AdminLayoutCalendarIndexRoute
+  '/admin/planner': typeof AdminLayoutPlannerIndexRoute
   '/admin/settings': typeof AdminLayoutSettingsIndexRoute
   '/admin/articles/create': typeof AdminLayoutArticlesCreateIndexRoute
   '/admin/settings/about': typeof AdminLayoutSettingsAboutIndexRoute
@@ -165,6 +172,7 @@ export interface FileRoutesByTo {
   '/admin/analytics': typeof AdminLayoutAnalyticsIndexRoute
   '/admin/articles': typeof AdminLayoutArticlesIndexRoute
   '/admin/calendar': typeof AdminLayoutCalendarIndexRoute
+  '/admin/planner': typeof AdminLayoutPlannerIndexRoute
   '/admin/settings': typeof AdminLayoutSettingsIndexRoute
   '/admin/articles/create': typeof AdminLayoutArticlesCreateIndexRoute
   '/admin/settings/about': typeof AdminLayoutSettingsAboutIndexRoute
@@ -187,6 +195,7 @@ export interface FileRoutesById {
   '/admin/_layout/analytics/': typeof AdminLayoutAnalyticsIndexRoute
   '/admin/_layout/articles/': typeof AdminLayoutArticlesIndexRoute
   '/admin/_layout/calendar/': typeof AdminLayoutCalendarIndexRoute
+  '/admin/_layout/planner/': typeof AdminLayoutPlannerIndexRoute
   '/admin/_layout/settings/': typeof AdminLayoutSettingsIndexRoute
   '/admin/_layout/articles/create/': typeof AdminLayoutArticlesCreateIndexRoute
   '/admin/_layout/settings/about/': typeof AdminLayoutSettingsAboutIndexRoute
@@ -208,6 +217,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/articles'
     | '/admin/calendar'
+    | '/admin/planner'
     | '/admin/settings'
     | '/admin/articles/create'
     | '/admin/settings/about'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/articles'
     | '/admin/calendar'
+    | '/admin/planner'
     | '/admin/settings'
     | '/admin/articles/create'
     | '/admin/settings/about'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '/admin/_layout/analytics/'
     | '/admin/_layout/articles/'
     | '/admin/_layout/calendar/'
+    | '/admin/_layout/planner/'
     | '/admin/_layout/settings/'
     | '/admin/_layout/articles/create/'
     | '/admin/_layout/settings/about/'
@@ -340,6 +352,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutSettingsIndexRouteImport
       parentRoute: typeof AdminLayoutRouteRoute
     }
+    '/admin/_layout/planner/': {
+      id: '/admin/_layout/planner/'
+      path: '/planner'
+      fullPath: '/admin/planner'
+      preLoaderRoute: typeof AdminLayoutPlannerIndexRouteImport
+      parentRoute: typeof AdminLayoutRouteRoute
+    }
     '/admin/_layout/calendar/': {
       id: '/admin/_layout/calendar/'
       path: '/calendar'
@@ -420,6 +439,7 @@ interface AdminLayoutRouteRouteChildren {
   AdminLayoutAnalyticsIndexRoute: typeof AdminLayoutAnalyticsIndexRoute
   AdminLayoutArticlesIndexRoute: typeof AdminLayoutArticlesIndexRoute
   AdminLayoutCalendarIndexRoute: typeof AdminLayoutCalendarIndexRoute
+  AdminLayoutPlannerIndexRoute: typeof AdminLayoutPlannerIndexRoute
   AdminLayoutSettingsIndexRoute: typeof AdminLayoutSettingsIndexRoute
   AdminLayoutArticlesCreateIndexRoute: typeof AdminLayoutArticlesCreateIndexRoute
   AdminLayoutSettingsAboutIndexRoute: typeof AdminLayoutSettingsAboutIndexRoute
@@ -433,6 +453,7 @@ const AdminLayoutRouteRouteChildren: AdminLayoutRouteRouteChildren = {
   AdminLayoutAnalyticsIndexRoute: AdminLayoutAnalyticsIndexRoute,
   AdminLayoutArticlesIndexRoute: AdminLayoutArticlesIndexRoute,
   AdminLayoutCalendarIndexRoute: AdminLayoutCalendarIndexRoute,
+  AdminLayoutPlannerIndexRoute: AdminLayoutPlannerIndexRoute,
   AdminLayoutSettingsIndexRoute: AdminLayoutSettingsIndexRoute,
   AdminLayoutArticlesCreateIndexRoute: AdminLayoutArticlesCreateIndexRoute,
   AdminLayoutSettingsAboutIndexRoute: AdminLayoutSettingsAboutIndexRoute,

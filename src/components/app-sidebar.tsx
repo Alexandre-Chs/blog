@@ -1,6 +1,17 @@
 import { Link, useRouterState } from '@tanstack/react-router'
 import type { ComponentProps } from 'react'
-import { Calendar, FileText, FilePlus, Home, LineChart, Settings, Image as ImageIcon, Bot, BookA } from 'lucide-react'
+import {
+  Calendar,
+  FileText,
+  FilePlus,
+  Home,
+  LineChart,
+  Settings,
+  Image as ImageIcon,
+  Bot,
+  BookA,
+  CalendarClock,
+} from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -30,7 +41,10 @@ const data = {
     },
     {
       title: 'Schedule',
-      items: [{ title: 'Calendar', url: '/admin/calendar', icon: Calendar }],
+      items: [
+        { title: 'Planner', url: '/admin/planner', icon: CalendarClock },
+        { title: 'Calendar', url: '/admin/calendar', icon: Calendar },
+      ],
     },
     {
       title: 'Analytics',

@@ -1,0 +1,132 @@
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Edit2, GripVertical, Lightbulb, Plus, Trash2 } from 'lucide-react'
+import { useState } from 'react'
+
+interface Idea {
+  id: string
+  title: string
+  context: string
+  retryCount?: number
+  createdAt: Date
+}
+
+const mockIdeas: Idea[] = [
+  {
+    id: '1',
+    title: '',
+    context:
+      "Guide pratique pour solopreneurs sur l'utilisation de l'IA pour automatiser les tâches répétitives et se concentrer sur le business.",
+    createdAt: new Date('2025-01-15T10:00:00Z'),
+  },
+  {
+    id: '2',
+    title: '10 outils essentiels pour les créateurs de contenu en 2025',
+    context: 'Liste des meilleurs outils pour créer du contenu de qualité: édition vidéo, design, rédaction, etc.',
+    createdAt: new Date('2025-01-14T15:30:00Z'),
+  },
+  {
+    id: '3',
+    title: 'Pourquoi le personal branding est crucial',
+    context:
+      "Explication de l'importance du personal branding et étapes pour construire sa marque personnelle en ligne.",
+    retryCount: 2,
+    createdAt: new Date('2025-01-13T09:00:00Z'),
+  },
+  {
+    id: '4',
+    title: 'Stratégies de pricing pour freelances',
+    context:
+      'Comment fixer ses tarifs, différentes stratégies de pricing, et comment augmenter ses prix sans perdre de clients.',
+    createdAt: new Date('2025-01-12T14:00:00Z'),
+  },
+]
+
+export function PlannerIdeas() {
+  const [ideas, setIdeas] = useState<Idea[]>(mockIdeas)
+  const [sheetOpen, setSheetOpen] = useState(false)
+
+  return (
+    <div className="pb-6">
+      <div className="flex flex-row items-start justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-xl font-semibold">
+            <Lightbulb className="w-5 h-5" />
+            Ideas Queue
+          </div>
+        </div>
+        <Button onClick={() => setSheetOpen(true)}>
+          <Plus className="w-4 h-4" />
+        </Button>
+      </div>
+
+      <div className="mt-6">
+        {ideas.length === 0 ? (
+          <div className="text-center py-16 text-muted-foreground">
+            <Lightbulb className="w-16 h-16 mx-auto mb-4 opacity-30" />
+            <p className="text-lg font-medium mb-1">No ideas yet</p>
+            <p className="text-sm">Add your first idea to get started with auto-publishing!</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {ideas.map((idea) => (
+              <div
+                key={idea.id}
+                className="group flex items-start gap-4 p-4 border rounded-lg hover:border-border/80 transition-colors"
+              >
+                <GripVertical className="w-5 h-5 text-muted-foreground mt-1 cursor-grab opacity-50 group-hover:opacity-100" />
+
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="truncate line-clamp-1">{idea.title || 'No title, AI generate one for you.'}</div>
+                  <div className="text-sm text-muted-foreground line-clamp-2">
+                    {idea.context || 'No additional context'}
+                  </div>
+
+                  <div className="text-xs text-muted-foreground">Scheduled for Mon 12 Feb 2025 at 9:00 AM</div>
+                </div>
+
+                <div className="flex gap-1 shrink-0">
+                  <Button variant="ghost" size="icon">
+                    <Edit2 className="w-4 h-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Trash2 className="w-4 h-4 text-destructive" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+        <SheetContent side="right" className="w-full sm:max-w-lg">
+          <SheetHeader>
+            <SheetTitle>Queue Article Idea</SheetTitle>
+            <SheetDescription>
+              Add an idea to the auto-publish queue. AI will write and publish it at the scheduled time.
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="space-y-6 py-6 px-4">
+            <div className="space-y-2">
+              <Label htmlFor="ai-subject">Article Subject</Label>
+              <Input id="ai-subject" placeholder="Leave empty to let AI generate a title" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ai-additional">Additional Information</Label>
+              <Textarea
+                id="ai-additional"
+                placeholder="Describe the article topic, desired tone (e.g., professional, casual), key points to cover, target audience, and any specific guidelines..."
+                className="min-h-[150px]"
+              />
+            </div>
+            <Button className="w-full gap-2 cursor-pointer">Add to Queue</Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </div>
+  )
+}
