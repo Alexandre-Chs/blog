@@ -20,6 +20,11 @@ export const settingsSchemas = {
     context: z.string(),
     defaultModel: z.string(),
   }),
+
+  planner: z.object({
+    publicationDays: z.array(z.string()).min(1),
+    publicationHour: z.number().min(0).max(23),
+  }),
 }
 
 export type SettingsMap = {

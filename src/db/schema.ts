@@ -138,6 +138,7 @@ type SettingsMap = {
   about: { content: string }
   favicon: { key: string; mimetype: string; url: string }
   ai: { context: string; defaultModel: string }
+  planner: { publicationDays: string[]; publicationHour: number }
 }
 
 export const settings = pgTable('settings', {
@@ -165,3 +166,14 @@ export const visits = pgTable('visits', {
 })
 
 export type Visit = InferSelectModel<typeof visits>
+
+export const ideasStatusEnum = pgEnum('status', ['draft', 'generating', 'published'])
+export const ideas = pgTable('ideas', {
+  id: text('id').primaryKey(),
+  title: text('title'),
+  context: text('context').notNull(),
+  position: integer('position'),
+  status: ideasStatusEnum(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  publishedAt: timestamp('published_at'),
+})
