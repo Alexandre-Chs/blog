@@ -1,6 +1,7 @@
 import { boolean, integer, jsonb, pgEnum, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 import type { InferSelectModel } from 'drizzle-orm'
+import type { SettingsMap } from '@/zod/settings'
 
 export const userRoleEnum = pgEnum('role', ['user', 'admin'])
 
@@ -132,14 +133,6 @@ export const articlesToMediasRelations = relations(articlesToMedias, ({ one }) =
     references: [articles.id],
   }),
 }))
-
-type SettingsMap = {
-  general: { name: string }
-  about: { content: string }
-  favicon: { key: string; mimetype: string; url: string }
-  ai: { context: string; defaultModel: string }
-  planner: { publicationDays: string[]; publicationHour: number }
-}
 
 export const settings = pgTable('settings', {
   key: text('key').primaryKey(),

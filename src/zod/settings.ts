@@ -22,7 +22,7 @@ export const settingsSchemas = {
   }),
 
   planner: z.object({
-    publicationDays: z.array(z.string()).min(1),
+    publicationDays: z.array(z.number()),
     publicationHour: z.number().min(0).max(23),
   }),
 }

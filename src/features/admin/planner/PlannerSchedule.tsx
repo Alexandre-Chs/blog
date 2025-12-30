@@ -1,20 +1,64 @@
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { CalendarClock } from 'lucide-react'
-import { useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useServerFn } from '@tanstack/react-start'
+import { plannerScheduleUpdate } from './planner-schedule-update.api'
+import { toast } from 'sonner'
+import { SettingsMap } from '@/zod/settings'
+import { plannerScheduleRead } from './planner-schedule-read.api'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const WEEK_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 export function PlannerSchedule() {
-  const [selectedDays, setSelectedDays] = useState<number[]>([1, 3, 5])
-  const [publishTime, setPublishTime] = useState('09:00')
+  const plannerScheduleUpdateFn = useServerFn(plannerScheduleUpdate)
+  const plannerScheduleReadFn = useServerFn(plannerScheduleRead)
 
-  const toggleDay = (dayIndex: number) => {
-    setSelectedDays((prev) =>
-      prev.includes(dayIndex) ? prev.filter((d) => d !== dayIndex) : [...prev, dayIndex].sort(),
+  const queryClient = useQueryClient()
+
+  const { data, isPending } = useQuery({
+    queryKey: ['planner-schedule'],
+    queryFn: () => plannerScheduleReadFn(),
+  })
+
+  const plannerScheduleMutation = useMutation({
+    mutationFn: async (data: SettingsMap['planner']) => {
+      await plannerScheduleUpdateFn({ data })
+    },
+    onSuccess: () => {
+      toast.success('Schedule planner updated successfully')
+      queryClient.invalidateQueries({ queryKey: ['planner-schedule'] })
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
+    },
+  })
+
+  const handlePublicationDaysClick = (dayIndex: number) => {
+    if (!data?.publicationDays) return
+    const selectedDaysNew = data.publicationDays.includes(dayIndex)
+      ? data.publicationDays.filter((d: number) => d !== dayIndex)
+      : [...data.publicationDays, dayIndex].sort()
+
+    plannerScheduleMutation.mutate({ publicationDays: selectedDaysNew, publicationHour: data.publicationHour || 0 })
+  }
+
+  const handlePublicationHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const hour = parseInt(e.target.value.split(':')[0], 10)
+    if (!hour) return
+
+    plannerScheduleMutation.mutate({ publicationDays: data?.publicationDays || [], publicationHour: hour })
+  }
+
+  if (isPending || !data) {
+    return (
+      <Card>
+        <div className="flex items-center justify-between p-6 gap-x-6">
+          <Skeleton className="h-8 flex flex-1" />
+          <Skeleton className="h-8 flex flex-1" />
+        </div>
+      </Card>
     )
   }
 
@@ -27,18 +71,18 @@ export function PlannerSchedule() {
             {WEEK_DAYS.map((day, index) => (
               <Badge
                 key={day}
-                variant={selectedDays.includes(index) ? 'default' : 'outline'}
+                variant={data?.publicationDays.includes(index) ? 'default' : 'outline'}
                 className="cursor-pointer hover:opacity-80"
-                onClick={() => toggleDay(index)}
+                onClick={() => handlePublicationDaysClick(index)}
               >
                 {day}
               </Badge>
             ))}
           </div>
           <p className="text-xs text-muted-foreground mt-2">
-            {selectedDays.length === 0
+            {data?.publicationDays.length === 0
               ? 'No days selected - auto-publishing is disabled'
-              : `Auto-publish on: ${selectedDays.map((i) => WEEK_DAYS[i]).join(', ')}`}
+              : `Auto-publish on: ${data?.publicationDays.map((i) => WEEK_DAYS[i]).join(', ')}`}
           </p>
         </div>
         <div>
@@ -46,14 +90,12 @@ export function PlannerSchedule() {
           <Input
             id="publishTime"
             type="time"
-            value={publishTime}
-            onChange={(e) => setPublishTime(e.target.value)}
+            value={`${data.publicationHour.toString().padStart(2, '0')}:00`}
+            onChange={handlePublicationHourChange}
             className="w-full max-w-xs mt-2"
           />
         </div>
       </div>
-
-      <Button className="ml-auto">Save Schedule</Button>
     </Card>
   )
 }
