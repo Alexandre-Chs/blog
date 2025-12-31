@@ -1,9 +1,9 @@
-import { settings } from '@/db/schema'
+import { ideas, settings } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
 import { validateSettings } from '@/zod/settings'
 import { createServerFn } from '@tanstack/react-start'
-import { eq } from 'drizzle-orm'
+import { desc, eq } from 'drizzle-orm'
 
 export const plannerScheduleRead = createServerFn({ method: 'GET' })
   .middleware([adminMiddleware])
@@ -23,4 +23,10 @@ export const plannerScheduleRead = createServerFn({ method: 'GET' })
       publicationDays: validData.publicationDays,
       publicationHour: validData.publicationHour,
     }
+  })
+
+export const plannerIdeasRead = createServerFn({ method: 'GET' })
+  .middleware([adminMiddleware])
+  .handler(async () => {
+    return await db.select().from(ideas).orderBy(desc(ideas.createdAt))
   })

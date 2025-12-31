@@ -64,6 +64,13 @@
       "when": 1766127679525,
       "tag": "0008_smart_marvel_zombies",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1767114227847,
+      "tag": "0009_yellow_electro",
+      "breakpoints": true
     }
   ]
 }

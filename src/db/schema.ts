@@ -170,3 +170,5 @@ export const ideas = pgTable('ideas', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   publishedAt: timestamp('published_at'),
 })
+
+export type Idea = InferSelectModel<typeof ideas>

@@ -169,3 +169,7 @@ code {
 .animate-pulse-dot {
   animation: pulse-dot 1.4s ease-in-out infinite;
 }
+
+.subtitle {
+  @apply mt-1 ml-[2px] block text-sm text-gray-500;
+}

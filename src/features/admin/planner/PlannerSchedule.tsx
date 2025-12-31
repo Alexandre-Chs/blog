@@ -86,7 +86,7 @@ export function PlannerSchedule() {
           </p>
         </div>
         <div>
-          <div>Publication Time</div>
+          <div>Publication Hour</div>
           <Input
             id="publishTime"
             type="time"
