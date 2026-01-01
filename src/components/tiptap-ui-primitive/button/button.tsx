@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useMemo } from 'react'
+import { Fragment, forwardRef, useMemo } from 'react'
 
 // --- Tiptap UI Primitive ---
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tiptap-ui-primitive/tooltip'
@@ -17,7 +17,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   shortcutKeys?: string
 }
 
-export const ShortcutDisplay: React.FC<{ shortcuts: string[] }> = ({ shortcuts }) => {
+export const ShortcutDisplay: React.FC<{ shortcuts: Array<string> }> = ({ shortcuts }) => {
   if (shortcuts.length === 0) return null
 
   return (
@@ -34,7 +34,7 @@ export const ShortcutDisplay: React.FC<{ shortcuts: string[] }> = ({ shortcuts }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, children, tooltip, showTooltip = true, shortcutKeys, 'aria-label': ariaLabel, ...props }, ref) => {
-    const shortcuts = useMemo<string[]>(() => parseShortcutKeys({ shortcutKeys }), [shortcutKeys])
+    const shortcuts = useMemo<Array<string>>(() => parseShortcutKeys({ shortcutKeys }), [shortcutKeys])
 
     if (!tooltip || !showTooltip) {
       return (

@@ -1,9 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
+import type { ChartConfig} from '@/components/ui/chart';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 
-export function AnalyticsViewsChart({ data }: { data: { date: string; views: number }[] }) {
+export function AnalyticsViewsChart({ data }: { data: Array<{ date: string; views: number }> }) {
   const chartConfig = {
     views: {
       label: 'Page Views',

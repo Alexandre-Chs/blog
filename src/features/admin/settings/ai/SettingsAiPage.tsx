@@ -5,6 +5,8 @@ import { toast } from 'sonner'
 import { useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { Check, ChevronsUpDown } from 'lucide-react'
+import { settingsAiRead } from './settings-ai-read.api'
+import { settingsAiUpdate, settingsAiUpdateSchema } from './settings-ai-update.api'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import NavigationName from '@/components/ui/navigation-name'
 import { Label } from '@/components/ui/label'
@@ -14,8 +16,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { cn } from '@/lib/utils'
 import { getOpenrouterModels } from '@/lib/openrouter/api'
-import { settingsAiRead } from './settings-ai-read.api'
-import { settingsAiUpdate, settingsAiUpdateSchema } from './settings-ai-update.api'
 
 function FieldInfo({ field }: { field: AnyFieldApi }) {
   return (

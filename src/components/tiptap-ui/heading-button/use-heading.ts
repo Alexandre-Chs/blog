@@ -1,8 +1,8 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { type Editor } from '@tiptap/react'
 import { NodeSelection, TextSelection } from '@tiptap/pm/state'
+import type {Editor} from '@tiptap/react';
 
 // --- Hooks ---
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
@@ -102,7 +102,7 @@ export function canToggle(editor: Editor | null, level?: Level, turnInto: boolea
 /**
  * Checks if heading is currently active
  */
-export function isHeadingActive(editor: Editor | null, level?: Level | Level[]): boolean {
+export function isHeadingActive(editor: Editor | null, level?: Level | Array<Level>): boolean {
   if (!editor || !editor.isEditable) return false
 
   if (Array.isArray(level)) {
@@ -115,7 +115,7 @@ export function isHeadingActive(editor: Editor | null, level?: Level | Level[]):
 /**
  * Toggles heading in the editor
  */
-export function toggleHeading(editor: Editor | null, level: Level | Level[]): boolean {
+export function toggleHeading(editor: Editor | null, level: Level | Array<Level>): boolean {
   if (!editor || !editor.isEditable) return false
 
   const levels = Array.isArray(level) ? level : [level]
@@ -178,7 +178,7 @@ export function toggleHeading(editor: Editor | null, level: Level | Level[]): bo
  */
 export function shouldShowButton(props: {
   editor: Editor | null
-  level?: Level | Level[]
+  level?: Level | Array<Level>
   hideWhenUnavailable: boolean
 }): boolean {
   const { editor, level, hideWhenUnavailable } = props

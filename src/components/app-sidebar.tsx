@@ -1,17 +1,17 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import type { ComponentProps } from 'react'
 import {
+  BookA,
+  Bot,
   Calendar,
-  FileText,
+  CalendarClock,
   FilePlus,
+  FileText,
   Home,
+  Image as ImageIcon,
   LineChart,
   Settings,
-  Image as ImageIcon,
-  Bot,
-  BookA,
-  CalendarClock,
 } from 'lucide-react'
+import type { ComponentProps } from 'react'
 import {
   Sidebar,
   SidebarContent,

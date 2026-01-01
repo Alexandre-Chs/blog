@@ -1,9 +1,9 @@
-import { articles, articlesToMedias, medias } from '@/db/schema'
-import { db } from '@/index'
-import { adminMiddleware } from '@/middlewares/admin'
 import { createServerFn } from '@tanstack/react-start'
 import { and, eq } from 'drizzle-orm'
 import z from 'zod'
+import { articles, articlesToMedias, medias } from '@/db/schema'
+import { db } from '@/index'
+import { adminMiddleware } from '@/middlewares/admin'
 
 const articlesArticleReadSchema = z.object({
   articleId: z.uuid(),

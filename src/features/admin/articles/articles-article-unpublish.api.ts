@@ -1,9 +1,9 @@
-import { articles } from '@/db/schema'
-import { db } from '@/index'
-import { adminMiddleware } from '@/middlewares/admin'
 import { createServerFn } from '@tanstack/react-start'
 import { eq } from 'drizzle-orm'
 import z from 'zod'
+import { articles } from '@/db/schema'
+import { db } from '@/index'
+import { adminMiddleware } from '@/middlewares/admin'
 
 export const articlesArticleUnpublish = createServerFn({ method: 'POST' })
   .middleware([adminMiddleware])

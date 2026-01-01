@@ -1,8 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
+import { desc } from 'drizzle-orm'
 import { adminMiddleware } from '@/middlewares/admin'
 import { db } from '@/index'
 import { medias } from '@/db/schema'
-import { desc } from 'drizzle-orm'
 
 export const settingsGalleryRead = createServerFn({ method: 'GET' })
   .middleware([adminMiddleware])

@@ -1,17 +1,13 @@
-import { forwardRef } from "react"
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import { cn } from "@/lib/tiptap-utils"
-import "@/components/tiptap-ui-primitive/dropdown-menu/dropdown-menu.scss"
+import { forwardRef } from 'react'
+import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
+import { cn } from '@/lib/tiptap-utils'
+import '@/components/tiptap-ui-primitive/dropdown-menu/dropdown-menu.scss'
 
-function DropdownMenu({
-  ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
+function DropdownMenu({ ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
   return <DropdownMenuPrimitive.Root modal={false} {...props} />
 }
 
-function DropdownMenuPortal({
-  ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
+function DropdownMenuPortal({ ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
   return <DropdownMenuPrimitive.Portal {...props} />
 }
 
@@ -38,23 +34,16 @@ const DropdownMenuSubContent = forwardRef<
   }
 >(({ className, portal = true, ...props }, ref) => {
   const content = (
-    <DropdownMenuPrimitive.SubContent
-      ref={ref}
-      className={cn("tiptap-dropdown-menu", className)}
-      {...props}
-    />
+    <DropdownMenuPrimitive.SubContent ref={ref} className={cn('tiptap-dropdown-menu', className)} {...props} />
   )
 
   return portal ? (
-    <DropdownMenuPortal {...(typeof portal === "object" ? portal : {})}>
-      {content}
-    </DropdownMenuPortal>
+    <DropdownMenuPortal {...(typeof portal === 'object' ? portal : {})}>{content}</DropdownMenuPortal>
   ) : (
     content
   )
 })
-DropdownMenuSubContent.displayName =
-  DropdownMenuPrimitive.SubContent.displayName
+DropdownMenuSubContent.displayName = DropdownMenuPrimitive.SubContent.displayName
 
 const DropdownMenuContent = forwardRef<
   React.ComponentRef<typeof DropdownMenuPrimitive.Content>,
@@ -67,15 +56,13 @@ const DropdownMenuContent = forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       onCloseAutoFocus={(e) => e.preventDefault()}
-      className={cn("tiptap-dropdown-menu", className)}
+      className={cn('tiptap-dropdown-menu', className)}
       {...props}
     />
   )
 
   return portal ? (
-    <DropdownMenuPortal {...(typeof portal === "object" ? portal : {})}>
-      {content}
-    </DropdownMenuPortal>
+    <DropdownMenuPortal {...(typeof portal === 'object' ? portal : {})}>{content}</DropdownMenuPortal>
   ) : (
     content
   )

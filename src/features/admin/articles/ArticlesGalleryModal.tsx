@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Image as ImageIcon } from 'lucide-react'
-import { GalleryImage } from '../settings/gallery/settings-gallery.types'
+import { settingsGalleryRead } from '../settings/gallery/settings-gallery-read.api'
+import type { GalleryImage } from '../settings/gallery/settings-gallery.types'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { settingsGalleryRead } from '../settings/gallery/settings-gallery-read.api'
 
 type ArticlesGalleryModal = {
   onSelect: (image: GalleryImage) => void

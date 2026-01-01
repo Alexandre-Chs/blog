@@ -4,11 +4,11 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { ClientOnly, useNavigate } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { settingsAboutUpdate } from './settings-about-update.api'
+import { settingsAboutRead } from './settings-about-read.api'
 import type { SimpleEditorRef } from '@/components/tiptap-templates/simple/simple-editor'
 import { Editor } from '@/components/tiptap-templates/simple/simple-editor'
 import { Button } from '@/components/ui/button'
 import NavigationName from '@/components/ui/navigation-name'
-import { settingsAboutRead } from './settings-about-read.api'
 
 export default function SettingsAboutPage() {
   const editorRef = useRef<SimpleEditorRef>(null)

@@ -4,11 +4,11 @@ import { useServerFn } from '@tanstack/react-start'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { s3SignedUrlCreate } from '../../../lib/s3-signed-url-create.api'
 import { ArticlesGalleryModal } from './ArticlesGalleryModal'
-import { GalleryImage } from '../settings/gallery/settings-gallery.types'
-import { Button } from '@/components/ui/button'
 import { articlesArticleThumbnailCreate } from './articles-article-thumbnail-create.api'
 import { articlesArticleThumbnailsGallery } from './articles-article-thumbnail-update.api'
 import { articlesArticleThumbnailDelete } from './articles-article-thumbnail-delete.api'
+import type { GalleryImage } from '../settings/gallery/settings-gallery.types'
+import { Button } from '@/components/ui/button'
 
 type ArticlesArticleThumbnailProps = {
   thumbnailUrl: string

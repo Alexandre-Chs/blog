@@ -1,14 +1,14 @@
 import { forwardRef, useCallback } from 'react'
 
 // --- Lib ---
+import type { Level, UseHeadingConfig } from '@/components/tiptap-ui/heading-button'
+import type { ButtonProps } from '@/components/tiptap-ui-primitive/button'
 import { parseShortcutKeys } from '@/lib/tiptap-utils'
 
 // --- Tiptap UI ---
-import type { Level, UseHeadingConfig } from '@/components/tiptap-ui/heading-button'
 import { HEADING_SHORTCUT_KEYS, useHeading } from '@/components/tiptap-ui/heading-button'
 
 // --- UI Primitives ---
-import type { ButtonProps } from '@/components/tiptap-ui-primitive/button'
 import { Button } from '@/components/tiptap-ui-primitive/button'
 import { Badge } from '@/components/tiptap-ui-primitive/badge'
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'

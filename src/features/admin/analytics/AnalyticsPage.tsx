@@ -2,15 +2,16 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
 import { Clock, Eye, Users } from 'lucide-react'
-import { analyticsCurrentVisitorsRead, analyticsRead, type TimeRange } from './analytics-read.api'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import NavigationName from '@/components/ui/navigation-name'
+import {  analyticsCurrentVisitorsRead, analyticsRead } from './analytics-read.api'
 import { AnalyticsStatCardSkeleton } from './AnalyticsStatCardSkeleton'
 import { AnalyticsSkeletonChart } from './AnalyticsSkeletonChart'
 import { AnalyticsViewsChart } from './AnalyticsViewsChart'
 import { AnalyticsRefererChart } from './AnalyticsRefererChart'
 import { AnalyticsTopPagesChart } from './AnalyticsTopPagesChart'
+import type {TimeRange} from './analytics-read.api';
+import NavigationName from '@/components/ui/navigation-name'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 function StatCard({ title, value, icon: Icon }: { title: string; value: number; icon: typeof Eye }) {
   const formatValue = (val: number) => {

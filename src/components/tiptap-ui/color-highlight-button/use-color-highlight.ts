@@ -1,15 +1,15 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { type Editor } from '@tiptap/react'
 import { useHotkeys } from 'react-hotkeys-hook'
+import type {Editor} from '@tiptap/react';
 
 // --- Hooks ---
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
 import { useIsBreakpoint } from '@/hooks/use-is-breakpoint'
 
 // --- Lib ---
-import { isMarkInSchema, isNodeTypeSelected, isExtensionAvailable } from '@/lib/tiptap-utils'
+import { isExtensionAvailable, isMarkInSchema, isNodeTypeSelected } from '@/lib/tiptap-utils'
 
 // --- Icons ---
 import { HighlighterIcon } from '@/components/tiptap-icons/highlighter-icon'
@@ -105,7 +105,7 @@ export interface UseColorHighlightConfig {
   onApplied?: ({ color, label, mode }: { color: string; label: string; mode: HighlightMode }) => void
 }
 
-export function pickHighlightColorsByValue(values: string[]) {
+export function pickHighlightColorsByValue(values: Array<string>) {
   const colorMap = new Map(HIGHLIGHT_COLORS.map((color) => [color.value, color]))
   return values
     .map((value) => colorMap.get(value))

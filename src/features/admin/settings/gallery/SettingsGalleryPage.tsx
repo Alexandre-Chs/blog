@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import { ImageIcon, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { settingsGalleryDelete } from './settings-gallery-delete.api'
+import { settingsGalleryRead } from './settings-gallery-read.api'
 import type { GalleryImage } from './settings-gallery.types'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -18,7 +19,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { settingsGalleryRead } from './settings-gallery-read.api'
 
 type ImageCardProps = {
   image: GalleryImage

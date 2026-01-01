@@ -10,13 +10,13 @@ import {
   settingsGeneralUpdate,
   settingsGeneralUpdateSchema,
 } from './settings-general-update.api'
+import { settingsGeneralRead } from './settings-general-read.api'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import NavigationName from '@/components/ui/navigation-name'
-import { settingsGeneralRead } from './settings-general-read.api'
 
 function FieldInfo({ field }: { field: AnyFieldApi }) {
   return (

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import type { Editor } from '@tiptap/react'
 
 // --- Hooks ---
+import type {Level} from '@/components/tiptap-ui/heading-button';
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
 
 // --- Icons ---
@@ -11,11 +12,11 @@ import { HeadingIcon } from '@/components/tiptap-icons/heading-icon'
 
 // --- Tiptap UI ---
 import {
-  headingIcons,
-  type Level,
-  isHeadingActive,
+  
   canToggle,
-  shouldShowButton,
+  headingIcons,
+  isHeadingActive,
+  shouldShowButton
 } from '@/components/tiptap-ui/heading-button'
 
 /**
@@ -30,7 +31,7 @@ export interface UseHeadingDropdownMenuConfig {
    * Available heading levels to show in the dropdown
    * @default [1, 2, 3, 4, 5, 6]
    */
-  levels?: Level[]
+  levels?: Array<Level>
   /**
    * Whether the dropdown should hide when headings are not available.
    * @default false
@@ -41,7 +42,7 @@ export interface UseHeadingDropdownMenuConfig {
 /**
  * Gets the currently active heading level from the available levels
  */
-export function getActiveHeadingLevel(editor: Editor | null, levels: Level[] = [1, 2, 3, 4, 5, 6]): Level | undefined {
+export function getActiveHeadingLevel(editor: Editor | null, levels: Array<Level> = [1, 2, 3, 4, 5, 6]): Level | undefined {
   if (!editor || !editor.isEditable) return undefined
   return levels.find((level) => isHeadingActive(editor, level))
 }

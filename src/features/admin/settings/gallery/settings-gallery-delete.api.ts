@@ -1,11 +1,11 @@
 import z from 'zod'
 import { createServerFn } from '@tanstack/react-start'
 import { DeleteObjectCommand } from '@aws-sdk/client-s3'
+import { eq } from 'drizzle-orm'
 import { s3Client } from '@/lib/s3'
 import { adminMiddleware } from '@/middlewares/admin'
 import { db } from '@/index'
 import { medias } from '@/db/schema'
-import { eq } from 'drizzle-orm'
 
 const UUID_REGEX =
   /^[a-zA-Z0-9_-]+\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|jpeg|png|webp|avif)$/i

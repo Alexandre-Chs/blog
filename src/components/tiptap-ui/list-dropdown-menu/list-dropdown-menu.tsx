@@ -1,25 +1,26 @@
 import { useCallback, useState } from 'react'
-import { type Editor } from '@tiptap/react'
+import type {Editor} from '@tiptap/react';
 
 // --- Hooks ---
+import type { ButtonProps } from '@/components/tiptap-ui-primitive/button'
+import type {ListType} from '@/components/tiptap-ui/list-button';
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
 
 // --- Icons ---
 import { ChevronDownIcon } from '@/components/tiptap-icons/chevron-down-icon'
 
 // --- Tiptap UI ---
-import { ListButton, type ListType } from '@/components/tiptap-ui/list-button'
+import { ListButton  } from '@/components/tiptap-ui/list-button'
 
 import { useListDropdownMenu } from '@/components/tiptap-ui/list-dropdown-menu/use-list-dropdown-menu'
 
 // --- UI Primitives ---
-import type { ButtonProps } from '@/components/tiptap-ui-primitive/button'
 import { Button, ButtonGroup } from '@/components/tiptap-ui-primitive/button'
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuTrigger,
 } from '@/components/tiptap-ui-primitive/dropdown-menu'
 import { Card, CardBody } from '@/components/tiptap-ui-primitive/card'
 
@@ -31,7 +32,7 @@ export interface ListDropdownMenuProps extends Omit<ButtonProps, 'type'> {
   /**
    * The list types to display in the dropdown.
    */
-  types?: ListType[]
+  types?: Array<ListType>
   /**
    * Whether the dropdown should be hidden when no list types are available
    * @default false

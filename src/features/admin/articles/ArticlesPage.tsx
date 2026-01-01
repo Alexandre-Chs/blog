@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
 import ArticlesArticleList from './ArticlesArticleList'
+import { articlesCount } from './articles-read.api'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import NavigationName from '@/components/ui/navigation-name'
-import { articlesCount } from './articles-read.api'
 
 function ArticlesCount({ count }: { count: number }) {
   return <Badge className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums">{count}</Badge>

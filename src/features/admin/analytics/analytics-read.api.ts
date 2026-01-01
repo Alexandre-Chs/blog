@@ -1,10 +1,10 @@
-import { db } from '@/index'
-import { visits } from '@/db/schema'
 import { desc, gte } from 'drizzle-orm'
-import type { InferSelectModel } from 'drizzle-orm'
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod'
 import { activeSessions } from './analytics-session'
+import type { InferSelectModel } from 'drizzle-orm'
+import { visits } from '@/db/schema'
+import { db } from '@/index'
 
 export type TimeRange = '7d' | '30d'
 export type Visit = InferSelectModel<typeof visits>
@@ -12,9 +12,9 @@ export interface AnalyticsData {
   totalViews: number
   uniqueVisitors: number
   avgDuration: number
-  viewsOverTime: { date: string; views: number }[]
-  topPages: { path: string; views: number }[]
-  referrers: { source: string; count: number }[]
+  viewsOverTime: Array<{ date: string; views: number }>
+  topPages: Array<{ path: string; views: number }>
+  referrers: Array<{ source: string; count: number }>
 }
 
 const analyticsReadSchema = z.object({
@@ -62,7 +62,7 @@ export const analyticsCurrentVisitorsRead = createServerFn({ method: 'GET' }).ha
   return Array.from(activeSessions.values()).filter((session) => now - session.lastSeenAt.getTime() < ONE_MINUTE).length
 })
 
-function calculateViewsOverTime(visitsData: Visit[], timeRange: TimeRange) {
+function calculateViewsOverTime(visitsData: Array<Visit>, timeRange: TimeRange) {
   const days = timeRange === '7d' ? 7 : 30
   const grouped: Record<string, number> = {}
 
@@ -85,7 +85,7 @@ function calculateViewsOverTime(visitsData: Visit[], timeRange: TimeRange) {
     .sort((a, b) => a.date.localeCompare(b.date))
 }
 
-function calculateTopPages(visitsData: Visit[]) {
+function calculateTopPages(visitsData: Array<Visit>) {
   const pageCounts: Record<string, number> = {}
 
   visitsData.forEach((visit) => {
@@ -101,7 +101,7 @@ function calculateTopPages(visitsData: Visit[]) {
     .slice(0, 10)
 }
 
-function calculateReferrers(visitsData: Visit[]) {
+function calculateReferrers(visitsData: Array<Visit>) {
   const referrerCounts: Record<string, number> = {}
 
   visitsData.forEach((visit) => {
