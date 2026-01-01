@@ -1,9 +1,9 @@
+import { createServerFn } from '@tanstack/react-start'
+import { desc, eq } from 'drizzle-orm'
 import { ideas, settings } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
 import { validateSettings } from '@/zod/settings'
-import { createServerFn } from '@tanstack/react-start'
-import { desc, eq } from 'drizzle-orm'
 
 export const plannerScheduleRead = createServerFn({ method: 'GET' })
   .middleware([adminMiddleware])

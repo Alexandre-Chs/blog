@@ -1,9 +1,9 @@
+import { createServerFn } from '@tanstack/react-start'
+import z from 'zod'
 import { settings } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
 import { validateSettings } from '@/zod/settings'
-import { createServerFn } from '@tanstack/react-start'
-import z from 'zod'
 
 const plannerScheduleUpdateSchema = z.object({
   publicationDays: z.array(z.number()),

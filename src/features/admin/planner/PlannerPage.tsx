@@ -1,6 +1,6 @@
-import NavigationName from '@/components/ui/navigation-name'
 import { PlannerSchedule } from './PlannerSchedule'
 import { PlannerIdeas } from './PlannerIdeas'
+import NavigationName from '@/components/ui/navigation-name'
 
 export default function PlannerPage() {
   return (
