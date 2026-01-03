@@ -6,6 +6,7 @@ import { adminMiddleware } from '@/middlewares/admin'
 
 const plannerIdeaCreateSchema = z.object({
   title: z.string().optional(),
+  subject: z.string().min(1),
   context: z.string().min(1),
 })
 
@@ -13,13 +14,14 @@ export const plannerIdeaCreate = createServerFn({ method: 'POST' })
   .middleware([adminMiddleware])
   .inputValidator(plannerIdeaCreateSchema)
   .handler(async ({ data }) => {
-    const { title, context } = data
+    const { title, subject, context } = data
 
     const [newIdea] = await db
       .insert(ideas)
       .values({
         id: crypto.randomUUID(),
         title: title || null,
+        subject,
         context,
         status: 'draft',
       })

@@ -9,6 +9,7 @@ const plannerIdeaUpdateSchema = z.object({
   id: z.string(),
   data: z.object({
     title: z.string().optional(),
+    subject: z.string().min(1),
     context: z.string().min(1),
   }),
 })
@@ -23,6 +24,7 @@ export const plannerIdeaUpdate = createServerFn({ method: 'POST' })
       .update(ideas)
       .set({
         title: ideaData.title || null,
+        subject: ideaData.subject,
         context: ideaData.context,
       })
       .where(eq(ideas.id, id))

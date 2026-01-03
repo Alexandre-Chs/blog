@@ -160,10 +160,11 @@ export const visits = pgTable('visits', {
 
 export type Visit = InferSelectModel<typeof visits>
 
-export const ideasStatusEnum = pgEnum('status', ['draft', 'generating', 'published'])
+export const ideasStatusEnum = pgEnum('status', ['draft', 'generating', 'published', 'failed'])
 export const ideas = pgTable('ideas', {
   id: text('id').primaryKey(),
   title: text('title'),
+  subject: text('subject').notNull(),
   context: text('context').notNull(),
   position: integer('position'),
   status: ideasStatusEnum(),

@@ -11,7 +11,7 @@ import { plannerIdeaUpdate } from './planner-idea-update.api'
 export function usePlannerIdeas() {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [ideaEditId, setIdeaEditId] = useState<string | null>(null)
-  const [idea, setIdea] = useState({ title: '', context: '' })
+  const [idea, setIdea] = useState({ title: '', subject: '', context: '' })
 
   const plannerIdeasReadFn = useServerFn(plannerIdeasRead)
   const plannerIdeaCreateFn = useServerFn(plannerIdeaCreate)
@@ -32,7 +32,7 @@ export function usePlannerIdeas() {
   })
 
   const plannerIdeasMutation = useMutation({
-    mutationFn: async (data: { title: string; context: string }) => {
+    mutationFn: async (data: { title: string; subject: string; context: string }) => {
       if (ideaEditId) await plannerIdeaUpdateFn({ data: { id: ideaEditId, data } })
       else await plannerIdeaCreateFn({ data })
     },
@@ -41,7 +41,7 @@ export function usePlannerIdeas() {
       queryClient.invalidateQueries({ queryKey: ['planner-idea', ideaEditId] })
       setSheetOpen(false)
       setIdeaEditId(null)
-      setIdea({ title: '', context: '' })
+      setIdea({ title: '', subject: '', context: '' })
     },
   })
 
@@ -56,7 +56,7 @@ export function usePlannerIdeas() {
   })
 
   useEffect(() => {
-    if (ideaEdit) setIdea({ title: ideaEdit.title || '', context: ideaEdit.context })
+    if (ideaEdit) setIdea({ title: ideaEdit.title || '', subject: ideaEdit.subject, context: ideaEdit.context })
   }, [ideaEdit])
 
   const openSheet = () => setSheetOpen(true)
@@ -72,12 +72,7 @@ export function usePlannerIdeas() {
     plannerIdeaDeleteMutation.mutate({ ideaId: id })
   }
 
-  const sheetReset = () => {
-    setIdeaEditId(null)
-    setIdea({ title: '', context: '' })
-  }
-
-  const ideaSave = (ideaData: { title: string; context: string }) => {
+  const ideaSave = (ideaData: { title: string; subject: string; context: string }) => {
     plannerIdeasMutation.mutate(ideaData)
   }
 
@@ -95,7 +90,6 @@ export function usePlannerIdeas() {
     isSaving: plannerIdeasMutation.isPending,
     isDeleting: plannerIdeaDeleteMutation.isPending,
     ideaSave,
-    sheetReset,
     sheetOpenToggle,
   }
 }

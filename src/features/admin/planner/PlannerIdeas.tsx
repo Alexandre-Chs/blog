@@ -96,9 +96,7 @@ export function PlannerIdeas() {
 
                 <div className="flex-1 min-w-0 space-y-2">
                   <div className="truncate line-clamp-1">{idea.title || 'No title, AI generate one for you.'}</div>
-                  <div className="text-sm text-muted-foreground line-clamp-2">
-                    {idea.context || 'No additional context'}
-                  </div>
+                  <div className="text-sm text-muted-foreground line-clamp-2">{idea.subject}</div>
 
                   <div className="text-xs text-muted-foreground">Scheduled for Mon 12 Feb 2025 at 9:00 AM</div>
                 </div>
@@ -166,12 +164,21 @@ export function PlannerIdeas() {
 
           <div className="space-y-6 py-6 px-4">
             <div className="space-y-2">
-              <Label htmlFor="ai-subject">Article Subject</Label>
+              <Label htmlFor="ai-title">Article Title</Label>
               <Input
-                id="ai-subject"
+                id="ai-title"
                 placeholder="Leave empty to let AI generate a title"
                 value={idea.title}
                 onChange={(e) => setIdea({ ...idea, title: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ai-subject">Article Subject</Label>
+              <Input
+                id="ai-subject"
+                placeholder="e.g : Best productivity tools for remote teams in 2026"
+                value={idea.subject}
+                onChange={(e) => setIdea({ ...idea, subject: e.target.value })}
               />
             </div>
             <div className="space-y-2">
