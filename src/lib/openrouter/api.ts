@@ -117,7 +117,7 @@ export const generateArticle = createServerFn({ method: 'POST' })
     }
   })
 
-function extractTitleAndContent(text: string): { title: string; content: string } {
+export function extractTitleAndContent(text: string): { title: string; content: string } {
   const lines = text.split('\n')
 
   if (lines.length === 0) return { title: '', content: '' }

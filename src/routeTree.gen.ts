@@ -8,8 +8,6 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as BlogRouteRouteImport } from './routes/_blog/route'
 import { Route as BlogIndexRouteImport } from './routes/_blog/index'
@@ -31,13 +29,6 @@ import { Route as AdminLayoutSettingsAboutIndexRouteImport } from './routes/admi
 import { Route as AdminLayoutArticlesCreateIndexRouteImport } from './routes/admin/_layout/articles/create/index'
 import { Route as AdminLayoutArticlesArticleIdEditIndexRouteImport } from './routes/admin/_layout/articles/$articleId/edit/index'
 
-const AdminRouteImport = createFileRoute('/admin')()
-
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BlogRouteRoute = BlogRouteRouteImport.update({
   id: '/_blog',
   getParentRoute: () => rootRouteImport,
@@ -48,14 +39,14 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
   getParentRoute: () => BlogRouteRoute,
 } as any)
 const AdminSignUpRoute = AdminSignUpRouteImport.update({
-  id: '/sign-up',
-  path: '/sign-up',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/sign-up',
+  path: '/admin/sign-up',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BlogAboutRoute = BlogAboutRouteImport.update({
   id: '/about',
@@ -63,8 +54,9 @@ const BlogAboutRoute = BlogAboutRouteImport.update({
   getParentRoute: () => BlogRouteRoute,
 } as any)
 const AdminLayoutRouteRoute = AdminLayoutRouteRouteImport.update({
-  id: '/_layout',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/_layout',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLayoutIndexRoute = AdminLayoutIndexRouteImport.update({
   id: '/',
@@ -162,13 +154,13 @@ export interface FileRoutesByFullPath {
   '/admin/articles/$articleId/edit': typeof AdminLayoutArticlesArticleIdEditIndexRoute
 }
 export interface FileRoutesByTo {
-  '/admin': typeof AdminLayoutIndexRoute
   '/about': typeof BlogAboutRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/sign-up': typeof AdminSignUpRoute
   '/': typeof BlogIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/$slug': typeof BlogSlugIndexRoute
+  '/admin': typeof AdminLayoutIndexRoute
   '/admin/analytics': typeof AdminLayoutAnalyticsIndexRoute
   '/admin/articles': typeof AdminLayoutArticlesIndexRoute
   '/admin/calendar': typeof AdminLayoutCalendarIndexRoute
@@ -183,7 +175,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_blog': typeof BlogRouteRouteWithChildren
-  '/admin': typeof AdminRouteWithChildren
   '/admin/_layout': typeof AdminLayoutRouteRouteWithChildren
   '/_blog/about': typeof BlogAboutRoute
   '/admin/login': typeof AdminLoginRoute
@@ -226,13 +217,13 @@ export interface FileRouteTypes {
     | '/admin/articles/$articleId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/admin'
     | '/about'
     | '/admin/login'
     | '/admin/sign-up'
     | '/'
     | '/api/auth/$'
     | '/$slug'
+    | '/admin'
     | '/admin/analytics'
     | '/admin/articles'
     | '/admin/calendar'
@@ -246,7 +237,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_blog'
-    | '/admin'
     | '/admin/_layout'
     | '/_blog/about'
     | '/admin/login'
@@ -269,19 +259,14 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   BlogRouteRoute: typeof BlogRouteRouteWithChildren
-  AdminRoute: typeof AdminRouteWithChildren
+  AdminLayoutRouteRoute: typeof AdminLayoutRouteRouteWithChildren
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminSignUpRoute: typeof AdminSignUpRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_blog': {
       id: '/_blog'
       path: ''
@@ -298,17 +283,17 @@ declare module '@tanstack/react-router' {
     }
     '/admin/sign-up': {
       id: '/admin/sign-up'
-      path: '/sign-up'
+      path: '/admin/sign-up'
       fullPath: '/admin/sign-up'
       preLoaderRoute: typeof AdminSignUpRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/login': {
       id: '/admin/login'
-      path: '/login'
+      path: '/admin/login'
       fullPath: '/admin/login'
       preLoaderRoute: typeof AdminLoginRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/_blog/about': {
       id: '/_blog/about'
@@ -322,7 +307,7 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminLayoutRouteRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/_layout/': {
       id: '/admin/_layout/'
@@ -466,23 +451,11 @@ const AdminLayoutRouteRouteChildren: AdminLayoutRouteRouteChildren = {
 const AdminLayoutRouteRouteWithChildren =
   AdminLayoutRouteRoute._addFileChildren(AdminLayoutRouteRouteChildren)
 
-interface AdminRouteChildren {
-  AdminLayoutRouteRoute: typeof AdminLayoutRouteRouteWithChildren
-  AdminLoginRoute: typeof AdminLoginRoute
-  AdminSignUpRoute: typeof AdminSignUpRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
+const rootRouteChildren: RootRouteChildren = {
+  BlogRouteRoute: BlogRouteRouteWithChildren,
   AdminLayoutRouteRoute: AdminLayoutRouteRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,
   AdminSignUpRoute: AdminSignUpRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
-const rootRouteChildren: RootRouteChildren = {
-  BlogRouteRoute: BlogRouteRouteWithChildren,
-  AdminRoute: AdminRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

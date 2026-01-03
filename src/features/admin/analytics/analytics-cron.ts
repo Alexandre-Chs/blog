@@ -1,5 +1,5 @@
 import { Cron, scheduledJobs } from 'croner'
-import { SESSION_TIMEOUT, activeSessions, saveSessionDatabase  } from './analytics-session'
+import { SESSION_TIMEOUT, activeSessions, saveSessionDatabase } from './analytics-session'
 
 function generateRandomSalt() {
   return Math.random().toString(36).substring(2) + Date.now().toString(36)
@@ -15,14 +15,15 @@ export function getCurrentSalts() {
   }
 }
 
-function stopAllJobs() {
-  scheduledJobs.forEach((job) => job.stop())
-}
+function analyticsCron() {
+  const saltJob = scheduledJobs.find((j) => j.name === 'analytics-salt')
+  if (saltJob) saltJob.stop() // for hot-reloading scenarios
 
-function initializeCrons() {
-  stopAllJobs()
+  const sessionJob = scheduledJobs.find((j) => j.name === 'analytics-session')
+  if (sessionJob) sessionJob.stop()
 
-  new Cron('*/5 * * * *', () => {
+  new Cron('*/5 * * * *', { name: 'analytics-session' }, () => {
+    console.log('CRON analytics', new Date().toISOString())
     if (!activeSessions.size) return
 
     const now = Date.now()
@@ -37,7 +38,7 @@ function initializeCrons() {
     }
   })
 
-  new Cron('* * * * * *', { interval: 90 }, () => {
+  new Cron('* * * * * *', { name: 'analytics-salt', interval: 90 }, () => {
     previousSalt = currentSalt!
     currentSalt = generateRandomSalt()
   })
@@ -45,4 +46,4 @@ function initializeCrons() {
   console.log('Crons initialized')
 }
 
-initializeCrons()
+export { analyticsCron }
