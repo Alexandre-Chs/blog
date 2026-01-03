@@ -3,7 +3,7 @@ import { useServerFn } from '@tanstack/react-start'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { plannerIdeasRead } from './planner-schedule-read.api'
-import { plannerIdeasUpdate } from './planner-ideas-update.api'
+import { plannerIdeaCreate } from './planner-idea-create.api'
 import { plannerIdeaDelete } from './planner-idea-delete.api'
 import { plannerIdeaRead } from './planner-idea-read.api'
 import { plannerIdeaUpdate } from './planner-idea-update.api'
@@ -14,7 +14,7 @@ export function usePlannerIdeas() {
   const [idea, setIdea] = useState({ title: '', context: '' })
 
   const plannerIdeasReadFn = useServerFn(plannerIdeasRead)
-  const plannerIdeasUpdateFn = useServerFn(plannerIdeasUpdate)
+  const plannerIdeaCreateFn = useServerFn(plannerIdeaCreate)
   const plannerIdeaReadFn = useServerFn(plannerIdeaRead)
   const plannerIdeaUpdateFn = useServerFn(plannerIdeaUpdate)
   const plannerIdeaDeleteFn = useServerFn(plannerIdeaDelete)
@@ -34,7 +34,7 @@ export function usePlannerIdeas() {
   const plannerIdeasMutation = useMutation({
     mutationFn: async (data: { title: string; context: string }) => {
       if (ideaEditId) await plannerIdeaUpdateFn({ data: { id: ideaEditId, data } })
-      else await plannerIdeasUpdateFn({ data })
+      else await plannerIdeaCreateFn({ data })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['planner-ideas'] })

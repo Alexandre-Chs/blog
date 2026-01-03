@@ -4,14 +4,14 @@ import { ideas } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
 
-const plannerIdeasUpdateSchema = z.object({
+const plannerIdeaCreateSchema = z.object({
   title: z.string().optional(),
   context: z.string().min(1),
 })
 
-export const plannerIdeasUpdate = createServerFn({ method: 'POST' })
+export const plannerIdeaCreate = createServerFn({ method: 'POST' })
   .middleware([adminMiddleware])
-  .inputValidator(plannerIdeasUpdateSchema)
+  .inputValidator(plannerIdeaCreateSchema)
   .handler(async ({ data }) => {
     const { title, context } = data
 
@@ -21,6 +21,7 @@ export const plannerIdeasUpdate = createServerFn({ method: 'POST' })
         id: crypto.randomUUID(),
         title: title || null,
         context,
+        status: 'draft',
       })
       .returning()
 
