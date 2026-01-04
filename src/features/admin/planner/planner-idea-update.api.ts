@@ -32,3 +32,27 @@ export const plannerIdeaUpdate = createServerFn({ method: 'POST' })
 
     return { success: true, idea: updatedIdea }
   })
+
+const plannerIdeaStatusUpdateSchema = z.object({
+  id: z.string(),
+  status: z.enum(['draft', 'failed', 'published', 'generating']),
+})
+
+export const plannerIdeaStatusUpdate = createServerFn({ method: 'POST' })
+  .middleware([adminMiddleware])
+  .inputValidator(plannerIdeaStatusUpdateSchema)
+  .handler(async ({ data }) => {
+    const { id, status } = data
+
+    console.log('le id', id)
+
+    const [updatedIdea] = await db
+      .update(ideas)
+      .set({
+        status,
+      })
+      .where(eq(ideas.id, id))
+      .returning()
+
+    return { success: true, idea: updatedIdea }
+  })

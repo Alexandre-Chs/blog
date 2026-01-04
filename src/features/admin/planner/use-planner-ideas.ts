@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import { plannerIdeaCreate } from './planner-idea-create.api'
 import { plannerIdeaDelete } from './planner-idea-delete.api'
 import { plannerIdeaRead } from './planner-idea-read.api'
-import { plannerIdeaUpdate } from './planner-idea-update.api'
+import { plannerIdeaStatusUpdate, plannerIdeaUpdate } from './planner-idea-update.api'
 import { plannerIdeasRead } from './planner-ideas-read.api'
 
 export function usePlannerIdeas() {
@@ -18,6 +18,7 @@ export function usePlannerIdeas() {
   const plannerIdeaReadFn = useServerFn(plannerIdeaRead)
   const plannerIdeaUpdateFn = useServerFn(plannerIdeaUpdate)
   const plannerIdeaDeleteFn = useServerFn(plannerIdeaDelete)
+  const plannerIdeaStatusUpdateFn = useServerFn(plannerIdeaStatusUpdate)
   const queryClient = useQueryClient()
 
   const { data: ideas = [], isPending } = useQuery({
@@ -55,6 +56,15 @@ export function usePlannerIdeas() {
     },
   })
 
+  const plannerIdeaStatusMutation = useMutation({
+    mutationFn: async (data: { id: string; status: 'draft' | 'generating' | 'published' | 'failed' }) => {
+      await plannerIdeaStatusUpdateFn({ data: { id: data.id, status: data.status } })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['planner-ideas'] })
+    },
+  })
+
   useEffect(() => {
     if (ideaEdit) setIdea({ title: ideaEdit.title || '', subject: ideaEdit.subject, context: ideaEdit.context })
   }, [ideaEdit])
@@ -76,6 +86,10 @@ export function usePlannerIdeas() {
     plannerIdeasMutation.mutate(ideaData)
   }
 
+  const statusFailedRemove = (id: string) => {
+    plannerIdeaStatusMutation.mutate({ id, status: 'draft' })
+  }
+
   return {
     isPending,
     sheetOpen,
@@ -91,5 +105,6 @@ export function usePlannerIdeas() {
     isDeleting: plannerIdeaDeleteMutation.isPending,
     ideaSave,
     sheetOpenToggle,
+    statusFailedRemove,
   }
 }

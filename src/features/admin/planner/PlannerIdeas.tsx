@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Badge } from '@/components/ui/badge'
 
 export function PlannerIdeas() {
   const {
@@ -33,6 +34,7 @@ export function PlannerIdeas() {
     ideaSave,
     sheetOpenToggle,
     openSheet,
+    statusFailedRemove,
   } = usePlannerIdeas()
 
   if (isPending) {
@@ -95,6 +97,11 @@ export function PlannerIdeas() {
                 <GripVertical className="w-5 h-5 text-muted-foreground mt-1 cursor-grab opacity-50 group-hover:opacity-100" />
 
                 <div className="flex-1 min-w-0 space-y-2">
+                  {idea.status === 'failed' && (
+                    <div onClick={() => statusFailedRemove(idea.id)} className="cursor-pointer">
+                      <Badge variant="destructive">Generation failed - Click to remove status</Badge>
+                    </div>
+                  )}
                   <div className="truncate line-clamp-1">{idea.title || 'No title, AI generate one for you.'}</div>
                   <div className="text-sm text-muted-foreground line-clamp-2">{idea.subject}</div>
 
