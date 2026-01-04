@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { eq } from 'drizzle-orm'
 import z from 'zod'
-import { ideas } from '@/db/schema'
+import { ideas, ideasStatusEnum } from '@/db/schema'
 import { db } from '@/index'
 import { adminMiddleware } from '@/middlewares/admin'
 
@@ -35,7 +35,7 @@ export const plannerIdeaUpdate = createServerFn({ method: 'POST' })
 
 const plannerIdeaStatusUpdateSchema = z.object({
   id: z.string(),
-  status: z.enum(['draft', 'failed', 'published', 'generating']),
+  status: z.enum(ideasStatusEnum.enumValues),
 })
 
 export const plannerIdeaStatusUpdate = createServerFn({ method: 'POST' })
@@ -43,8 +43,6 @@ export const plannerIdeaStatusUpdate = createServerFn({ method: 'POST' })
   .inputValidator(plannerIdeaStatusUpdateSchema)
   .handler(async ({ data }) => {
     const { id, status } = data
-
-    console.log('le id', id)
 
     const [updatedIdea] = await db
       .update(ideas)

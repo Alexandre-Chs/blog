@@ -7,6 +7,9 @@ import { plannerIdeaDelete } from './planner-idea-delete.api'
 import { plannerIdeaRead } from './planner-idea-read.api'
 import { plannerIdeaStatusUpdate, plannerIdeaUpdate } from './planner-idea-update.api'
 import { plannerIdeasRead } from './planner-ideas-read.api'
+import { ideasStatusEnum } from '@/db/schema'
+
+type statusType = (typeof ideasStatusEnum.enumValues)[number]
 
 export function usePlannerIdeas() {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -57,7 +60,7 @@ export function usePlannerIdeas() {
   })
 
   const plannerIdeaStatusMutation = useMutation({
-    mutationFn: async (data: { id: string; status: 'draft' | 'generating' | 'published' | 'failed' }) => {
+    mutationFn: async (data: { id: string; status: statusType }) => {
       await plannerIdeaStatusUpdateFn({ data: { id: data.id, status: data.status } })
     },
     onSuccess: () => {
