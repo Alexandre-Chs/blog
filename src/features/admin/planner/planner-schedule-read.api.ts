@@ -24,9 +24,3 @@ export const plannerScheduleRead = createServerFn({ method: 'GET' })
       publicationHour: validData.publicationHour,
     }
   })
-
-export const plannerIdeasRead = createServerFn({ method: 'GET' })
-  .middleware([adminMiddleware])
-  .handler(async () => {
-    return await db.select().from(ideas).orderBy(desc(ideas.createdAt))
-  })
