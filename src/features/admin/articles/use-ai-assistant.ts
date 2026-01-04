@@ -3,14 +3,14 @@ import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
 
 import type { SimpleEditorRef } from '@/components/tiptap-templates/simple/simple-editor'
-import { generateArticle } from '@/lib/openrouter/api'
+import { articlesArticleAi } from '@/features/admin/articles/articles-article-ai.api'
 
 export function useAiAssistant(editorRef: React.RefObject<SimpleEditorRef | null>, setTitle: (title: string) => void) {
   const [aiSheetOpen, setAiSheetOpen] = useState(false)
   const [aiSubject, setAiSubject] = useState('')
   const [aiAdditionalInfo, setAiAdditionalInfo] = useState('')
 
-  const generateArticleFn = useServerFn(generateArticle)
+  const generateArticleFn = useServerFn(articlesArticleAi)
 
   const [isGenerating, setIsGenerating] = useState(false)
   const [streamingText, setStreamingText] = useState('')
