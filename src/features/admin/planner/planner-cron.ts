@@ -2,18 +2,18 @@ import { randomUUID } from 'node:crypto'
 import { Cron, scheduledJobs } from 'croner'
 import { and, eq, gt, isNotNull, lt } from 'drizzle-orm'
 import { plannerAi } from './planner-ai'
+import type { Idea } from '@/db/schema'
 import { db } from '@/index'
 import { articles, ideas, settings, user } from '@/db/schema'
 import { validateSettings } from '@/zod/settings'
 import { generateUniqueSlug } from '@/utils/slug'
-import type { Idea } from '@/db/schema'
 
 function plannerIdeasCron() {
   const existingJob = scheduledJobs.find((j) => j.name === 'planner-ideas')
   if (existingJob) existingJob.stop() // for hot-reloading scenarios
 
   new Cron('*/1 * * * *', { name: 'planner-ideas' }, async () => {
-    let ideaNext: Idea[] | null = null
+    let ideaNext: Array<Idea> | null = null
 
     try {
       console.log('🕒 Cron started at:', new Date().toISOString())

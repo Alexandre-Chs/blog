@@ -1,9 +1,8 @@
 import * as React from 'react'
 
-
-import {  cva } from 'class-variance-authority'
+import { cva } from 'class-variance-authority'
 import { SlateElement } from 'platejs/static'
-import type {VariantProps} from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority'
 import type { SlateElementProps } from 'platejs/static'
 
 const headingVariants = cva('relative mb-1', {

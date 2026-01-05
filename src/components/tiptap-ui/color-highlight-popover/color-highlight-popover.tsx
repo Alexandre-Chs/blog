@@ -1,5 +1,5 @@
 import { forwardRef, useMemo, useRef, useState } from 'react'
-import type {Editor} from '@tiptap/react';
+import type { Editor } from '@tiptap/react'
 
 // --- Hooks ---
 import type { ButtonProps } from '@/components/tiptap-ui-primitive/button'

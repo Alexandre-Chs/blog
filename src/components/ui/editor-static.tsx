@@ -1,9 +1,8 @@
 import * as React from 'react'
 
-
 import { cva } from 'class-variance-authority'
-import { PlateStatic  } from 'platejs/static'
-import type {PlateStaticProps} from 'platejs/static';
+import { PlateStatic } from 'platejs/static'
+import type { PlateStaticProps } from 'platejs/static'
 import type { VariantProps } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'

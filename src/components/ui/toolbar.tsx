@@ -4,9 +4,9 @@ import * as React from 'react'
 
 import * as ToolbarPrimitive from '@radix-ui/react-toolbar'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
-import {  cva } from 'class-variance-authority'
+import { cva } from 'class-variance-authority'
 import { ChevronDown } from 'lucide-react'
-import type {VariantProps} from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority'
 
 import { DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'

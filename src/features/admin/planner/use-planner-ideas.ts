@@ -7,7 +7,7 @@ import { plannerIdeaDelete } from './planner-idea-delete.api'
 import { plannerIdeaRead } from './planner-idea-read.api'
 import { plannerIdeaStatusUpdate, plannerIdeaUpdate } from './planner-idea-update.api'
 import { plannerIdeasRead } from './planner-ideas-read.api'
-import { ideasStatusEnum } from '@/db/schema'
+import type { ideasStatusEnum } from '@/db/schema'
 
 type statusType = (typeof ideasStatusEnum.enumValues)[number]
 

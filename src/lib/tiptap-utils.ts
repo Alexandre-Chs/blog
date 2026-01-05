@@ -1,7 +1,7 @@
 import { AllSelection, NodeSelection, Selection, TextSelection } from '@tiptap/pm/state'
 import { CellSelection, cellAround } from '@tiptap/pm/tables'
-import {   findParentNodeClosestToPos } from '@tiptap/react'
-import type {Editor, NodeWithPos} from '@tiptap/react';
+import { findParentNodeClosestToPos } from '@tiptap/react'
+import type { Editor, NodeWithPos } from '@tiptap/react'
 import type { Transaction } from '@tiptap/pm/state'
 import type { Node as PMNode } from '@tiptap/pm/model'
 
@@ -376,7 +376,18 @@ const ATTR_WHITESPACE =
   /[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205F\u3000]/g
 
 export function isAllowedUri(uri: string | undefined, protocols?: ProtocolConfig) {
-  const allowedProtocols: Array<string> = ['http', 'https', 'ftp', 'ftps', 'mailto', 'tel', 'callto', 'sms', 'cid', 'xmpp']
+  const allowedProtocols: Array<string> = [
+    'http',
+    'https',
+    'ftp',
+    'ftps',
+    'mailto',
+    'tel',
+    'callto',
+    'sms',
+    'cid',
+    'xmpp',
+  ]
 
   if (protocols) {
     protocols.forEach((protocol) => {

@@ -3,7 +3,6 @@ import * as React from 'react'
 import { SlateElement } from 'platejs/static'
 import type { SlateElementProps } from 'platejs/static'
 
-
 import { cn } from '@/lib/utils'
 
 export function ParagraphElementStatic(props: SlateElementProps) {

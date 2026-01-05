@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import type { Editor } from '@tiptap/react'
 
 // --- Hooks ---
-import type {ListType} from '@/components/tiptap-ui/list-button';
+import type { ListType } from '@/components/tiptap-ui/list-button'
 import { useTiptapEditor } from '@/hooks/use-tiptap-editor'
 
 // --- Icons ---
@@ -16,7 +16,7 @@ import { ListTodoIcon } from '@/components/tiptap-icons/list-todo-icon'
 import { isNodeInSchema } from '@/lib/tiptap-utils'
 
 // --- Tiptap UI ---
-import {  canToggleList, isListActive, listIcons } from '@/components/tiptap-ui/list-button'
+import { canToggleList, isListActive, listIcons } from '@/components/tiptap-ui/list-button'
 
 /**
  * Configuration for the list dropdown menu functionality

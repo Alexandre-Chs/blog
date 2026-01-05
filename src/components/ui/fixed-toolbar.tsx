@@ -3,7 +3,6 @@
 import { Toolbar } from './toolbar'
 import { cn } from '@/lib/utils'
 
-
 export function FixedToolbar(props: React.ComponentProps<typeof Toolbar>) {
   return (
     <Toolbar
