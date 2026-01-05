@@ -15,6 +15,7 @@ export interface AnalyticsData {
   viewsOverTime: Array<{ date: string; views: number }>
   topPages: Array<{ path: string; views: number }>
   referrers: Array<{ source: string; count: number }>
+  devices: Array<{ device: string; count: number }>
 }
 
 const analyticsReadSchema = z.object({
@@ -44,6 +45,7 @@ export const analyticsRead = createServerFn({ method: 'GET' })
     const viewsOverTime = calculateViewsOverTime(visitsData, timeRange)
     const topPages = calculateTopPages(visitsData)
     const referrers = calculateReferrers(visitsData)
+    const devices = calculateDevices(visitsData)
 
     return {
       totalViews,
@@ -52,6 +54,7 @@ export const analyticsRead = createServerFn({ method: 'GET' })
       viewsOverTime,
       topPages,
       referrers,
+      devices,
     }
   })
 
@@ -122,4 +125,22 @@ function calculateReferrers(visitsData: Array<Visit>) {
     .map(([source, count]) => ({ source, count }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 10)
+}
+
+function calculateDevices(visitsData: Array<Visit>) {
+  const deviceCounts: Record<string, number> = {
+    desktop: 0,
+    mobile: 0,
+    tablet: 0,
+  }
+
+  visitsData.forEach((visit) => {
+    if (visit.device) {
+      deviceCounts[visit.device] = (deviceCounts[visit.device] || 0) + 1
+    }
+  })
+
+  return Object.entries(deviceCounts)
+    .map(([device, count]) => ({ device: device.charAt(0).toUpperCase() + device.slice(1), count }))
+    .sort((a, b) => b.count - a.count)
 }

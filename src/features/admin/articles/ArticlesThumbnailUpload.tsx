@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient  } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useServerFn } from '@tanstack/react-start'
 import { UploadCloud } from 'lucide-react'

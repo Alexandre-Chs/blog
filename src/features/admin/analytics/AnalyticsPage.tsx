@@ -2,13 +2,14 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
 import { Clock, Eye, Users } from 'lucide-react'
-import {  analyticsCurrentVisitorsRead, analyticsRead } from './analytics-read.api'
+import { analyticsCurrentVisitorsRead, analyticsRead } from './analytics-read.api'
 import { AnalyticsStatCardSkeleton } from './AnalyticsStatCardSkeleton'
 import { AnalyticsSkeletonChart } from './AnalyticsSkeletonChart'
 import { AnalyticsViewsChart } from './AnalyticsViewsChart'
 import { AnalyticsRefererChart } from './AnalyticsRefererChart'
 import { AnalyticsTopPagesChart } from './AnalyticsTopPagesChart'
-import type {TimeRange} from './analytics-read.api';
+import { AnalyticsDevicesChart } from './AnalyticsDevicesChart'
+import type { TimeRange } from './analytics-read.api'
 import NavigationName from '@/components/ui/navigation-name'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -61,7 +62,7 @@ export function AnalyticsPage() {
   return (
     <>
       <NavigationName name="Analytics" subtitle="Track your blog performance and visitor insights" />
-      <div className="px-8 space-y-6">
+      <div className="px-8 space-y-6 pb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-center gap-x-2 text-muted-foreground text-sm">
             <span className="h-2 w-2 block rounded-full bg-green-500"></span>
@@ -101,6 +102,7 @@ export function AnalyticsPage() {
             <>
               <AnalyticsRefererChart data={data.referrers} />
               <AnalyticsTopPagesChart data={data.topPages} />
+              <AnalyticsDevicesChart data={data.devices} />
             </>
           ) : null}
         </div>

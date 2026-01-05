@@ -1,5 +1,5 @@
 import { Bar, BarChart, LabelList, XAxis, YAxis } from 'recharts'
-import type { ChartConfig} from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 
