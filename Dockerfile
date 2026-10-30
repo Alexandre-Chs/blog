@@ -1,30 +1,31 @@
+# syntax=docker/dockerfile:1
 # ========================================
 # Stage 1: Build
 # ========================================
-FROM node:20-alpine AS builder
+FROM node:22.23.4-alpine AS builder
 WORKDIR /app
 
 # Install dependencies first (better layer caching)
 COPY package.json pnpm-lock.yaml* ./
-RUN corepack enable && corepack prepare pnpm@10.0.0 --activate && pnpm i --frozen-lockfile
+RUN corepack enable && corepack prepare pnpm@10.25.0 --activate && pnpm i --frozen-lockfile
 
 # Copy source and build
 COPY . .
-RUN pnpm run build
+RUN --mount=type=secret,id=appenv,target=/app/.env pnpm run build
 
 # ========================================
 # Stage 2: Production dependencies only
 # ========================================
-FROM node:20-alpine AS deps
+FROM node:22.23.4-alpine AS deps
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml* ./
-RUN corepack enable && corepack prepare pnpm@10.0.0 --activate && pnpm i --frozen-lockfile --prod
+RUN corepack enable && corepack prepare pnpm@10.25.0 --activate && pnpm i --frozen-lockfile --prod
 
 # ========================================
 # Stage 3: Runner
 # ========================================
-FROM node:20-alpine AS runner
+FROM node:22.23.4-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
